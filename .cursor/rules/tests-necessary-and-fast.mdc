@@ -1,0 +1,12 @@
+---
+description: Write few, fast, necessary tests. If a test needs more than 5s, rewrite it.
+alwaysApply: true
+---
+
+# Tests must be necessary and fast
+
+- Cover the behaviour the ticket promised. Do not add extra cases, snapshots, or a second test that fills the same form.
+- Fill text with `fireEvent.changeText`. Do not type long strings key by key.
+- Query the exact field. `getByLabelText(/name/i)` also matches Full name. Use `getByRole("textbox", { name: /^name/i })`.
+- Set picker values through the form default values. Do not open a native picker in a form submit test.
+- Keep the default 5s Jest timeout. Do not raise it. If a test cannot finish in 5s on a laptop, it is not a good test.

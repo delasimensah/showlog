@@ -1,0 +1,14 @@
+---
+description: Each slice sits on the last one. If a shipped screen already shows a field we now store, wire it in that slice. Missing it is a failed slice.
+alwaysApply: true
+---
+
+# Wire existing data on shipped screens
+
+We build on the previous slice. Leaving a shipped screen stale is a failed slice, not later work.
+
+If the locked design shows a field, and this repo already stores that value, the UI must show the real value. Do not hardcode `"—"`, `"0"`, a fake name, or empty text for data this repo already has.
+
+A later ticket is only for data this version does not have yet (for example open repairs before work orders exist, rent before rent is stored).
+
+When a slice creates or links a record, open every shipped screen that already displays a related column or label and wire it in that same slice. `"—"` is allowed only when that row truly has no value.

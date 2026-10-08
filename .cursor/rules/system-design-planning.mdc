@@ -1,0 +1,13 @@
+---
+description: When planning a project or major feature, apply the locked Showlog product docs and the Convex design when it exists.
+alwaysApply: true
+---
+
+When the user asks to **plan a project**, **plan a feature**, or **design** a new product area or major capability:
+
+1. Read `docs/product/locked-decisions.md` and `docs/product/product-requirements.md`. Do not invent features that are not in those files.
+2. If `docs/product/system-design.md` and `docs/product/convex-design.md` exist, read them. If they do not, say so and do not invent a second architecture.
+3. If `docs/product/linear-tickets.md` exists, check the agreed build order and acceptance.
+4. Produce a short, actionable plan the user can follow or hand to the agent for implementation.
+
+Keep the plan aligned with this monorepo: Expo (iPhone app), Convex, `packages/shared`. For small, localized changes (e.g. one new screen or component), follow the usual code-organization and app docs; the product docs are still the source of truth for scope.

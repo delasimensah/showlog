@@ -1,0 +1,102 @@
+name: 🧪 Testing
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  test:
+    name: 🧪 Run Tests
+    runs-on: ubuntu-latest
+    if: false  # disabled
+
+    steps:
+      - name: 📱 Checkout repository
+        uses: actions/checkout@v5
+
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+          cache: "yarn"
+
+      - name: 📦 Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: 🧪 Run tests
+        run: yarn test:ci
+
+      - name: 📊 Upload coverage
+        uses: codecov/codecov-action@v6
+        if: always()
+        with:
+          files: ./**/coverage/lcov.info
+          fail_ci_if_error: false
+
+  notify-test-success:
+    name: ✅ Notify Test Success
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.event_name == 'pull_request' && success()
+
+    steps:
+      - name: 💬 Comment on PR - Tests passed
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const issue_number = context.payload.pull_request.number;
+
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number,
+              body: `## ✅ Tests Passed
+              
+              All tests passed.
+              
+              **To merge this PR:**
+              - Wait for quality checks to pass
+              - Then you can merge
+              
+              ---
+              *Tests completed by: ${context.actor}*`
+            });
+
+  notify-test-failure:
+    name: 📢 Notify Test Failure
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.event_name == 'pull_request' && failure()
+
+    steps:
+      - name: 💬 Comment on PR failure
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const issue_number = context.payload.pull_request.number;
+
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number,
+              body: `## ❌ Tests Failed
+              
+              Automated tests failed. Run them locally:
+              \`\`\`bash
+              yarn test:ci
+              \`\`\`
+              
+              ---
+              *Check the [Actions tab](../../actions) for detailed error logs.*`
+            });
+

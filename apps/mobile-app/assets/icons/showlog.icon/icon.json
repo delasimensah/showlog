@@ -1,0 +1,32 @@
+{
+  "fill": {
+    "solid": "extended-srgb:0.05490,0.05490,0.06275,1.00000"
+  },
+  "groups": [
+    {
+      "name": "Logo",
+      "layers": [
+        {
+          "name": "logo",
+          "image-name": "logo.png",
+          "glass": true,
+          "position": {
+            "scale": 1,
+            "translation-in-points": [0, 0]
+          }
+        }
+      ],
+      "shadow": {
+        "kind": "neutral",
+        "opacity": 0.35
+      },
+      "translucency": {
+        "enabled": true,
+        "value": 0.2
+      }
+    }
+  ],
+  "supported-platforms": {
+    "squares": "shared"
+  }
+}

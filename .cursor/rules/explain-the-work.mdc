@@ -1,0 +1,26 @@
+---
+description: After finishing a task, explain what you built in plain language first, then name the files and why.
+alwaysApply: true
+---
+
+# Explain the work after each task
+
+When you finish a task the user asked you to do (implement, fix, or change docs), do not only list commands. Explain the work so they can talk about it.
+
+## Order
+
+1. What changed, in everyday words. What a person can now do that they could not do before.
+2. How it was built. Name the files and functions. Define a term the first time you use it.
+3. Why you chose that shape, in one or two reasons. If you rejected an obvious alternative, say so in one line.
+4. Then the test commands they can run.
+
+## Voice
+
+- Simple first. Technical names second.
+- Short paragraphs or a short bullet list. Not a dump of every file.
+- Do not open with jargon, a file tree, or “we refactored the auth layer.”
+
+## Do not
+
+- Skip this after a slice, a bug fix, or a docs change they asked for.
+- Recap when they only asked a question. Answer the question first, then only the facts they need to act.

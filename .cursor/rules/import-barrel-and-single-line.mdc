@@ -1,0 +1,15 @@
+---
+description: Barrel-only imports for constants, hooks, services, utils, assets, shared; one line per module. ESLint enforces deep paths.
+alwaysApply: true
+---
+
+# Imports: Barrel Only, One Line Per Module
+
+**Barrel paths only** for `@/constants`, `@/hooks`, `@/utils`, `@/assets`, `@/services`, **`shared`**. When Convex is wired, generated API uses `convex/_generated/api`.
+
+- **✅** `import { COLORS } from "@/constants";` — **❌** `@/constants/colors`
+- **✅** `import { x } from "shared";` — **❌** `shared/...`
+
+**One import line per module.** Combine imports from the same module on one line.
+
+Source: `docs/import-patterns-guide.md`.

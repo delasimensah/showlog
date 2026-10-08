@@ -1,0 +1,28 @@
+---
+description: Convex Free plan usage is per team; file egress from media is the usual demo trap.
+alwaysApply: true
+---
+
+# Convex Free plan — watch file egress
+
+Convex Free resource caps are **per team** (sum of every project on that team), not per app. Many Convex projects do **not** give each project its own egress budget.
+
+## Scarce meter for media demos
+
+**File data egress** (1 GB/month on Free) is usually what fails first when apps stream audio, video, or other large files from Convex file storage. Function calls at solo scale are rarely the problem.
+
+**Egress** = bytes leaving Convex when a stored file is downloaded. Upload is not egress.
+
+## Do
+
+- Read `docs/convex-usage.md`.
+- Before large media seed or heavy playback testing: estimate unique file size and egress per demo pass.
+- Check usage from the repo root: `npx convex deployment usage`.
+- Prefer shorter seed clips, client-side cache after first play, or object storage (for example R2) for heavy bytes — not a plan upgrade just for demos.
+- If Free hard caps are hit, note the meter and dominant project in `STATUS.md`.
+
+## Do not
+
+- Treat many Convex projects as unlimited media CDN capacity.
+- Prefetch a whole media catalog from Convex storage.
+- Paper over an egress email by upgrading without checking which meter tripped.

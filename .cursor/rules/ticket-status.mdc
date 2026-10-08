@@ -1,0 +1,15 @@
+---
+description: Ticket status lives in docs/product/linear-tickets.md and STATUS.md. Todo, In Progress, Done. Done means merged to main.
+alwaysApply: true
+---
+
+# Ticket status
+
+Each ticket in `docs/product/linear-tickets.md` has a status line: **Todo**, **In Progress**, **Done**, or **Canceled**.
+
+- Move a ticket to **In Progress** when you start its branch.
+- Move it to **Done** only when its pull request is merged to `main`. On a feature branch, write the ticket and `STATUS.md` as they will read after the merge.
+- A section of tickets (an epic) is In Progress from its first started ticket, and Done when every ticket in it is Done or Canceled. Update the section line in the same turn as its last ticket.
+- `STATUS.md` names the current ticket and the next one. Keep it in step with the tickets file.
+
+Do not say a ticket is finished in chat while the file still shows it open.

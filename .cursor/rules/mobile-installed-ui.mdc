@@ -1,0 +1,34 @@
+---
+description: Use Expo UI and the installed packages for mobile controls. Custom UI only when those cannot do the interaction.
+globs:
+  - apps/mobile-app/**
+alwaysApply: false
+---
+
+# Mobile — installed UI first
+
+`VStack` and `HStack` stay the layout. They are already the wrappers for this app.
+
+Before adding a control, use the installed component that is the normal choice for that job.
+
+- If `@expo/ui` has it, use it. That means SwiftUI on iOS (menus, sheets, pickers, sliders, buttons).
+- If a dedicated package in this app is the normal tool, use that package. Images use `expo-image`. Long lists use `@shopify/flash-list`.
+- A custom control is only for an interaction none of those can do. The mini-player drag, from the collapsed bar into the full player, is that case. A menu, sheet, or image next to it is not.
+
+## Examples
+
+```tsx
+// Wrong: a hand-built modal for track actions
+<Modal>{/* Play, Play next, Add to queue */}</Modal>
+
+// Right: Expo UI. SwiftUI Menu on iOS.
+import { Host, Menu, Button } from "@expo/ui/swift-ui";
+```
+
+```tsx
+// Wrong: React Native Image
+import { Image } from "react-native";
+
+// Right
+import { Image } from "expo-image";
+```

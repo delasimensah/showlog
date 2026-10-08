@@ -1,0 +1,10 @@
+---
+description: Local yarn test:ci is the bar before a PR. Do not wait on GitHub. Do not raise Jest timeouts.
+alwaysApply: true
+---
+
+# Local tests are the PR bar
+
+When this message asks to make sure tests pass, run local `yarn lint`, `yarn format:check`, `yarn type-check`, and `yarn test:ci`. That is the check.
+
+Do not wait on `gh pr checks`. A test that only survives GitHub by sitting for minutes, or by raising Jest’s timeout, is a bad test. Rewrite it so it finishes in the default 5s.

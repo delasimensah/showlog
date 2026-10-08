@@ -1,0 +1,33 @@
+---
+description: Write docs and client copy in full sentences. No shorthand, noun dumps, or slogan punctuation.
+alwaysApply: true
+---
+
+# Write so a tired reader does not have to decode
+
+When you create or edit Markdown, emails, recaps, tickets, or product docs in this repo, every sentence must carry a full idea. The reader should not need an earlier chat, a Convex file, or a status-machine in their head.
+
+## Do this
+
+- Use ordinary punctuation and full sentences. Lists are fine. A list item is still a complete thought, not a pile of nouns.
+- Name the who, the what, and the outcome. Weeks later, “apply” and “the cut” mean nothing.
+- If you use a status or a role, say what a person does at that step.
+- After you write, re-read as someone who has not seen the rest of the pack. If a line only makes sense because you already know the design, rewrite it.
+
+## Do not do this
+
+- Shorthand because the idea was already said once in this chat or another file.
+- Noun catalogs after a label (`Buildings, units, tenants, open work orders…`).
+- Slogan cuts (`The login can stay. Access does not.` / `Not X. Y.`).
+- Engineer compression (`Work order status moves received, then assigned…`).
+- Colon dumps that are not a sentence.
+
+## Example
+
+Bad: Work order status moves received, then assigned, then scheduled, then done.
+
+Good: A repair starts as received, then staff assign it, then it is scheduled, then it is marked done. Those steps happen in that order.
+
+Bad: Scale. Small internal. Ten buildings, three owners.
+
+Good: This is a small internal tool. About ten buildings, three owners, office staff, some caretakers, and the tenants of those buildings.

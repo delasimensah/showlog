@@ -1,0 +1,22 @@
+---
+description: Do not create a git branch unless it is feature/SHOW-n for a ticket that already exists in docs/product/linear-tickets.md. Ask first. A tangent is not a new branch.
+alwaysApply: true
+---
+
+# Never branch off a ticket
+
+Tickets live in `docs/product/linear-tickets.md`, numbered `SHOW-1`, `SHOW-2`, and so on.
+
+Do not create a git branch unless it is `feature/SHOW-n` for a ticket that **already exists** in that file.
+
+A tangent, UX follow-up, or “while we are here” change stays on the current ticket branch. If that cannot work, **ask** before you create anything.
+
+## Do not
+
+- Name a branch after the work (`feature/add-watch-later`, `feature/fix-empty-search`, or any name that is not `feature/SHOW-n`)
+- Add a ticket after the fact to justify a branch you already made
+- Add a ticket so you can branch, unless this message asked you to add that ticket
+
+## Ask first, then wait
+
+Stay on this ticket’s branch, or add the ticket to the file first and then `feature/SHOW-n`. Do not pick for them.

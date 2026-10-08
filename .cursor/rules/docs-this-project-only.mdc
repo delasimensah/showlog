@@ -1,0 +1,25 @@
+---
+description: Product docs describe this project only. No outside process, no unused-stack lists.
+alwaysApply: true
+---
+
+# Docs describe this project only
+
+This repo is a standalone product. README, AGENTS.md, product docs, coding guides, and comments must make sense to a developer who has not seen any other project.
+
+## Write
+
+- What this project is, what it uses, and how to work in it.
+- The stack in the positive: name the tools that are here.
+
+## Do not write
+
+- Tools this project does not use, including “do not add X” lists.
+- Other projects, templates, setup phases, or a “what this repo is not” section.
+- Banners, caveats, or completeness asides that only make sense from an earlier chat.
+
+## Example
+
+Bad: Do not add a REST client or a query cache library. Convex queries and mutations are the data layer.
+
+Good: Convex queries and mutations are the data layer. Zustand is only for client extras.

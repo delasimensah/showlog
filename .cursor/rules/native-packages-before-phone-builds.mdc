@@ -1,0 +1,34 @@
+---
+description: Install every Expo native package before the first development and preview builds. Cloud builds are limited. An update cannot add native code.
+globs:
+  - apps/mobile-app/**
+alwaysApply: false
+---
+
+# Native packages before the phone builds
+
+A cloud build is limited. The free Expo plan allows 15 iOS builds each calendar month, shared by every app on the Expo account. Unused builds disappear on the 1st. This app is iOS only.
+
+An update push sends JavaScript only. It cannot add a native package to a phone that was built without it.
+
+## Before the first development build and the first preview build
+
+Install every native package this version needs. Do this when asked to install the necessary native packages, even if the screen that uses one of them comes later.
+
+Native means:
+
+- An Expo or React Native package with native code, such as haptics, audio, image, updates, or notifications
+- A config plugin
+- A permission, the app icon, or the splash screen
+
+Then one development build and one preview build per platform that will be installed. Do not add a simulator build unless asked. Do not use `--platform all` unless both platforms are needed that day.
+
+## After those builds
+
+Use Metro for the development app. Use an update push for the preview app. Do not start a cloud build for JavaScript, copy, or styling.
+
+Start a cloud build only when a native package, plugin, permission, icon, splash screen, or the app version changes. Updates only reach a binary with the same app version, so do not bump the version unless a new build is intended.
+
+## A native package added after the binary exists
+
+Keep the package in the project. Call it only inside a guard, so a phone built without that native code keeps working. Do not remove the package to get through the month. The next development build and preview build must include it.

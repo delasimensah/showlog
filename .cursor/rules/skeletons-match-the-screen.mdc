@@ -1,0 +1,23 @@
+---
+description: Loading skeletons must match the real screen layout
+globs: "**/*Skeleton*.tsx"
+alwaysApply: false
+---
+
+# Skeletons match the screen
+
+When a shipped screen has a loading state, the skeleton must look like that screen — same chrome, same blocks, same row shape. Not two generic bars.
+
+## Do
+
+- Mirror the page header, summary cards, list rows, charts, and tables the user will see when data arrives.
+- Use the same outer padding and column tracks as the loaded page.
+- Follow `docs/product/product-requirements.md`: loading uses skeletons matching the real layout.
+
+## Do not
+
+- Ship a skeleton that is only a couple of full-width bars or a blank pulse box.
+- Use a spinner-only full page for list or dashboard screens.
+- Copy another screen’s skeleton when this screen’s layout is different.
+
+Up next, Upcoming, Discover, and My shows are the bar for this app.

@@ -1,0 +1,19 @@
+---
+description: Delete, remove, and sign out are always red text
+alwaysApply: true
+---
+
+# Negative actions are red text
+
+A control that takes something away uses red text. That includes Delete, Remove, Sign out, and the same kind of action under another label.
+
+## Do
+
+- Use the button tone `quietDanger` so the label is red text on a transparent button.
+- A plain button or icon that removes something, such as the cross on a tag, uses `text-danger`.
+- Keep the icon the same red as the label.
+
+## Do not
+
+- Use `quiet`, muted text, or the normal text color for these actions.
+- Use a filled red button with white text. The label itself is red.

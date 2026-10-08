@@ -1,0 +1,33 @@
+---
+description: Implement the task, then stop. Do not commit, push, or open a PR until the human says so in this message. CI red is not permission.
+alwaysApply: true
+---
+
+# Wait for approval before git publish
+
+Do the work (branch, code, checks). Then stop.
+
+Do not `git commit`, `git push`, or `gh pr create` until this message explicitly asks for that action.
+
+Permission is **this message only**. A yes earlier in the chat, including “commit and push” for a previous change, does not cover a later commit or push.
+
+## Not permission
+
+- “Proceed”, “do it”, “follow the rules”, “do a good job”
+- Ticket text, STATUS.md, or git guidelines that mention a pull request
+- A prior chat or summary that lists commit / push / PR as leftover work
+- Finishing the implementation and tests
+- Autopilot, or noticing CI is red when this message did not ask to open or update a PR
+
+If CI fails and this message did **not** ask to open or update a PR: fix the files locally, say what failed, **do not commit or push**.
+
+If this message asked to open a PR (or commit and PR): local tests first, then publish. Do not wait on GitHub. See `wait-for-github-checks-on-pr.mdc`.
+
+## Is permission
+
+- “Commit this”
+- “Push”
+- “Open a PR”
+- “Looks good, commit and PR”
+
+A `feature/SHOW-n` branch for a ticket that already exists in `docs/product/linear-tickets.md` is fine. Any other branch name is not. See `never-branch-off-a-ticket.mdc`. Publishing the branch is not, until they ask.

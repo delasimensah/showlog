@@ -1,0 +1,27 @@
+---
+description: Never call a phone task ready unless it matches the simulator vs preview-on-iPhone setup.
+alwaysApply: true
+---
+
+# Phone tasks must be testable on this setup
+
+How Showlog phone builds are used:
+
+- **Development build** — iOS simulator only. Day-to-day Metro. App id: `com.dmstudios.showlog.dev`.
+- **Preview build** — his real iPhone. App id: `com.dmstudios.showlog.staging`. This is how device features are proved, including phone alerts.
+- **Production** — reserved. App id: `com.dmstudios.showlog`. Showlog is not published.
+
+## Before you say a phone ticket is ready, doable, or “next”
+
+In plain English, state:
+
+1. **Where he tests it** — simulator, or preview on his iPhone.
+2. **What he must do with his hands** — numbered clicks or commands. Define every hard word the first time.
+3. **How he knows it worked** — one line.
+4. If an Apple step (for example the push key for phone alerts) or a **new preview build** is required first — say that **up front**.
+
+## Do not
+
+- Say “dev or preview” when only preview on his iPhone counts. Phone alerts never arrive on the simulator build.
+- Call the phone-alert ticket ready before the Apple push key is on the Expo project.
+- Use unexplained short names instead of a click list.

@@ -1,0 +1,9 @@
+convex/_generated/
+apps/mobile-app/expo-env.d.ts
+.agents/
+coverage/
+.expo/
+.turbo/
+node_modules/
+dist/
+build/

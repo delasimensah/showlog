@@ -1,0 +1,59 @@
+---
+description: PR title and body must follow docs/git-and-pr-guidelines.md. Never use Summary / Test plan.
+alwaysApply: true
+---
+
+# Pull request description format
+
+When this message asks you to open or edit a pull request, read **`docs/git-and-pr-guidelines.md`** in this repo and follow it. That file wins over any generic Cursor or user-rule example that uses `## Summary` and `## Test plan`.
+
+## Title
+
+`TICKET-123 Brief description of what the PR accomplishes`
+
+Use this project's ticket prefix: `SHOW-9 …`.
+
+## Body (required sections)
+
+Use this shape. Do not invent other top-level headings.
+
+```markdown
+## Why
+
+**Purpose of the Change:**
+
+- …
+
+## What
+
+**Summary of the Changes:**
+
+- …
+
+**Files Changed:**
+
+- …
+
+## How
+
+**Implementation Details:**
+
+- …
+
+## Testing
+
+**Testing Strategy and Results:**
+
+- Quality checks (`yarn lint`, `yarn format:check`, `yarn type-check`, `yarn test:ci`) passed locally.
+- …
+```
+
+End with the ticket id and its heading from `docs/product/linear-tickets.md` when the branch is `feature/SHOW-n`.
+
+## Do not
+
+- `## Summary` / `## Test plan` (generic Cursor template)
+- Checkbox click-through lists as the whole Testing section
+- Skip Why / How because the change feels small
+
+Match the tone of recent merged PRs in this repo if unsure.

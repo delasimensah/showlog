@@ -1,0 +1,58 @@
+{
+  "name": "showlog",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "apps/*",
+      "packages/*"
+    ],
+    "nohoist": [
+      "**/react-native",
+      "**/react-native/**"
+    ]
+  },
+  "scripts": {
+    "dev:mobile": "turbo run dev --filter=@showlog/mobile-app",
+    "dev:backend": "convex dev",
+    "dev:backend:once": "convex dev --once",
+    "lint": "turbo run lint",
+    "lint:fix": "turbo run lint:fix",
+    "type-check": "turbo run type-check && tsc --noEmit -p convex",
+    "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,md,json}\"",
+    "test": "yarn test:backend && turbo run test",
+    "test:ci": "yarn test:backend && turbo run test:ci",
+    "test:backend": "vitest run --config vitest.config.ts",
+    "test:mobile": "turbo run test --filter=@showlog/mobile-app",
+    "test:shared": "turbo run test --filter=shared",
+    "clean": "turbo run clean && rm -rf node_modules"
+  },
+  "devDependencies": {
+    "@edge-runtime/vm": "^5.0.0",
+    "@types/node": "^24",
+    "convex-test": "^0.0.56",
+    "prettier": "^3.6.2",
+    "prettier-plugin-tailwindcss": "^0.5.11",
+    "turbo": "^2.10.11",
+    "typescript": "~6.0.3",
+    "vite": "^8.2.2",
+    "vitest": "^5.0.0"
+  },
+  "dependencies": {
+    "@auth/core": "0.41.1",
+    "@convex-dev/auth": "^0.0.96",
+    "convex": "^1.46.0",
+    "convex-helpers": "^0.1.124"
+  },
+  "resolutions": {
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "@react-native/jest-preset": "0.86.3"
+  },
+  "packageManager": "yarn@1.22.22",
+  "engines": {
+    "yarn": ">=1.22.0",
+    "node": ">=22.13.0"
+  }
+}

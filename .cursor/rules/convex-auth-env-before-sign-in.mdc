@@ -1,0 +1,16 @@
+---
+description: Convex Auth env must exist on the Convex deployment before a real sign-in can succeed.
+alwaysApply: true
+---
+
+# Convex Auth env before first real sign-in
+
+Sign-in is not done until `JWT_PRIVATE_KEY`, `JWKS`, and `SITE_URL` exist on the Convex deployment (the one in root `.env.local`).
+
+Pushing `convex/` does not create them. Tests do not prove they exist. Missing `JWT_PRIVATE_KEY` crashes sign-in with `Missing environment variable JWT_PRIVATE_KEY`.
+
+Read `docs/convex-auth-env.md`. Generate the key pair with `jose`. Set with `npx convex env set "NAME=value"` (one argument). Do not run the interactive `npx @convex-dev/auth` wizard. Do not commit the keys. Do not paste `npx convex env list` output.
+
+If sign-in crashes on a missing key, stop and set the three variables. Do not ship a workaround.
+
+Production is a different deployment. Follow `docs/convex-production.md`. Generate a new key pair and set it with `npx convex env set --prod`. Do not copy the dev keys. Do not run the demo seed on production.

@@ -1,0 +1,10 @@
+---
+description: Name test files after the module they cover, not the ticket.
+alwaysApply: true
+---
+
+# Tests match the module, not the ticket
+
+- `tracks.ts` → `tracks.test.ts` in the same folder.
+- Do not name files or folders after the ticket, slice, or epic (`discover.test.ts` for SHOW-7 when the module is `suggestions.ts`).
+- Do not add a leftover file that only exists because of the ticket name.

@@ -1,0 +1,28 @@
+---
+description: Scaffold and new projects open as a blank slate, never an auth screen before features.
+alwaysApply: true
+---
+
+# Scaffold is a blank slate — never an auth screen first
+
+When scaffolding or starting a new client project **before feature build / screen tickets**:
+
+## Do
+
+- Treat the repo as a **blank slate** with the stack, docs, and thin backend wiring the PRD named.
+- First screen: product name + one short line of what it is (from the PRD). No sign-in, sign-up, or auth gate.
+- Auth may exist as **infrastructure only** (Convex Auth tables, providers, env placeholders). That is not a reason to ship an auth UI.
+
+## Do not
+
+- Open the app on `/sign-in`, a password form, or any auth redirect before features are under build.
+- Copy an auth shell from another app as the starting UI.
+- Assume “thin auth start” means “ship a sign-in screen.”
+
+## When auth UI is allowed
+
+Only after screen design and the tickets in `docs/product/linear-tickets.md` call for sign-in as a product surface.
+
+## Where this is also written
+
+- `project-template/docs/new-project-scaffold.md` (authoritative for the copy list)

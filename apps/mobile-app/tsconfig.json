@@ -1,0 +1,24 @@
+{
+  "extends": "expo/tsconfig.base.json",
+  "compilerOptions": {
+    "moduleSuffixes": [".ios", ".native", ""],
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "types": ["jest"],
+    "paths": {
+      "@/*": ["./*"],
+      "@convex/*": ["../../convex/*"],
+      "shared": ["../../packages/shared/src"]
+    },
+    "skipLibCheck": true
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts",
+    "nativewind-env.d.ts",
+    "expo-router-testing.d.ts"
+  ]
+}

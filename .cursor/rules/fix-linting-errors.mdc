@@ -1,0 +1,15 @@
+---
+description: Always fix linting (and type) errors you introduce. Run lint after edits.
+alwaysApply: true
+---
+
+# Fix linting errors you add
+
+**You MUST fix any linting or type-check errors that your changes introduce.**
+
+- After creating or editing files, run the app's **lint** command (e.g. `yarn lint` in mobile-app) for the area you changed. If the linter reports errors or warnings in files you added or modified, fix them before finishing (e.g. import order, no-require-imports, unused variables).
+- Mobile `yarn lint` must cover every app source folder (`app`, `components`, `hooks`, `utils`, `constants`, `types`, and `services` when present) — not Expo’s default `app`/`components`/`src` only. Do not claim lint is clean if the IDE shows errors in `hooks/` or similar.
+- After editing a hook or other file outside `app/`/`components/`, run ESLint on that path (or Cursor ReadLints on the file) before you say checks passed.
+- Do not call `setState` synchronously in a `useEffect` body to mirror props/auth into local state (`react-hooks/set-state-in-effect`). Derive the ready flag, or set state only in async callbacks / effect cleanup. Prefer `RefObject` over deprecated `MutableRefObject` (React 19).
+- If the project has a **type-check** command (e.g. `yarn type-check` or `tsc --noEmit`), run it after edits and fix any type errors in the files you changed.
+- Do not leave lint or type errors in your edits for the user to fix. Fix them yourself as part of the same task.

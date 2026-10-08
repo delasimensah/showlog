@@ -1,0 +1,64 @@
+---
+description: Mandatory code organization and style for this monorepo. Follow to the letter.
+alwaysApply: true
+---
+
+You MUST follow this repository's code organization and writing conventions to the letter. Do not deviate unless the user explicitly asks otherwise.
+
+## Where conventions live
+
+- **apps/mobile-app:** Read `apps/mobile-app/docs/project-structure.md`, `apps/mobile-app/docs/developer-decision-guide.md`, and `apps/mobile-app/docs/adding-screens-guide.md` when adding or changing screens, components, hooks, services.
+- **packages/shared:** Read `packages/shared/docs/contributing-guide.md` when relevant.
+- **Cross-cutting (all apps):** Read `docs/import-patterns-guide.md`, `docs/export-patterns-guide.md`, `docs/component-organization-guide.md` for imports, exports, and where components belong. Read `docs/component-building-guide.md` before building a component.
+
+When in doubt, open the doc for the app or package you are editing and follow it.
+
+## Non-negotiable rules
+
+### Components
+
+- **Screens/pages folders are for full-screen components only.** Only components that represent a full navigable screen (`*Screen` in `components/screens/[stack]/`) belong there. Non-screen UI (overlays, forms, feature content, modals) goes in feature or shared folders (e.g. `components/home/`, `components/shared/`), not in `screens/`. See `docs/component-organization-guide.md`.
+- Every component lives in a **folder**: `ComponentName/ComponentName.tsx` (not a loose `ComponentName.tsx`).
+- **Do not nest component folders inside another component's folder.** Each component is a direct child of a **category** folder (e.g. `components/home/RecentSearchItem/`, `components/home/SearchOverlayContent/`). Wrong: `components/home/SearchOverlayContent/RecentSearchItem/`. Right: `components/home/RecentSearchItem/` and `components/home/SearchOverlayContent/` as siblings.
+- Every component has a test file: `ComponentName/ComponentName.test.tsx` (colocated in the same folder as the component). Tests are REQUIRED. See `.cursor/rules/test-files-placement.mdc` for where and how to add all test files.
+- A component folder contains only `ComponentName.tsx`, `ComponentName.test.tsx`, and optionally `ComponentNameSkeleton.tsx`. Form schemas, helpers, and other files go in `utils/`.
+- **No** `index.ts` inside individual component folders. Only category-level or top-level barrel files.
+- Types stay **inline** in the component file. No separate `.types.ts` files for component props.
+- Export components from the **barrel**: `components/index.ts` with `export { default as ComponentName } from "./[category]/ComponentName/ComponentName";`
+- Use **Tailwind** for styling (NativeWind on mobile). Check existing components first; compose them when possible.
+
+### Services and hooks
+
+- **No** `index.ts` inside subdirectories (e.g. no `services/auth/index.ts`, no `hooks/auth/index.ts`). Only the **top-level** `services/index.ts` and `hooks/index.ts` export from subdirectories.
+- Use **named exports** for service functions and hooks. Barrel re-exports: `export { signIn, signOut } from "./auth/authService";`
+- Group related logic in single files (e.g. all auth functions in `authService.ts`).
+
+**Hooks — category subfolders only:**
+
+- Every hook file MUST live in a **category subfolder**: `hooks/auth/`, `hooks/navigation/`, or `hooks/shared/`. Path form: `hooks/[category]/useHookName.ts`. Product data is fetched with Convex `useQuery` / `useMutation` in screens.
+- **Never** put a hook file directly in `hooks/` (e.g. `hooks/useDebouncedValue.ts` is wrong). Put it in the correct category (e.g. `hooks/shared/useDebouncedValue.ts`).
+- Authentication extras → `hooks/auth/`. Navigation hooks → `hooks/navigation/`. Generic utility hooks (debounce, local storage, etc.) → `hooks/shared/`.
+- In `hooks/index.ts`, export from the category path: `export { useHookName } from "./[category]/useHookName";`
+
+**Services — category subfolders only:**
+
+- Every service file MUST live in a category subfolder (e.g. `services/auth/authService.ts`). Do not place service files at the root of `services/`.
+- Export from `services/index.ts` only, from the correct `"./[category]/..."` path.
+
+See `.cursor/rules/hooks-and-services-organization.mdc` for the full mandatory rules.
+
+### Imports
+
+- **Cross-folder:** Use `@/` aliases: `import { Button } from "@/components";` `import { User } from "@/types";`
+- **Same folder / nearby:** Use relative paths: `import { X } from "./X";` or `../Other/Other`.
+- **Shared package:** `import { ... } from "shared";`
+
+### Mobile layout (VStack / HStack)
+
+- **In `apps/mobile-app`:** Use **VStack** and **HStack** (from `components/ui/Stack`) for layout and grouping. Do not use raw **View** for layout unless required (e.g. `createAnimatedComponent(ScrollView)`, a wrapper that must be a View for a third-party API, or similar). Prefer Stack so layout and spacing stay consistent.
+
+### App structure
+
+- **Mobile (Expo):** Expo Router. Same group names under `app/`. Screens in `app/(auth)/`, `app/(main-app)/(tabs)/[tab]/`, etc. Register new screens in the corresponding `_layout.tsx` when adding to a stack.
+
+Before adding a new screen, page, component, hook, or service, read the relevant **developer-decision-guide** and **project-structure** for that app so you follow the exact patterns (paths, exports, layout registration).
