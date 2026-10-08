@@ -1,7 +1,6 @@
 ---
 description: Loading skeletons must match the real screen layout
-globs: "**/*Skeleton*.tsx"
-alwaysApply: false
+alwaysApply: true
 ---
 
 # Skeletons match the screen
@@ -10,14 +9,16 @@ When a shipped screen has a loading state, the skeleton must look like that scre
 
 ## Do
 
-- Mirror the page header, summary cards, list rows, charts, and tables the user will see when data arrives.
+- Keep the screen title, back and menu buttons, search field, and section headings as the real controls while data loads. Skeleton only the values the query fills.
+- Mirror the rows the user will see when data arrives: the same picture size and shape (posters stay 2:3, episode pictures 16:9), the same number of text lines, and the tick circle where a tick goes.
 - Use the same outer padding and column tracks as the loaded page.
 - Follow `docs/product/product-requirements.md`: loading uses skeletons matching the real layout.
 
 ## Do not
 
 - Ship a skeleton that is only a couple of full-width bars or a blank pulse box.
-- Use a spinner-only full page for list or dashboard screens.
+- Use a spinner-only full page for a list screen.
+- Replace a whole screen with a skeleton when its header and buttons are already known.
 - Copy another screen’s skeleton when this screen’s layout is different.
 
 Up next, Upcoming, Discover, and My shows are the bar for this app.

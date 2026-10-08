@@ -24,9 +24,9 @@ Read **`STATUS.md`** at the repo root before planning or implementing. Update it
 ## Product and architecture
 
 - **`docs/product/locked-decisions.md`** and **`docs/product/product-requirements.md`** — What we are building. Do not invent features that are not in these files.
-- **`docs/product/system-design.md`** and **`docs/product/convex-design.md`** — Only after those files exist. Until then, do not invent tables or permission rules beyond the product requirements and the thin Convex auth start.
-- **`docs/product/linear-tickets.md`** — Tickets `SHOW-n`, build order, and status, once written.
-- **`docs/design/`** — Screen design. `docs/design/references/tvtime/` holds layout references only.
+- **`docs/product/system-design.md`** — Tables, server functions, clock jobs, and build order. Do not invent tables or permission rules beyond it.
+- **`docs/product/linear-tickets.md`** — Tickets `SHOW-1` to `SHOW-12`, build order, and status.
+- **`docs/design/screens.md`** — One spec per screen with its references. **`docs/design/design-system.md`** — colours, type, spacing. `docs/design/references/tvtime/` holds layout references only.
 
 ## Stack and official docs
 

@@ -1,0 +1,20 @@
+---
+description: Build features the way other products already do them. Keep known controls on screen while data loads.
+alwaysApply: true
+---
+
+# Build the screen the usual way
+
+Build the feature the way other products already do it. Read the design and the requirements before inventing a control or a loading state.
+
+A decision about one screen's fields stays in that screen's docs. It does not become a rule for every screen.
+
+## Do
+
+- Search updates the results only. The title, the search box, the buttons, and the section headings stay on screen.
+- Navigation (the tab bar, back buttons) stays visible while data loads.
+
+## Do not
+
+- Replace a screen with a skeleton because a query is in flight. Skeleton only the values still loading. See `skeletons-match-the-screen.mdc`.
+- Copy one screen's field decisions into an always-on rule.

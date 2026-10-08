@@ -54,8 +54,8 @@ Sizes:
 
 - **Screen edges:** 20 left and right.
 - **Spacing:** 8 inside a row, 12 between a poster and its text, 16–20 between rows, 24–32 between sections.
-- **Posters:** 2:3 shape. 76 × 112 in Up next rows, three across in the My shows grid.
-- **Corner radius:** posters 10, cards and sheets 16, chips and buttons fully rounded, the tab bar fully rounded and floating.
+- **Posters:** 2:3 shape. 48 × 72 in Upcoming and Search rows, 120 × 180 in Discover, three across in the My shows grid. Up next and Season rows use the 16:9 episode picture (128 × 72) instead. Sizes for every shared part are in `screens.md`, Shared parts.
+- **Corner radius:** every poster and episode picture 10, cards and sheets 16, chips and buttons fully rounded, the tab bar fully rounded and floating.
 - **Shadows:** none. Depth comes from surface on page.
 - **Touch targets:** at least 44.
 - **Tick button:** a 40 circle with a mint outline and a mint tick. Tapping it fills the circle mint with an ink tick and plays a light haptic.

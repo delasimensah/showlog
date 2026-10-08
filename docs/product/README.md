@@ -4,4 +4,5 @@
 - `questionnaire.md` — the requirements questions, answered.
 - `product-requirements.md` — flows, screens, and data. The source of truth for what gets built.
 
-System design and tickets are added after these three are approved.
+- `system-design.md` — tables, server functions, clock jobs, and build order.
+- `linear-tickets.md` — tickets SHOW-1 to SHOW-12 in build order, with acceptance for each.

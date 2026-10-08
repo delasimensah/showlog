@@ -4,6 +4,8 @@ Rules guide the agent for this monorepo.
 
 ## Always on (every chat)
 
+- **`build-the-screen-the-usual-way.mdc`** — Known controls stay on screen while data loads.
+- **`skeletons-match-the-screen.mdc`** — Skeletons only for the values still loading, in the loaded row shape.
 - **`ticket-status.mdc`** — Todo, In Progress, Done in `docs/product/linear-tickets.md`. Done means merged. Write STATUS as the post-merge state on a feature branch.
 - **`wait-for-approval-before-git.mdc`** — Implement and stop. Do not commit, push, or open a PR until asked.
 - **`pr-description-from-guidelines.mdc`** — PR body is Why / What / How / Testing from `docs/git-and-pr-guidelines.md`. Never Summary / Test plan.
