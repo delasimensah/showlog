@@ -13,7 +13,7 @@
 - **Outcome:** B (studio accounts)
 - **Current phase:** Setup done: scaffold, GitHub, Expo, Convex, design system, icon, system design, screens, and tickets SHOW-1 to SHOW-12. Builds next, then SHOW-1. iPhone app (Expo SDK 57), shared package, and a thin Convex start (Convex Auth tables and routes, signed-in function wrappers). First screen is the name and one line. Native packages for this version are installed. Lint, format, type-check, and tests pass. Private GitHub repo on `main`. Branches are deleted automatically after merge. Convex agent guidelines and skills installed (`convex/_generated/ai/guidelines.md`, `.agents/skills/`).
 - **Last updated:** 2026-10-08
-- **Blocked / open:** The preview build needs Delasi's Apple Developer sign-in and his iPhone registered. The Apple push key waits for SHOW-11.
+- **Blocked / open:** Both phone builds are running on Expo (8 Oct 2026). Simulator: https://expo.dev/accounts/dm-studios/projects/showlog/builds/bf5a7b93-ccf6-41d4-8999-41b67c64bdec (in progress). Preview for the iPhone: https://expo.dev/accounts/dm-studios/projects/showlog/builds/21398ded-56e6-4244-ac90-336c5b0a4d0a (queued, waiting for a free build slot). The Apple push key waits for SHOW-11.
 
 ---
 
@@ -32,7 +32,7 @@
 - [x] Private GitHub repo: https://github.com/delasimensah/showlog (first commit on `main`, 8 Oct 2026)
 - [x] Linear: not used. Tickets live in `docs/product/linear-tickets.md`.
 - [x] Vercel: not used. No website.
-- [x] Expo / EAS: https://expo.dev/accounts/dm-studios/projects/showlog (`extra.eas.projectId` and `updates.url` in `app.config.ts`). No builds yet.
+- [x] Expo / EAS: https://expo.dev/accounts/dm-studios/projects/showlog (`extra.eas.projectId` and `updates.url` in `app.config.ts`).
 - [x] Slack: not used.
 - [x] Backend cloud (Convex): project `showlog`, dev deployment synced, URL in local env and EAS development and preview. Auth env set (`JWT_PRIVATE_KEY`, `JWKS`, `SITE_URL=showlog://`).
 - [x] Access list (`ACCESS-LIST.md`): OpenAI key location noted
@@ -47,14 +47,14 @@
 - [x] Design system locked (8 Oct 2026): mint on ink, Plus Jakarta Sans — `docs/design/design-system.md`. Tokens wired into `packages/shared` colours, the Tailwind theme, and the font loader.
 - [x] Screen design (8 Oct 2026): TV Time screenshots plus Mobbin references for each screen — `docs/design/screens.md`. No UX Pilot.
 - [x] Tickets SHOW-1 to SHOW-12 in `docs/product/linear-tickets.md`, all Todo
-- [ ] One development build, one preview build (Plus Jakarta Sans package already installed)
+- [ ] One development build, one preview build — both started 8 Oct 2026, not finished yet (Plus Jakarta Sans package already installed)
 - [ ] Build
 
 ---
 
 ## Next action (one line)
 
-One iOS simulator development build and one iOS preview build (the preview build needs Delasi's Apple sign-in once), then start SHOW-1 on `feature/SHOW-1`.
+Wait for the simulator and preview builds to finish, install them, then start SHOW-1 on `feature/SHOW-1`.
 
 ---
 
