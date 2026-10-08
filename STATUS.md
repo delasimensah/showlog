@@ -11,7 +11,7 @@
 - **Client / job:** Showlog. Personal iPhone app for tracking TV shows. No client, no invoice, not published.
 - **Backend:** Convex (dev deployment only, team `dm-studios`)
 - **Outcome:** B (studio accounts)
-- **Current phase:** Scaffold done. iPhone app (Expo SDK 57), shared package, and a thin Convex start (Convex Auth tables and routes, signed-in function wrappers). First screen is the name and one line. Native packages for this version are installed. Lint, format, type-check, and tests pass. No git repo yet.
+- **Current phase:** Scaffold done. iPhone app (Expo SDK 57), shared package, and a thin Convex start (Convex Auth tables and routes, signed-in function wrappers). First screen is the name and one line. Native packages for this version are installed. Lint, format, type-check, and tests pass. Private GitHub repo created, one commit on `main`.
 - **Last updated:** 2026-10-08
 - **Blocked / open:** The Convex type files in `convex/_generated/` are placeholders until the first `yarn dev:backend` regenerates them at the Convex cloud step.
 
@@ -29,7 +29,7 @@
 ## Workshop (tools, not product features)
 
 - [x] Scaffold monorepo (phone app only)
-- [ ] Private GitHub repo (`delasimensah/showlog`)
+- [x] Private GitHub repo: https://github.com/delasimensah/showlog (first commit on `main`, 8 Oct 2026)
 - [x] Linear: not used. Tickets live in `docs/product/linear-tickets.md`.
 - [x] Vercel: not used. No website.
 - [ ] Expo / EAS (`@dm-studios/showlog`): `eas init`, then `extra.eas.projectId` and `updates.url` in `app.config.ts`
@@ -54,7 +54,7 @@
 
 ## Next action (one line)
 
-Create the private GitHub repo `delasimensah/showlog` and push the scaffold, design system, and icon as the first commit (waiting on Delasi's go-ahead). Then Expo, then Convex cloud.
+Expo / EAS: `eas init` for `@dm-studios/showlog`, then add `extra.eas.projectId` and `updates.url` to `app.config.ts`. Then Convex cloud plus auth env.
 
 ---
 
