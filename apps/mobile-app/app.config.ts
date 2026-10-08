@@ -84,11 +84,17 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   experiments: {
     typedRoutes: true,
   },
+  updates: {
+    url: "https://u.expo.dev/13195df8-2f5f-43ad-96ee-0c6d33741c6b",
+  },
   runtimeVersion: {
     policy: "appVersion",
   },
   extra: {
     router: {},
+    eas: {
+      projectId: "13195df8-2f5f-43ad-96ee-0c6d33741c6b",
+    },
   },
   owner: "dm-studios",
 });

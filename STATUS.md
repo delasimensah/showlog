@@ -32,7 +32,7 @@
 - [x] Private GitHub repo: https://github.com/delasimensah/showlog (first commit on `main`, 8 Oct 2026)
 - [x] Linear: not used. Tickets live in `docs/product/linear-tickets.md`.
 - [x] Vercel: not used. No website.
-- [ ] Expo / EAS (`@dm-studios/showlog`): `eas init`, then `extra.eas.projectId` and `updates.url` in `app.config.ts`
+- [x] Expo / EAS: https://expo.dev/accounts/dm-studios/projects/showlog (`extra.eas.projectId` and `updates.url` in `app.config.ts`). No builds yet.
 - [x] Slack: not used.
 - [ ] Backend cloud (Convex) plus auth env
 - [x] Access list (`ACCESS-LIST.md`): OpenAI key location noted
@@ -54,7 +54,7 @@
 
 ## Next action (one line)
 
-Expo / EAS: `eas init` for `@dm-studios/showlog`, then add `extra.eas.projectId` and `updates.url` to `app.config.ts`. Then Convex cloud plus auth env.
+Convex cloud: create the dev deployment on team `dm-studios` with `yarn dev:backend`, then set `JWT_PRIVATE_KEY`, `JWKS`, and `SITE_URL` (`showlog://`) per `docs/convex-auth-env.md`. Then the Apple push key on the Expo project.
 
 ---
 
