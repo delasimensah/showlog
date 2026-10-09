@@ -43,14 +43,16 @@ describe("SearchScreen", () => {
   const searchShows = jest.fn();
   const addShow = jest.fn();
   const back = jest.fn();
+  const push = jest.fn();
 
   beforeEach(() => {
     searchShows.mockReset();
     addShow.mockReset();
     back.mockReset();
+    push.mockReset();
     mockedSearch.mockReturnValue(searchShows);
     mockedAdd.mockReturnValue(addShow);
-    (useRouter as jest.Mock).mockReturnValue({ back, push: jest.fn() });
+    (useRouter as jest.Mock).mockReturnValue({ back, push });
   });
 
   it("asks for a name before searching", () => {
@@ -83,6 +85,19 @@ describe("SearchScreen", () => {
       expect(getByText("On your list")).toBeTruthy();
     });
     expect(addShow).toHaveBeenCalledWith({ tvmazeId: 1505 });
+  });
+
+  it("opens the show when the row is tapped", async () => {
+    searchShows.mockResolvedValue([onePiece]);
+    const { getByLabelText } = render(<SearchScreen />);
+
+    fireEvent.changeText(getByLabelText("Search"), "one piece");
+
+    await waitFor(() => {
+      expect(getByLabelText("One Piece")).toBeTruthy();
+    });
+    fireEvent.press(getByLabelText("One Piece"));
+    expect(push).toHaveBeenCalledWith("/show/1505");
   });
 
   it("says when nothing matches", async () => {

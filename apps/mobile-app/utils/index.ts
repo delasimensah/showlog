@@ -22,6 +22,10 @@ export {
   showSuccessToast,
 } from "./toastUtils";
 
+export { fillOpacity } from "./showHeaderFade";
+export { joinMeta, seasonsLabel } from "./showLabel";
+export { watchedShare } from "./watchedShare";
+
 // Import cn from shared package
 export { cn } from "shared";
 

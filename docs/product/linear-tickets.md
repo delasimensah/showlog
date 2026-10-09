@@ -24,7 +24,7 @@ Every ticket follows `.cursor/rules/` and the docs `mandatory-project-docs.mdc` 
 
 ## Status now
 
-- SHOW-1: **Done**. SHOW-2: **Done**. SHOW-3 to SHOW-12: **Todo**.
+- SHOW-1: **Done**. SHOW-2: **Done**. SHOW-3: **Done**. SHOW-4 to SHOW-12: **Todo**.
 
 ---
 
@@ -94,7 +94,7 @@ The app opens on Sign in. I create my one account, land on the four tabs, and st
 
 ## SHOW-3. I can open a show, on my list or not
 
-**Status:** Todo
+**Status:** Done
 **Apps:** phone, Convex
 **Branch:** `feature/SHOW-3`
 **Screens:** `screens.md` section 8

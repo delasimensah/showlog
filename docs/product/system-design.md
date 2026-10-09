@@ -253,7 +253,7 @@ Files under `convex/`, one per area. Public functions are signed-in only.
   - `(auth)/sign-in.tsx`
   - `(main-app)/(tabs)/_layout.tsx` with a stack on each tab: `up-next/`, `upcoming/`, `discover/`, `my-shows/`. Each stack's first screen is `index.tsx`.
   - `(main-app)/search.tsx`
-  - `(main-app)/show/[tvmazeId]/index.tsx` and `(main-app)/show/[tvmazeId]/season/[season].tsx`
+  - `(main-app)/show/[tvmazeId]/index.tsx` and `(main-app)/show/[tvmazeId]/season/[season].tsx`. The show screen is a screen of the main stack, so the system back button returns to the screen that opened it.
   - `(main-app)/profile.tsx`, `(main-app)/alerts-intro.tsx`
 - The episode sheet is a bottom sheet in `components/bottom-sheets/`, opened through `BottomSheetsManager`.
 - Feature components in `components/[feature]/` (for example `components/shows/`, `components/up-next/`). Screens in `components/screens/`.

@@ -1,6 +1,12 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { fetchJson, stripHtml, toEpisodeCopies, toShowCopy } from "./tvmaze";
+import {
+  fetchJson,
+  stripHtml,
+  toEpisodeCopies,
+  toShowCopy,
+  countNumberedSeasons,
+} from "./tvmaze";
 
 afterEach(() => {
   vi.useRealTimers();
@@ -12,6 +18,19 @@ describe("stripHtml", () => {
     expect(stripHtml("<p>Monkey D. Luffy &amp; his crew.</p>")).toBe(
       "Monkey D. Luffy & his crew."
     );
+  });
+});
+
+describe("countNumberedSeasons", () => {
+  it("counts numbered seasons and drops specials", () => {
+    expect(
+      countNumberedSeasons([
+        { number: 1 },
+        { number: 1999 },
+        { number: null },
+        { number: 0 },
+      ])
+    ).toBe(2);
   });
 });
 
