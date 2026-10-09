@@ -33,6 +33,14 @@ export {
 export { SHOW_STATUSES, showStatus } from "./showStatus";
 export type { ShowStatus, ShowStatusInput } from "./showStatus";
 
+export {
+  formatAirTime,
+  hourStart,
+  upcomingDetail,
+  upcomingSections,
+} from "./upcoming";
+export type { UpcomingAirTime, UpcomingSection } from "./upcoming";
+
 // Validation utilities
 export {
   isValidEmail,

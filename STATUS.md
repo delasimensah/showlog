@@ -11,7 +11,7 @@
 - **Client / job:** Showlog. Personal iPhone app for tracking TV shows. No client, no invoice, not published.
 - **Backend:** Convex (dev deployment only, team `dm-studios`)
 - **Outcome:** B (studio accounts)
-- **Current phase:** SHOW-7 is Done. TVmaze changes reach the app within a day. Next is SHOW-8: Upcoming lists what airs next. Setup is already done: scaffold, GitHub, Expo, Convex, design system, icon, system design, screens, tickets SHOW-1 to SHOW-12, and both phone builds. iPhone app (Expo SDK 57), shared package, and Convex Auth. Native packages for this version are installed. Private GitHub repo on `main`. Branches are deleted automatically after merge. Convex agent guidelines and skills are installed.
+- **Current phase:** SHOW-8 is Done. Upcoming lists what airs next. Next is SHOW-9: I can put a show on Watch later, stop it, or remove it. Setup is already done: scaffold, GitHub, Expo, Convex, design system, icon, system design, screens, tickets SHOW-1 to SHOW-12, and both phone builds. iPhone app (Expo SDK 57), shared package, and Convex Auth. Native packages for this version are installed. Private GitHub repo on `main`. Branches are deleted automatically after merge. Convex agent guidelines and skills are installed.
 - **Last updated:** 2026-10-09
 - **Blocked / open:** The Apple push key waits for SHOW-11.
 
@@ -46,7 +46,7 @@
 - [x] System design (8 Oct 2026) — `docs/product/system-design.md`
 - [x] Design system locked (8 Oct 2026): mint on ink, Plus Jakarta Sans — `docs/design/design-system.md`. Tokens wired into `packages/shared` colours, the Tailwind theme, and the font loader.
 - [x] Screen design (8 Oct 2026): TV Time screenshots plus Mobbin references for each screen — `docs/design/screens.md`. No UX Pilot.
-- [x] Tickets SHOW-1 to SHOW-12 in `docs/product/linear-tickets.md`. SHOW-1, SHOW-2, SHOW-3, SHOW-4, SHOW-5, SHOW-6, and SHOW-7 are Done. SHOW-8 to SHOW-12 are Todo.
+- [x] Tickets SHOW-1 to SHOW-12 in `docs/product/linear-tickets.md`. SHOW-1, SHOW-2, SHOW-3, SHOW-4, SHOW-5, SHOW-6, SHOW-7, and SHOW-8 are Done. SHOW-9 to SHOW-12 are Todo.
 - [x] One development build, one preview build (8 Oct 2026, Plus Jakarta Sans package already installed). Simulator: https://expo.dev/accounts/dm-studios/projects/showlog/builds/bf5a7b93-ccf6-41d4-8999-41b67c64bdec. Preview: https://expo.dev/accounts/dm-studios/projects/showlog/builds/21398ded-56e6-4244-ac90-336c5b0a4d0a.
 - [ ] Build
 
@@ -54,7 +54,7 @@
 
 ## Next action (one line)
 
-SHOW-8 is next. Upcoming lists what airs next.
+SHOW-9 is next. I can put a show on Watch later, stop it, or remove it.
 
 ---
 
@@ -75,3 +75,4 @@ SHOW-8 is next. Upcoming lists what airs next.
 - SHOW-5 pull request: https://github.com/delasimensah/showlog/pull/5
 - SHOW-6 pull request: https://github.com/delasimensah/showlog/pull/6
 - SHOW-7 pull request: https://github.com/delasimensah/showlog/pull/7
+- SHOW-8 pull request: https://github.com/delasimensah/showlog/pull/8

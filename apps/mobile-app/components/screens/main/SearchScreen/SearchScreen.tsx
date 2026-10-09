@@ -1,5 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Stack, useRouter } from "expo-router";
+import {
+  type NativeStackNavigationProp,
+  Stack,
+  useNavigation,
+  useRouter,
+} from "expo-router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   NativeScrollEvent,
@@ -8,20 +13,20 @@ import {
   ScrollView,
   View,
 } from "react-native";
+import type { SearchBarCommands } from "react-native-screens";
 
 import { COLORS } from "@/constants";
-import { useAddShow, useSearchShows } from "@/hooks";
+import { useAddShow, useListedShows, useSearchShows } from "@/hooks";
 import { showErrorToast } from "@/utils";
 
 import AddButton from "../../../ui/AddButton/AddButton";
 import Poster from "../../../ui/Poster/Poster";
-import SkeletonCard from "../../../ui/SkeletonCard/SkeletonCard";
 import { HStack, VStack } from "../../../ui/Stack/Stack";
 import Text from "../../../ui/Text/Text";
+import SearchScreenSkeleton from "./SearchScreenSkeleton";
 
 const SEARCH_MIN_LENGTH = 2;
 const SEARCH_DEBOUNCE_MS = 300;
-const SKELETON_NAME_WIDTHS = [180, 140, 210, 160];
 
 interface SearchHit {
   tvmazeId: number;
@@ -65,27 +70,6 @@ function SearchMessage({
   );
 }
 
-function SearchSkeleton() {
-  return (
-    <VStack spacing="md" className="pt-4">
-      {SKELETON_NAME_WIDTHS.map((nameWidth) => (
-        <HStack key={nameWidth} align="center" spacing="none" className="gap-3">
-          <SkeletonCard width={48} height={72} radius={10} />
-          <VStack spacing="xs" className="flex-1">
-            <SkeletonCard width={nameWidth} height={14} radius={4} />
-            <SkeletonCard
-              width={Math.round(nameWidth * 0.7)}
-              height={9}
-              radius={4}
-            />
-          </VStack>
-          <SkeletonCard width={32} height={32} radius={16} />
-        </HStack>
-      ))}
-    </VStack>
-  );
-}
-
 function searchText(
   value: string | { nativeEvent?: { text?: string } }
 ): string {
@@ -94,8 +78,11 @@ function searchText(
 
 const SearchScreen: React.FC = () => {
   const router = useRouter();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<Record<string, undefined>>>();
   const searchShows = useSearchShows();
   const addShow = useAddShow();
+  const listed = useListedShows();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchHit[] | undefined>(undefined);
   const [searching, setSearching] = useState(false);
@@ -103,6 +90,16 @@ const SearchScreen: React.FC = () => {
   const [addingId, setAddingId] = useState<number | null>(null);
   const requestId = useRef(0);
   const pullArmed = useRef(true);
+  const searchBar = useRef<SearchBarCommands>(null);
+
+  // The field opens active, so the x is there without a tap. The native
+  // autoFocus flag does not do this when the screen is pushed, and focusing
+  // before the push finishes is ignored.
+  useEffect(
+    () =>
+      navigation.addListener("transitionEnd", () => searchBar.current?.focus()),
+    [navigation]
+  );
 
   const runSearch = useCallback(
     async (text: string) => {
@@ -141,11 +138,6 @@ const SearchScreen: React.FC = () => {
     setAddingId(hit.tvmazeId);
     try {
       await addShow({ tvmazeId: hit.tvmazeId });
-      setResults((current) =>
-        current?.map((row) =>
-          row.tvmazeId === hit.tvmazeId ? { ...row, onList: true } : row
-        )
-      );
     } catch {
       showErrorToast("Could not add this show.");
     } finally {
@@ -182,7 +174,7 @@ const SearchScreen: React.FC = () => {
       />
     );
   } else if (showSkeleton) {
-    body = <SearchSkeleton />;
+    body = <SearchScreenSkeleton />;
   } else if (showError) {
     body = (
       <SearchMessage
@@ -202,7 +194,12 @@ const SearchScreen: React.FC = () => {
   } else if (results !== undefined) {
     body = (
       <VStack spacing="md" className="py-4">
-        {results.map((hit) => {
+        {results.map((found) => {
+          // My list is live, so a show added on its own screen shows here at once.
+          const hit = {
+            ...found,
+            onList: listed?.includes(found.tvmazeId) ?? found.onList,
+          };
           const meta = metaLine(hit);
           return (
             <HStack
@@ -272,7 +269,7 @@ const SearchScreen: React.FC = () => {
   return (
     <>
       <Stack.SearchBar
-        autoFocus
+        ref={searchBar}
         autoCapitalize="none"
         hideNavigationBar
         hideWhenScrolling={false}

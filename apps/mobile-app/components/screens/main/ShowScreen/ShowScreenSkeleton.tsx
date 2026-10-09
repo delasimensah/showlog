@@ -36,7 +36,7 @@ const ShowScreenSkeleton: React.FC<ShowScreenSkeletonProps> = ({
         ) : (
           <>
             <HStack align="center" spacing="sm">
-              <SkeletonCard width={width * 0.55} height={4} radius={4} />
+              <SkeletonCard width={width * 0.55} height={6} radius={4} />
               <SkeletonCard width={48} height={9} radius={4} />
             </HStack>
             <SkeletonCard width={width - 40} height={140} radius={16} />

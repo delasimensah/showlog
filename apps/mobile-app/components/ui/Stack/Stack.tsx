@@ -10,6 +10,8 @@ export type StackJustify =
   "start" | "center" | "end" | "between" | "around" | "evenly";
 
 interface StackProps extends ViewProps {
+  /** Reaches the underlying View, for measuring. */
+  ref?: React.Ref<View>;
   /**
    * Direction of the stack
    * @default 'column'

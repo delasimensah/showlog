@@ -1,13 +1,14 @@
 import { fireEvent, render, waitFor } from "@testing-library/react-native";
-import { useRouter } from "expo-router";
+import { useNavigation, useRouter } from "expo-router";
 
-import { useAddShow, useSearchShows } from "@/hooks";
+import { useAddShow, useListedShows, useSearchShows } from "@/hooks";
 
 import SearchScreen from "./SearchScreen";
 
 jest.mock("@/hooks", () => ({
   useSearchShows: jest.fn(),
   useAddShow: jest.fn(),
+  useListedShows: jest.fn(),
 }));
 
 jest.mock("@/utils", () => ({
@@ -16,6 +17,7 @@ jest.mock("@/utils", () => ({
 
 const mockedSearch = useSearchShows as jest.Mock;
 const mockedAdd = useAddShow as jest.Mock;
+const mockedListed = useListedShows as jest.Mock;
 
 const onePiece = {
   tvmazeId: 1505,
@@ -52,6 +54,7 @@ describe("SearchScreen", () => {
     push.mockReset();
     mockedSearch.mockReturnValue(searchShows);
     mockedAdd.mockReturnValue(addShow);
+    mockedListed.mockReturnValue([]);
     (useRouter as jest.Mock).mockReturnValue({ back, push });
   });
 
@@ -64,7 +67,7 @@ describe("SearchScreen", () => {
     expect(searchShows).not.toHaveBeenCalled();
   });
 
-  it("shows matching shows and marks one as on the list after adding", async () => {
+  it("shows matching shows and adds one", async () => {
     searchShows.mockResolvedValue([onePiece, liveAction]);
     addShow.mockResolvedValue({ myShowId: "my-shows-1" });
     const { getByLabelText, getByText, getAllByLabelText } = render(
@@ -82,9 +85,26 @@ describe("SearchScreen", () => {
     fireEvent.press(getAllByLabelText("Add")[0]);
 
     await waitFor(() => {
-      expect(getByText("On your list")).toBeTruthy();
+      expect(addShow).toHaveBeenCalledWith({ tvmazeId: 1505 });
     });
-    expect(addShow).toHaveBeenCalledWith({ tvmazeId: 1505 });
+  });
+
+  it("marks a show as on the list when it is added somewhere else", async () => {
+    searchShows.mockResolvedValue([onePiece]);
+    const { getByLabelText, getByText, queryByLabelText, rerender } = render(
+      <SearchScreen />
+    );
+
+    fireEvent.changeText(getByLabelText("Search"), "one piece");
+    await waitFor(() => {
+      expect(queryByLabelText("Add")).toBeTruthy();
+    });
+
+    mockedListed.mockReturnValue([1505]);
+    rerender(<SearchScreen />);
+
+    expect(getByText("On your list")).toBeTruthy();
+    expect(queryByLabelText("Add")).toBeNull();
   });
 
   it("opens the show when the row is tapped", async () => {
@@ -115,5 +135,17 @@ describe("SearchScreen", () => {
     const { getByLabelText } = render(<SearchScreen />);
     fireEvent.press(getByLabelText("Cancel"));
     expect(back).toHaveBeenCalledTimes(1);
+  });
+
+  it("activates the field when the screen has finished opening", () => {
+    const addListener = jest.fn(() => jest.fn());
+    (useNavigation as jest.Mock).mockReturnValue({ addListener });
+
+    render(<SearchScreen />);
+
+    expect(addListener).toHaveBeenCalledWith(
+      "transitionEnd",
+      expect.any(Function)
+    );
   });
 });

@@ -24,7 +24,7 @@ Every ticket follows `.cursor/rules/` and the docs `mandatory-project-docs.mdc` 
 
 ## Status now
 
-- SHOW-1: **Done**. SHOW-2: **Done**. SHOW-3: **Done**. SHOW-4: **Done**. SHOW-5: **Done**. SHOW-6: **Done**. SHOW-7: **Done**. SHOW-8 to SHOW-12: **Todo**.
+- SHOW-1: **Done**. SHOW-2: **Done**. SHOW-3: **Done**. SHOW-4: **Done**. SHOW-5: **Done**. SHOW-6: **Done**. SHOW-7: **Done**. SHOW-8: **Done**. SHOW-9 to SHOW-12: **Todo**.
 
 ---
 
@@ -162,7 +162,7 @@ The app opens on Sign in. I create my one account, land on the four tabs, and st
 
 **How it is built**
 
-- `lists.upNext` query with the three sections. The Up next tab rows with the tick button, "+N", and "7 months ago".
+- `lists.upNext` query with the three sections. The Up next tab rows with the tick button and "+N".
 - The Where you left off card on the show screen, from the `lastWatchedEpisodeId` and `nextEpisodeId` progress fields.
 - The hourly clock job (`convex/crons.ts`, `clock.hourly` steps 1 and 2): recompute progress for shows with an episode that aired in the last hour. Alerts are added to this job in SHOW-11.
 - Empty Up next with the Discover button. Discover opens the Discover tab, which is still empty until SHOW-10. Search stays on Discover.
@@ -231,7 +231,7 @@ The app opens on Sign in. I create my one account, land on the four tabs, and st
 
 ## SHOW-8. Upcoming lists what airs next
 
-**Status:** Todo
+**Status:** Done
 **Apps:** phone, Convex
 **Branch:** `feature/SHOW-8`
 **Screens:** `screens.md` section 4
@@ -239,12 +239,12 @@ The app opens on Sign in. I create my one account, land on the four tabs, and st
 **How it is built**
 
 - `lists.upcoming({ now })` query. The phone passes the time rounded down to the hour.
-- Day grouping and the "in 7 days" countdown in `packages/shared`, using the phone's time zone.
+- Day grouping in `packages/shared`, using the phone's time zone. Today, Tomorrow, and the rest of this week by day name. Each later day is its own heading, the date.
 
 **Acceptance (yes or no)**
 
-- Episodes of my shows that have not aired are grouped Today, Tomorrow, the rest of this week by day name, then Later.
-- Each row shows the air time in phone time and the network. Date-only episodes show the date.
+- Episodes of my shows that have not aired are grouped Today, Tomorrow, the rest of this week by day name, then one heading per later day with that date.
+- Each row shows the air time in phone time. An episode with a date and no time shows "Time TBA". The network is on the show screen.
 - Episode 1 of a season shows Premiere.
 - Shows with nothing scheduled are under No date yet. Ended shows and Stopped shows are not listed.
 - Shared tests for the grouping across midnight and the week edge.

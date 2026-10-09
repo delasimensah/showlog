@@ -84,13 +84,13 @@ describe("ShowScreen", () => {
     jest.spyOn(Linking, "openURL").mockResolvedValue(true);
   });
 
-  it("keeps the menu and shows skeletons while the show loads", () => {
+  it("shows skeletons while the show loads", () => {
     mockedShow.mockReturnValue(undefined);
-    const { getByLabelText, getAllByTestId } = render(
+    const { getAllByTestId, queryByLabelText } = render(
       <ShowScreen tvmazeId={1505} />
     );
 
-    expect(getByLabelText("Menu")).toBeTruthy();
+    expect(queryByLabelText("Menu")).toBeNull();
     expect(getAllByTestId("skeleton-card").length).toBeGreaterThan(0);
   });
 

@@ -15,7 +15,6 @@ import { showErrorToast } from "@/utils";
 
 import ShowHeaderBackground from "../../../show/ShowHeaderBackground/ShowHeaderBackground";
 import ShowHeaderTitle from "../../../show/ShowHeaderTitle/ShowHeaderTitle";
-import ShowMenuButton from "../../../show/ShowMenuButton/ShowMenuButton";
 import ShowOnList from "../../../show/ShowOnList/ShowOnList";
 import ShowPicture from "../../../show/ShowPicture/ShowPicture";
 import ShowPreview from "../../../show/ShowPreview/ShowPreview";
@@ -156,7 +155,6 @@ const ShowScreen: React.FC<{ tvmazeId: number }> = ({ tvmazeId }) => {
       });
   };
 
-  const showMenu = mine === undefined || mine !== null;
   let body: React.ReactNode;
   if (mine === undefined) {
     body = <ShowScreenSkeleton width={width} />;
@@ -209,7 +207,6 @@ const ShowScreen: React.FC<{ tvmazeId: number }> = ({ tvmazeId }) => {
           scrollY={scrollY}
         />
       ) : null}
-      {showMenu ? <ShowMenuButton /> : null}
       <Animated.ScrollView
         style={{ flex: 1 }}
         contentInsetAdjustmentBehavior="never"

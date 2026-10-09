@@ -209,3 +209,165 @@ describe("myShows", () => {
     expect(byName.map((row) => row.name)).toEqual(["Alpha", "Middle", "Zebra"]);
   });
 });
+
+describe("myTvmazeIds", () => {
+  it("lists the shows on my list", async () => {
+    const t = convexTest(schema, modules);
+    const userId = await t.run(async (ctx) => {
+      return await ctx.db.insert("users", {
+        name: "Ada",
+        email: "me@example.com",
+      });
+    });
+    await addShow(t, userId, {
+      name: "Mine",
+      tvmazeId: 7,
+      watchedCount: 0,
+      addedAt: now,
+    });
+
+    const ids = await t
+      .withIdentity({ subject: `${userId}|test-session` })
+      .query(api.lists.myTvmazeIds, {});
+
+    expect(ids).toEqual([7]);
+  });
+});
+
+describe("upcoming", () => {
+  it("lists future episodes and one undated row per show", async () => {
+    const t = convexTest(schema, modules);
+    const userId = await t.run(async (ctx) => {
+      return await ctx.db.insert("users", {
+        name: "Ada",
+        email: "me@example.com",
+      });
+    });
+
+    await t.run(async (ctx) => {
+      const add = async (input: {
+        name: string;
+        tvmazeId: number;
+        status?: "Running" | "Ended";
+        network?: string;
+        stoppedAt?: number;
+        watchLater?: boolean;
+        episodes: {
+          name: string;
+          number: number;
+          airsAt?: number;
+          airTimeKnown: boolean;
+        }[];
+      }) => {
+        const showId = await ctx.db.insert("shows", {
+          tvmazeId: input.tvmazeId,
+          name: input.name,
+          genres: [],
+          status: input.status ?? "Running",
+          network: input.network,
+          seasons: [],
+          yearSeasons: false,
+          tvmazeUpdatedAt: 0,
+        });
+        for (const episode of input.episodes) {
+          await ctx.db.insert("episodes", {
+            showId,
+            tvmazeId: input.tvmazeId * 100 + episode.number,
+            season: 1,
+            number: episode.number,
+            order: episode.number,
+            name: episode.name,
+            airsAt: episode.airsAt,
+            airTimeKnown: episode.airTimeKnown,
+          });
+        }
+        await ctx.db.insert("myShows", {
+          userId,
+          showId,
+          addedAt: now,
+          watchLater: input.watchLater ?? false,
+          stoppedAt: input.stoppedAt,
+          airedCount: 0,
+          watchedCount: 0,
+          waitingAfterNext: 0,
+        });
+      };
+
+      await add({
+        name: "Next week",
+        tvmazeId: 1,
+        network: "ABC",
+        watchLater: true,
+        episodes: [
+          {
+            name: "Already on",
+            number: 1,
+            airsAt: now - DAY,
+            airTimeKnown: true,
+          },
+          {
+            name: "Premiere night",
+            number: 2,
+            airsAt: now + 2 * DAY,
+            airTimeKnown: true,
+          },
+        ],
+      });
+      await add({
+        name: "Finished run",
+        tvmazeId: 2,
+        status: "Ended",
+        episodes: [
+          {
+            name: "Finale",
+            number: 1,
+            airsAt: now + DAY,
+            airTimeKnown: true,
+          },
+        ],
+      });
+      await add({
+        name: "Stopped show",
+        tvmazeId: 3,
+        stoppedAt: now,
+        episodes: [
+          {
+            name: "Skipped",
+            number: 1,
+            airsAt: now + DAY,
+            airTimeKnown: true,
+          },
+        ],
+      });
+      await add({
+        name: "Undated",
+        tvmazeId: 4,
+        episodes: [
+          { name: "Someday", number: 1, airTimeKnown: false },
+          { name: "Later someday", number: 2, airTimeKnown: false },
+        ],
+      });
+      await add({
+        name: "Caught up",
+        tvmazeId: 5,
+        episodes: [
+          {
+            name: "Done",
+            number: 1,
+            airsAt: now - DAY,
+            airTimeKnown: true,
+          },
+        ],
+      });
+    });
+
+    const list = await t
+      .withIdentity({ subject: `${userId}|test-session` })
+      .query(api.lists.upcoming, { now });
+
+    expect(list.episodes.map((row) => row.name)).toEqual(["Premiere night"]);
+    expect(list.episodes[0]?.network).toBe("ABC");
+    expect(list.episodes[0]?.showName).toBe("Next week");
+    expect(list.noDate.map((row) => row.showName)).toEqual(["Undated"]);
+  });
+});

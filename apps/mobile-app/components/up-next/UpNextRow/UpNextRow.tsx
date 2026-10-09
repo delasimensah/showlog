@@ -1,7 +1,13 @@
 import { useRouter } from "expo-router";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Pressable } from "react-native";
-import { episodeLabel, episodeSeasonLine, timeAgo } from "shared";
+import Animated, {
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
+import { episodeLabel, episodeSeasonLine } from "shared";
 
 import Chip from "../../ui/Chip/Chip";
 import EpisodeImage from "../../ui/EpisodeImage/EpisodeImage";
@@ -28,67 +34,115 @@ export interface UpNextRowData {
 
 interface UpNextRowProps {
   row: UpNextRowData;
-  now: number;
   onTick: () => void;
 }
 
-const UpNextRow: React.FC<UpNextRowProps> = ({ row, now, onTick }) => {
+const SLIDE = 36;
+const TICK_HOLD_MS = 320;
+
+const UpNextRow: React.FC<UpNextRowProps> = ({ row, onTick }) => {
   const router = useRouter();
+  const shift = useSharedValue(0);
+  const awaitingEnter = useRef(false);
+  const holdTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [shown, setShown] = useState(row);
+  const [ticked, setTicked] = useState(false);
+  const display = row.episodeId === shown.episodeId ? row : shown;
   const seasonLine = episodeSeasonLine({
-    yearSeasons: row.yearSeasons,
-    season: row.season,
-    number: row.number,
+    yearSeasons: display.yearSeasons,
+    season: display.season,
+    number: display.number,
   });
-  const ago =
-    row.lastWatchedAt === null ? null : timeAgo(row.lastWatchedAt, now);
+  const motionStyle = useAnimatedStyle(() => ({
+    opacity: 1 - Math.abs(shift.value),
+    transform: [{ translateX: shift.value * SLIDE }],
+  }));
+
+  useEffect(() => {
+    return () => {
+      if (holdTimer.current !== null) clearTimeout(holdTimer.current);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (row.episodeId === shown.episodeId) return;
+    const next = row;
+    awaitingEnter.current = true;
+    shift.set(
+      withTiming(-1, { duration: 180 }, (finished) => {
+        if (!finished) return;
+        shift.set(1);
+        runOnJS(setShown)(next);
+        runOnJS(setTicked)(false);
+      })
+    );
+  }, [row, shown.episodeId, shift]);
+
+  useEffect(() => {
+    if (!awaitingEnter.current) return;
+    awaitingEnter.current = false;
+    shift.set(withTiming(0, { duration: 220 }));
+  }, [shown.episodeId, shift]);
 
   return (
-    <HStack align="center" spacing="sm">
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={row.showName}
-        onPress={() => router.push(`/show/${row.tvmazeId}`)}
-        className="min-w-0 flex-1"
-      >
-        <HStack align="center" spacing="sm">
-          <EpisodeImage uri={row.imageUrl ?? row.headerUrl ?? row.posterUrl} />
-          <VStack spacing="xs" className="min-w-0 flex-1">
-            <Text
-              className="font-app-bold text-[17px] text-text"
-              numberOfLines={1}
-            >
-              {row.showName}
-            </Text>
-            {seasonLine !== null ? (
-              <Text className="font-app-medium text-[13px] text-muted">
-                {seasonLine}
-              </Text>
-            ) : null}
-            <HStack align="center" spacing="xs">
-              <Text className="font-app-semibold text-[13px] text-primary">
-                {episodeLabel(row)}
-              </Text>
-              {row.waitingAfterNext > 0 ? (
-                <Chip label={`+${row.waitingAfterNext}`} />
-              ) : null}
-            </HStack>
-            <HStack spacing="none" className="min-w-0">
+    <HStack
+      align="center"
+      spacing="sm"
+      className="overflow-hidden rounded-2xl bg-surface px-4 py-3"
+    >
+      <Animated.View style={[{ flex: 1, minWidth: 0 }, motionStyle]}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={display.showName}
+          onPress={() => router.push(`/show/${display.tvmazeId}`)}
+          className="min-w-0 flex-1"
+        >
+          <HStack align="center" spacing="sm">
+            <EpisodeImage
+              uri={display.imageUrl ?? display.headerUrl ?? display.posterUrl}
+            />
+            <VStack spacing="xs" className="min-w-0 flex-1">
               <Text
-                className="shrink font-app-medium text-[13px] text-muted"
+                className="font-app-bold text-[15px] text-text"
                 numberOfLines={1}
               >
-                {row.name}
+                {display.showName}
               </Text>
-              {ago !== null ? (
+              {seasonLine !== null ? (
                 <Text className="font-app-medium text-[13px] text-muted">
-                  {` · ${ago}`}
+                  {seasonLine}
                 </Text>
               ) : null}
-            </HStack>
-          </VStack>
-        </HStack>
-      </Pressable>
-      <TickButton watched={false} onPress={onTick} />
+              <HStack align="center" spacing="xs">
+                <Text className="font-app-semibold text-[13px] text-primary">
+                  {episodeLabel(display)}
+                </Text>
+                {display.waitingAfterNext > 0 ? (
+                  <Chip label={`+${display.waitingAfterNext}`} />
+                ) : null}
+              </HStack>
+              <HStack spacing="none" className="min-w-0">
+                <Text
+                  className="shrink font-app-medium text-[13px] text-muted"
+                  numberOfLines={1}
+                >
+                  {display.name}
+                </Text>
+              </HStack>
+            </VStack>
+          </HStack>
+        </Pressable>
+      </Animated.View>
+      <TickButton
+        watched={ticked}
+        onPress={() => {
+          if (ticked) return;
+          setTicked(true);
+          holdTimer.current = setTimeout(() => {
+            onTick();
+          }, TICK_HOLD_MS);
+        }}
+      />
     </HStack>
   );
 };

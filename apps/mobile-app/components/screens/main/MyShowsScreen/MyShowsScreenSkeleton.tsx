@@ -23,7 +23,7 @@ const MyShowsScreenSkeleton: React.FC = () => {
   const columnWidth = posterColumnWidth(screenWidth);
 
   return (
-    <VStack spacing="md" className="px-5 pt-4">
+    <VStack spacing="md" className="px-5 py-4">
       {rowsOf(NAME_WIDTHS, 3).map((row, rowIndex) => (
         <HStack key={rowIndex} spacing="none" className="gap-3">
           {row.map((nameWidth) => (
@@ -37,7 +37,7 @@ const MyShowsScreenSkeleton: React.FC = () => {
                 height={columnWidth * 1.5}
                 radius={10}
               />
-              <SkeletonCard width={columnWidth} height={4} radius={2} mt={8} />
+              <SkeletonCard width={columnWidth} height={6} radius={3} mt={8} />
               <SkeletonCard
                 width={columnWidth * nameWidth}
                 height={9}

@@ -111,7 +111,7 @@ const ShowOnList: React.FC<ShowOnListProps> = ({ show, width }) => {
             router.push(`/show/${show.tvmazeId}/season/${season}`);
           }}
         />
-        <VStack spacing="sm">
+        <VStack spacing="md">
           <Text className="font-app-semibold text-xl text-text">About</Text>
           {show.summary ? <ShowSummary text={show.summary} /> : null}
           <GenreList genres={show.genres} />

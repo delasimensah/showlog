@@ -52,7 +52,15 @@ const MyShowsScreen: React.FC = () => {
 
   let body: React.ReactNode;
   if (shows === undefined) {
-    body = <MyShowsScreenSkeleton />;
+    body = (
+      <ScrollView
+        className="flex-1 bg-page"
+        contentInsetAdjustmentBehavior="automatic"
+        contentContainerStyle={{ paddingBottom: 40 }}
+      >
+        <MyShowsScreenSkeleton />
+      </ScrollView>
+    );
   } else if (shows.length === 0) {
     body = (
       <EmptyState

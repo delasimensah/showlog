@@ -30,13 +30,15 @@ const ShowHeaderTitle: React.FC<ShowHeaderTitleProps> = ({
     <VStack
       pointerEvents="none"
       spacing="none"
-      align="stretch"
+      align="center"
       style={headerTitleFrame(width, "icon")}
     >
       <Animated.Text
         numberOfLines={1}
+        ellipsizeMode="tail"
         style={[
           {
+            width: "100%",
             color: COLORS.text,
             fontFamily: FONTS.semibold,
             fontSize: 17,

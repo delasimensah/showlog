@@ -7,13 +7,18 @@ const NAME_WIDTHS = [160, 120, 180, 140, 150];
 
 const UpNextScreenSkeleton: React.FC = () => {
   return (
-    <VStack spacing="md" className="px-5 pt-4">
+    <VStack spacing="md" className="px-5 py-4">
       <SkeletonCard width={110} height={20} radius={4} />
       {NAME_WIDTHS.map((nameWidth, index) => (
-        <HStack key={nameWidth} align="center" spacing="sm">
+        <HStack
+          key={nameWidth}
+          align="center"
+          spacing="sm"
+          className="overflow-hidden rounded-2xl bg-surface px-4 py-3"
+        >
           <SkeletonCard width={128} height={72} radius={10} />
           <VStack spacing="xs" className="min-w-0 flex-1">
-            <SkeletonCard width={nameWidth} height={14} radius={4} />
+            <SkeletonCard width={nameWidth} height={11} radius={4} />
             <HStack align="center" spacing="xs">
               <SkeletonCard width={60} height={9} radius={4} />
               {index === 0 || index === 2 ? (
@@ -21,7 +26,6 @@ const UpNextScreenSkeleton: React.FC = () => {
               ) : null}
             </HStack>
             <SkeletonCard width={nameWidth * 0.8} height={9} radius={4} />
-            <SkeletonCard width={70} height={9} radius={4} />
           </VStack>
           <SkeletonCard width={40} height={40} radius={20} />
         </HStack>
