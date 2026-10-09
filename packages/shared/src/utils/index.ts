@@ -31,6 +31,8 @@ export {
 } from "./date";
 
 export { SHOW_STATUSES, showStatus } from "./showStatus";
+export { tvTime, tvTimeParts } from "./tvTime";
+export type { TvTimeParts } from "./tvTime";
 export type { ShowStatus, ShowStatusInput } from "./showStatus";
 
 export {

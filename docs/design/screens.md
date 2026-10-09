@@ -215,7 +215,7 @@ Year-season shows read "Episode 1180" on the mint line and "2026 · E25" under t
 
 **On my list:**
 
-- Header picture full width, 16:10, with a dark fade into `page` over its lower half. The show name sits on that fade, up to two lines. Pulling down stretches the picture. Scrolling up fades `page` into the system navigation bar, and the show name fades in with it, centred on the bar, on one line, ending in an ellipsis when it does not fit. The system back button sits in the navigation bar. The menu button (ellipsis) sits on the right only once the menu below exists. A poster used in place of a wide picture stays 2:3 and centred in the header, so it is not stretched.
+- Header picture full width, 16:10, with a dark fade into `page` over its lower half. The show name sits on that fade, up to two lines. Pulling down stretches the picture. Scrolling up fades the iPhone's own dark glass into the system navigation bar, and the show name fades in with it, centred on the bar, in bold, on one line, ending in an ellipsis when it does not fit. The system back button sits in the navigation bar. The menu button (ellipsis) sits on the right only once the menu below exists. A poster used in place of a wide picture stays 2:3 and centred in the header, so it is not stretched.
 - Hero title (show name, up to two lines), then the meta line "5 seasons · Netflix", then a progress summary: "48 of 73 watched" (meta line) on the left, the percentage in mint on the right, and a full-width `ProgressBar` under them. When the show is on Watch later, the bar and the percentage are blue. When it is stopped, the percentage reads Stopped in red and the bar is red.
 - **Where you left off** card: the meta line "Last watched · 12 Mar" (12), the `EpisodeLabel` (12), the episode title (15, Bold), and TVmaze's summary (13, three lines). Lines sit 8 apart. Under a `border` hairline: "Up next" (meta line), the next `EpisodeLabel` and title, and a `TickButton` on the right. With nothing ticked: a mint play circle (36) on the left, "Start with S1 | E1" (15, Bold), "Nothing watched yet" as a meta line, and the `TickButton`. Tapping an episode in the card opens the episode sheet.
 - **Seasons** (section heading, the season count in muted beside it): one `surface` card, radius 16, with a hairline between rows. Each row: "Season 4" (or "2026" for year seasons, 17, Bold) with "10/24" beside it as a meta line (a mint check circle when every episode is watched). The chevron stays at the far end. A `ProgressBar` sits under them. Tapping opens the season.
@@ -251,7 +251,7 @@ Year-season shows read "Episode 1180" on the mint line and "2026 · E25" under t
 
 **Route:** `app/(main-app)/show/[tvmazeId]/season/[season].tsx`
 
-**Header:** the system navigation bar. The system back button, then the screen title "Season 4" (or "2026") with the show name as a meta line under it. Both lines stay on one line. A long show name ends in an ellipsis before the Watch season button. A "Watch season" text button (15, Bold, mint) at the top right ticks every aired episode in the season. It reads "Season watched" in muted when nothing is left.
+**Header:** the system navigation bar. The system back button, then the screen title "Season 4" (or "2026", 17, Bold) with the show name as a meta line under it. Both lines stay on one line. A long show name ends in an ellipsis before the Watch season button. A "Watch season" text button (15, Bold, mint) at the top right ticks every aired episode in the season. It reads "Season watched" in muted when nothing is left.
 
 **Episode row:**
 
@@ -291,13 +291,13 @@ Unaired: no buttons. "Airs Friday 21:00" instead.
 
 **Layout:**
 
-- The system navigation bar. The system back button, and the screen title "Profile".
-- Two stat cards side by side, equal width: **TV time** with "8 months 1 day 12 hours" (numbers 28 ExtraBold, units 13 Medium muted), and **Episodes watched** with "9,629". The label (13, Medium, muted) sits above the number.
+- The system navigation bar. The system back button, and the screen title "Profile" (Bold).
+- Two stat cards side by side, equal width, the same padding, and the same gap between them as that padding. **Watch time** is three numbers in a row (28 ExtraBold) with the unit under each one (11 Medium, muted): months, days, hours. **Episodes watched** uses that same number size. The card label (13, Medium, muted) sits above.
 - Settings card: rows 52 tall with `border` hairlines between them. Name (the name on the right in muted), Account (email on the right in muted), Alerts (native switch from `@expo/ui`), Export my history (chevron). Export opens the share sheet with the JSON file.
 - "Show data from TVmaze" with a link and "Version 1.0.0", both meta lines, centred.
 - Sign out as a full-width `quietDanger` `Button`. It asks to confirm.
 
-**Loading:** the title, the stat labels (TV time, Episodes watched), and every settings row stay. Only the numbers wait: a bar 22 tall in each stat tile, the TV time bar about 160 wide and the episodes bar about 80 wide. The name and the email each show a bar 11 tall, about 150 wide.
+**Loading:** the title, the stat labels (Watch time, Episodes watched), and every settings row stay. Only the numbers wait: the same bar, 28 tall and 72 wide, in each stat tile. The name and the email each show a bar 11 tall, about 150 wide.
 
 **References:**
 

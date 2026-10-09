@@ -3,7 +3,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import { Alert, useWindowDimensions, View } from "react-native";
-import Animated from "react-native-reanimated";
+import Animated, { useAnimatedReaction } from "react-native-reanimated";
+import { scheduleOnRN } from "react-native-worklets";
 
 import { COLORS } from "@/constants";
 import {
@@ -16,9 +17,8 @@ import {
   useShowHeaderScroll,
   useStopShow,
 } from "@/hooks";
-import { showErrorToast } from "@/utils";
+import { fillOpacity, showErrorToast } from "@/utils";
 
-import ShowHeaderBackground from "../../../show/ShowHeaderBackground/ShowHeaderBackground";
 import ShowHeaderTitle from "../../../show/ShowHeaderTitle/ShowHeaderTitle";
 import ShowMenu from "../../../show/ShowMenu/ShowMenu";
 import ShowOnList from "../../../show/ShowOnList/ShowOnList";
@@ -128,16 +128,31 @@ const ShowScreen: React.FC<{ tvmazeId: number }> = ({ tvmazeId }) => {
     setRetry((current) => current + 1);
   };
   const { scrollY, onScroll } = useShowHeaderScroll(retryFromPull);
+  const [blurred, setBlurred] = useState(false);
+
+  useAnimatedReaction(
+    () => fillOpacity(scrollY.value, threshold),
+    (opacity, previous) => {
+      const next = opacity > 0;
+      const prev = (previous ?? 0) > 0;
+      if (next === prev) return;
+      scheduleOnRN(setBlurred, next);
+    },
+    [threshold]
+  );
 
   useEffect(() => {
     navigation.setOptions({
       headerTransparent: true,
       headerShadowVisible: false,
       headerStyle: { backgroundColor: "transparent" },
-      scrollEdgeEffects: { top: "hidden" },
-      headerBackground: () => (
-        <ShowHeaderBackground scrollY={scrollY} threshold={threshold} />
-      ),
+      scrollEdgeEffects: {
+        top: "hidden",
+        bottom: "hidden",
+        left: "hidden",
+        right: "hidden",
+      },
+      headerBlurEffect: blurred ? "systemChromeMaterialDark" : "none",
       headerTitle: () => (
         <ShowHeaderTitle
           name={headerName}
@@ -151,12 +166,12 @@ const ShowScreen: React.FC<{ tvmazeId: number }> = ({ tvmazeId }) => {
       navigation.setOptions({
         title: "",
         headerTitle: "",
-        headerBackground: undefined,
+        headerBlurEffect: "none",
         headerTransparent: true,
         headerStyle: { backgroundColor: "transparent" },
       });
     };
-  }, [headerName, navigation, scrollY, threshold]);
+  }, [blurred, headerName, navigation, scrollY, threshold]);
 
   const report = () => {
     showErrorToast("Could not update this show.");

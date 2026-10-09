@@ -24,7 +24,7 @@ Every ticket follows `.cursor/rules/` and the docs `mandatory-project-docs.mdc` 
 
 ## Status now
 
-- SHOW-1: **Done**. SHOW-2: **Done**. SHOW-3: **Done**. SHOW-4: **Done**. SHOW-5: **Done**. SHOW-6: **Done**. SHOW-7: **Done**. SHOW-8: **Done**. SHOW-9: **Done**. SHOW-10: **Done**. SHOW-11 to SHOW-12: **Todo**.
+- SHOW-1: **Done**. SHOW-2: **Done**. SHOW-3: **Done**. SHOW-4: **Done**. SHOW-5: **Done**. SHOW-6: **Done**. SHOW-7: **Done**. SHOW-8: **Done**. SHOW-9: **Done**. SHOW-10: **Done**. SHOW-11: **Done**. SHOW-12: **Todo**.
 
 ---
 
@@ -308,22 +308,22 @@ The app opens on Sign in. I create my one account, land on the four tabs, and st
 
 ## SHOW-11. Profile shows my stats and I can export my history
 
-**Status:** Todo
+**Status:** Done
 **Apps:** phone, Convex, shared
 **Branch:** `feature/SHOW-11`
 **Screens:** `screens.md` section 11
 
 **How it is built**
 
-- `profile.stats` query from `userStats`. TV time as months, days, and hours in `packages/shared` (a month is 30 days).
+- `profile.stats` query from `userStats`. Watch time as months, days, and hours in `packages/shared` (a month is 30 days).
 - `profile.exportHistory` action. The phone writes `showlog-history-YYYY-MM-DD.json` with `expo-file-system` and opens the share sheet with `expo-sharing`.
 - "Show data from TVmaze" with a link and the app version on Profile.
 
 **Acceptance (yes or no)**
 
-- Profile shows episodes watched and TV time, matching my ticks. A missing runtime uses the show's average, or zero.
+- Profile shows episodes watched and Watch time, matching my ticks. A missing runtime uses the show's average, or zero.
 - Export opens the share sheet and Save to Files writes one JSON file with every show (added time, status) and every watched episode (show, season, number, title, watched time).
-- Shared tests for the TV time format.
+- Shared tests for the Watch time format.
 
 **Tested on:** simulator for stats. The iPhone for Save to Files.
 

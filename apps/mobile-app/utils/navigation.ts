@@ -31,7 +31,7 @@ export const defaultStackScreenOptions = {
   headerTintColor: COLORS.text,
   headerTitleStyle: {
     color: COLORS.text,
-    fontFamily: "App-Regular",
+    fontFamily: FONTS.bold,
   },
   contentStyle: {
     backgroundColor: COLORS.page,
