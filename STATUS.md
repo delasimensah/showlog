@@ -71,3 +71,4 @@ SHOW-5 is next. Up next shows what to watch, and the show remembers where you le
 - SHOW-1 pull request: https://github.com/delasimensah/showlog/pull/1
 - SHOW-2 pull request: https://github.com/delasimensah/showlog/pull/2
 - SHOW-3 pull request: https://github.com/delasimensah/showlog/pull/3
+- SHOW-4 pull request: https://github.com/delasimensah/showlog/pull/4
