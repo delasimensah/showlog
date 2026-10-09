@@ -77,3 +77,4 @@ SHOW-11 is next. Profile shows my stats and I can export my history.
 - SHOW-7 pull request: https://github.com/delasimensah/showlog/pull/7
 - SHOW-8 pull request: https://github.com/delasimensah/showlog/pull/8
 - SHOW-9 pull request: https://github.com/delasimensah/showlog/pull/9
+- SHOW-10 pull request: https://github.com/delasimensah/showlog/pull/10
