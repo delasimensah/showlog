@@ -198,7 +198,7 @@ Files under `convex/`, one per area. Public functions are signed-in only.
 
 **`discover.ts`**
 
-- `rows()` query: the three rows for my state (section 5 of the locked decisions). Each row returns the 100 best-rated matches that are not on my list. The phone picks 20 at random and reshuffles on open and on pull down. Picking on the phone is required, because Convex queries must give the same answer every time they run.
+- `rows()` query: the three rows for my state (section 5 of the locked decisions). Each row returns the 100 best-rated matches that are not on my list. The phone picks 20 once a day and keeps them until tomorrow. Picking on the phone is required, because Convex queries must give the same answer every time they run.
 
 **`profile.ts`**
 
@@ -259,7 +259,7 @@ Files under `convex/`, one per area. Public functions are signed-in only.
 - The episode sheet is a bottom sheet in `components/bottom-sheets/`, opened through `BottomSheetsManager`.
 - Feature components in `components/[feature]/` (for example `components/shows/`, `components/up-next/`). Screens in `components/screens/`.
 - Data hooks in `hooks/` wrap the Convex calls, so screens do not import `api` directly.
-- Zustand only for phone-side choices: the My shows sort and filter (saved to the phone with AsyncStorage) and the Discover shuffle seed.
+- Zustand only for phone-side choices: the My shows sort and filter (saved to the phone with AsyncStorage).
 - Native iPhone controls from `@expo/ui` for the show menu, the sort and filter choices, and the alerts switch.
 
 ---

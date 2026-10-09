@@ -90,7 +90,7 @@ Every outside thing this app depends on, with source, rights, and how it gets in
 
 1. I sign in.
 2. I search for a show by name, see matching shows with poster, type (for example Animation), language, first-air year, and network, and add one to my list.
-3. **Discover** shows rows of shows I may like, picked at random from the suggestion pool and shuffled each time I open it or pull down. Shows already on my list are left out. I can add a show straight from its card, or open it to read about it first.
+3. **Discover** shows rows of shows I may like, picked from the suggestion pool. The same 20 stay until the next day. Shows already on my list are left out. I can add a show straight from its card, or open it to read about it first.
    - **Before I add any shows:** Popular anime, Popular right now (running shows), and Top rated (rating 8 or more).
    - **After I add shows:** Because you watch anime (only if anime is on my list), More of my two most common genres (for example "More Drama"), and Top rated.
    - Each row shows 20 shows picked at random from the 100 best-rated matches.
@@ -170,7 +170,7 @@ Every outside thing this app depends on, with source, rights, and how it gets in
 2. Watching (tab)
 3. Upcoming (tab)
 4. My shows (tab), with a sort and filter sheet
-5. Discover (tab): rows of suggested shows with an Add button on each card, shuffled on open and on pull down
+5. Discover (tab): rows of suggested shows with an Add button on each card. The same 20 stay until the next day.
 6. Search (opened from Discover)
 7. Show: header picture, name, seasons and network, progress bar, Where you left off card, seasons, and a menu with Watch later, Stop watching, and Remove from my list. For a show opened from Discover or Search that is not on my list yet: header picture, name, genres, rating, status, network, number of seasons, summary, and an Add button. Episodes appear once it is added.
 8. Season: episode list with ticks, countdowns for unaired episodes, and Watched up to here

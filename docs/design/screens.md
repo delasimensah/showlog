@@ -159,7 +159,7 @@ Year-season shows read "Episode 1180" on the mint line and "2026 · E25" under t
 
 **Card:** medium `Poster` with an `AddButton` 8 in from its bottom right. Under it the poster label (two lines) and the year as a meta line. After adding, the meta line reads "Added".
 
-**Behaviour:** tapping the poster opens the show. Opening the tab or pulling down reshuffles every row.
+**Behaviour:** tapping the poster opens the show. Each row keeps the same 20 shows until the next day.
 
 **Loading:** the title and search button stay. Three rows, each with a heading bar (20 tall, 140 wide) and four cards: a 120 × 180 poster block (radius 10) with a 32 circle 8 in from its bottom right, then a two-line name (two 9-tall bars, the second shorter) and a year bar (9 tall, 32 wide). The fourth card is cut off at the screen edge, the same as the loaded row.
 

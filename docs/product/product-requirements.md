@@ -43,7 +43,7 @@ Each flow lists what must be true for it to count as done.
 - Before I add any shows, the rows are Popular anime, Popular right now (running shows), and Top rated (rating 8 or more).
 - After I add shows, the rows are Because you watch anime (only if anime is on my list), More of my two most common genres (for example "More Drama"), and Top rated.
 - A show counts as anime if TVmaze gives it the Anime genre, or if it is Japanese animation.
-- Each row shows 20 shows picked at random from the 100 best-rated matches. Opening the tab or pulling down shuffles them.
+- Each row shows 20 shows picked from the 100 best-rated matches. That pick lasts until the next day.
 - Each card shows the poster, name, and year, with an Add button. Adding works from the card, and the card shows "Added".
 - Tapping a card opens the show with its genres, rating, status, network, number of seasons, summary, and an Add button.
 - The suggestion pool is filled once during setup, so Discover is never empty on the first open.
@@ -128,7 +128,7 @@ References for each screen are in `docs/design/references/tvtime/`. Mobbin refer
 2. **Watching** (tab) — sections Up next, Paused for a while, Not started. Empty state: "Add the shows you watch" with a Discover button. Reference: `01-watch-list.jpg`.
 3. **Upcoming** (tab) — date-grouped list. Empty state: "Nothing scheduled for your shows yet." References: `03`, `04`.
 4. **My shows** (tab) — poster grid, sort and filter sheet. Profile icon in the header. Empty state sends you to Discover. References: `06`, `07`.
-5. **Discover** (tab) — rows of suggested shows, each card with poster, name, year, and Add. Search button in the header. Pull down to shuffle.
+5. **Discover** (tab) — rows of suggested shows, each card with poster, name, year, and Add. Search button in the header. The same 20 stay until the next day.
 6. **Search** — search field, results with Add.
 7. **Show** — header picture, name, seasons and network, progress bar, Where you left off card, seasons, menu (Watch later, Stop watching, Remove from my list), TVmaze credit. A show not on my list yet shows genres, rating, status, network, number of seasons, summary, and Add instead of episodes. References: `10`, `11`, `14`, `16`.
 8. **Season** (opens inside the show) — episode rows with picture, number, title, tick or countdown. Watch season. References: `12`, `13`.
