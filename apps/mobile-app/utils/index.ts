@@ -22,6 +22,7 @@ export {
   showSuccessToast,
 } from "./toastUtils";
 
+export { applyAvailableUpdate } from "./applyAvailableUpdate";
 export { keepDayShows, localDay } from "./dayShows";
 export { saveHistoryFile } from "./exportHistory";
 export { headerTitleFrame } from "./headerTitleFrame";

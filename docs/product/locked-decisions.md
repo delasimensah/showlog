@@ -209,7 +209,7 @@ From the rule that native packages go in before the first cloud build, so one de
 - `expo-haptics` (a small tap feel when ticking an episode)
 - `@expo/ui` (native iPhone menus, sheets, pickers, and toggles, built with SwiftUI)
 - `expo-file-system` and `expo-sharing` (export my history as a file)
-- `expo-updates` (send code changes to the preview app without a new build)
+- `expo-updates` (send code changes to the preview app without a new build). The preview app checks on open and reloads into that code before the first screen. The development app uses Metro and skips the check.
 - `expo-splash-screen`, `expo-font`, and the chosen Google Font package
 - App icon and splash screen, made before the first build
 

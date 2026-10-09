@@ -32,3 +32,4 @@ export { useTickEpisode } from "./shows/useTickEpisode";
 export { useUntickEpisode } from "./shows/useUntickEpisode";
 export { useWatchSeason } from "./shows/useWatchSeason";
 export { useWatchUpTo } from "./shows/useWatchUpTo";
+export { useApplyAvailableUpdate } from "./updates/useApplyAvailableUpdate";

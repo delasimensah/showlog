@@ -23,6 +23,7 @@ import {
   SuccessToast,
 } from "@/components";
 import { COLORS, FONT_LOADING_MAP } from "@/constants";
+import { useApplyAvailableUpdate } from "@/hooks";
 import {
   defaultStackScreenOptions,
   navigationTheme,
@@ -41,18 +42,19 @@ const RootLayout = () => {
   const [loaded, error] = useFonts({
     ...FONT_LOADING_MAP,
   });
+  const isCheckingUpdate = useApplyAvailableUpdate();
 
   useEffect(() => {
     if (error) throw error;
   }, [error]);
 
   useEffect(() => {
-    if (loaded) {
+    if (loaded && !isCheckingUpdate) {
       void SplashScreen.hideAsync();
     }
-  }, [loaded]);
+  }, [isCheckingUpdate, loaded]);
 
-  if (!loaded) {
+  if (!loaded || isCheckingUpdate) {
     return <LoadingScreen />;
   }
 
