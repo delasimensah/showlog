@@ -144,6 +144,45 @@ jest.mock("expo-haptics", () => ({
   ImpactFeedbackStyle: { Light: "light" },
 }));
 
+jest.mock("@expo/ui/swift-ui", () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const mockReact = require("react");
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { Text, View } = require("react-native");
+  const Pass = ({ children }: { children?: unknown }) =>
+    mockReact.createElement(View, null, children);
+  return {
+    Host: Pass,
+    BottomSheet: ({
+      children,
+      isPresented,
+    }: {
+      children?: unknown;
+      isPresented?: boolean;
+    }) => (isPresented ? mockReact.createElement(View, null, children) : null),
+    Group: Pass,
+    Form: Pass,
+    Section: ({ children, title }: { children?: unknown; title?: string }) =>
+      mockReact.createElement(
+        View,
+        null,
+        title ? mockReact.createElement(Text, null, title) : null,
+        children
+      ),
+    Picker: Pass,
+    Text: ({ children }: { children?: unknown }) =>
+      mockReact.createElement(Text, null, children),
+  };
+});
+
+jest.mock("@expo/ui/swift-ui/modifiers", () => ({
+  pickerStyle: () => ({}),
+  tag: () => ({}),
+  frame: () => ({}),
+  presentationDragIndicator: () => ({}),
+  preferredColorScheme: () => ({}),
+}));
+
 jest.mock("@expo/ui/community/menu", () => {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const mockReact = require("react");

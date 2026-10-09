@@ -26,6 +26,7 @@ export { headerTitleFrame } from "./headerTitleFrame";
 export { fillOpacity } from "./showHeaderFade";
 export { playTickHaptic } from "./tickHaptic";
 export { joinMeta, seasonsLabel } from "./showLabel";
+export { posterColumnWidth } from "./posterColumnWidth";
 export { watchedShare } from "./watchedShare";
 
 // Import cn from shared package
