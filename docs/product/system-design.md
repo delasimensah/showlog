@@ -153,6 +153,7 @@ One internal helper, `recomputeProgress(ctx, myShowId, now)` in `convex/progress
 - Aired = `airsAt` is at or before now. When the time is unknown, aired = the date is before today in UTC.
 - Next episode = the lowest `order` that has aired and is not ticked.
 - `waitingAfterNext` = aired, not ticked, after the next episode. Shown as "+N" only when it is above zero.
+- Last watched = the ticked episode furthest along in airing order. Watch season and watched up to here move it to the end of what they just marked, so a show that is caught up does not stay on an earlier single tick. The date is when that episode was ticked.
 - Show status (for filters and labels), worked out in `packages/shared` from the progress fields, the TVmaze status, `watchLater`, and `stoppedAt`: Stopped, Watch later, Not started, Finished, Up to date, Watching. Stopped and Watch later win when set.
 
 **Size check:** One Piece has 1,181 episodes. Recomputing reads that many rows once, which is far below Convex's per-function read limit. Up next itself reads only `myShows` rows and the next episode for each, so it stays small no matter how long a show is.
@@ -320,7 +321,7 @@ The tickets follow this order (full text in `linear-tickets.md`):
 8. Upcoming
 9. Watch later, Stop watching, and Remove
 10. Discover and the weekly pool
-11. Phone alerts
-12. Profile stats and export
+11. Profile stats and export
+12. Phone alerts
 
-That is the priority in the product requirements: search, ticking, Up next, and Where you left off first. Then My shows, Upcoming, and Discover. Then alerts. Then stats and export.
+That is the priority in the product requirements: search, ticking, Up next, and Where you left off first. Then My shows, Upcoming, and Discover. Then stats and export. Then alerts.

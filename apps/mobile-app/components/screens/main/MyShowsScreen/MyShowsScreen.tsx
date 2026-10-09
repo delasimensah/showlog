@@ -98,6 +98,8 @@ const MyShowsScreen: React.FC = () => {
                   posterUrl={show.posterUrl}
                   watchedCount={show.watchedCount}
                   airedCount={show.airedCount}
+                  watchLater={show.status === "Watch later"}
+                  stopped={show.status === "Stopped"}
                   width={columnWidth}
                   onPress={() => router.push(`/show/${show.tvmazeId}`)}
                 />

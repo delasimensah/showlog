@@ -42,6 +42,8 @@ interface ShowOnListProps {
     }[];
     watchedCount: number;
     airedCount: number;
+    watchLater: boolean;
+    stopped: boolean;
     waitingAfterNext: number;
     leftOff: (ListedEpisode & { watchedAt: number }) | null;
     upNext: ListedEpisode | null;
@@ -79,7 +81,12 @@ const ShowOnList: React.FC<ShowOnListProps> = ({ show, width }) => {
         name={show.name}
         meta={joinMeta([seasonsLabel(show.seasons.length), show.network])}
       >
-        <ProgressSummary watched={show.watchedCount} aired={show.airedCount} />
+        <ProgressSummary
+          watched={show.watchedCount}
+          aired={show.airedCount}
+          watchLater={show.watchLater}
+          stopped={show.stopped}
+        />
       </ShowHero>
       <VStack spacing="lg" className="mt-6 bg-page px-5 pb-10">
         <ContinueCard

@@ -1,7 +1,15 @@
 import { fireEvent, render, waitFor } from "@testing-library/react-native";
-import { Linking } from "react-native";
+import { Alert, Linking } from "react-native";
 
-import { useAddShow, usePreviewShow, useShow } from "@/hooks";
+import {
+  useAddShow,
+  usePreviewShow,
+  useRemoveShow,
+  useResumeShow,
+  useSetWatchLater,
+  useShow,
+  useStopShow,
+} from "@/hooks";
 
 import ShowScreen from "./ShowScreen";
 
@@ -9,6 +17,10 @@ jest.mock("@/hooks", () => ({
   useShow: jest.fn(),
   usePreviewShow: jest.fn(),
   useAddShow: jest.fn(),
+  useSetWatchLater: jest.fn(),
+  useStopShow: jest.fn(),
+  useResumeShow: jest.fn(),
+  useRemoveShow: jest.fn(),
   useShowHeaderScroll: () => ({
     scrollY: { value: 0 },
     onScroll: jest.fn(),
@@ -26,6 +38,10 @@ jest.mock("@/utils", () => ({
 const mockedShow = useShow as jest.Mock;
 const mockedPreview = usePreviewShow as jest.Mock;
 const mockedAdd = useAddShow as jest.Mock;
+const mockedSetWatchLater = useSetWatchLater as jest.Mock;
+const mockedStop = useStopShow as jest.Mock;
+const mockedResume = useResumeShow as jest.Mock;
+const mockedRemove = useRemoveShow as jest.Mock;
 
 const onList = {
   showId: "shows-1",
@@ -43,6 +59,9 @@ const onList = {
   ],
   watchedCount: 0,
   airedCount: 20,
+  myShowId: "my-shows-1",
+  watchLater: false,
+  stopped: false,
   waitingAfterNext: 0,
   leftOff: null,
   upNext: {
@@ -75,12 +94,28 @@ const preview = {
 describe("ShowScreen", () => {
   const previewShow = jest.fn();
   const addShow = jest.fn();
+  const setWatchLater = jest.fn();
+  const stopShow = jest.fn();
+  const resumeShow = jest.fn();
+  const removeShow = jest.fn();
 
   beforeEach(() => {
     previewShow.mockReset();
     addShow.mockReset();
+    setWatchLater.mockReset();
+    stopShow.mockReset();
+    resumeShow.mockReset();
+    removeShow.mockReset();
+    setWatchLater.mockResolvedValue(null);
+    stopShow.mockResolvedValue(null);
+    resumeShow.mockResolvedValue(null);
+    removeShow.mockResolvedValue(null);
     mockedPreview.mockReturnValue(previewShow);
     mockedAdd.mockReturnValue(addShow);
+    mockedSetWatchLater.mockReturnValue(setWatchLater);
+    mockedStop.mockReturnValue(stopShow);
+    mockedResume.mockReturnValue(resumeShow);
+    mockedRemove.mockReturnValue(removeShow);
     jest.spyOn(Linking, "openURL").mockResolvedValue(true);
   });
 
@@ -137,6 +172,36 @@ describe("ShowScreen", () => {
     await waitFor(() => {
       expect(addShow).toHaveBeenCalledWith({ tvmazeId: 44702 });
     });
+  });
+
+  it("saves the show for later, and asks before removing it", () => {
+    mockedShow.mockReturnValue(onList);
+    const back = jest.fn();
+    const { useRouter } = jest.requireMock("expo-router") as {
+      useRouter: jest.Mock;
+    };
+    useRouter.mockReturnValue({
+      push: jest.fn(),
+      replace: jest.fn(),
+      back,
+      canGoBack: jest.fn(() => true),
+    });
+    const alert = jest.spyOn(Alert, "alert").mockImplementation(() => {});
+    const { getByLabelText } = render(<ShowScreen tvmazeId={1505} />);
+
+    fireEvent.press(getByLabelText("Watch later"));
+    expect(setWatchLater).toHaveBeenCalledWith({
+      myShowId: "my-shows-1",
+      on: true,
+    });
+
+    fireEvent.press(getByLabelText("Remove from my list"));
+    const buttons = alert.mock.calls[0]?.[2] as {
+      text?: string;
+      onPress?: () => void;
+    }[];
+    buttons.find((button) => button.text === "Remove")?.onPress?.();
+    expect(removeShow).toHaveBeenCalledWith({ myShowId: "my-shows-1" });
   });
 
   it("keeps a long summary closed until More", async () => {

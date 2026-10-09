@@ -82,7 +82,7 @@ const UpNextScreen: React.FC = () => {
 
   return (
     <>
-      <Stack.Title large>Up next</Stack.Title>
+      <Stack.Title large>Watching</Stack.Title>
       {body}
     </>
   );

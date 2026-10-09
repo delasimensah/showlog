@@ -2,6 +2,33 @@ import { api } from "@convex/_generated/api";
 import type { Id } from "@convex/_generated/dataModel";
 import { useMutation } from "convex/react";
 
+function leftOffNow(episode: {
+  episodeId: Id<"episodes">;
+  season: number;
+  number: number;
+  order: number;
+  name: string;
+  summary: string | null;
+  runtime: number | null;
+  imageUrl: string | null;
+  airsAt: number | null;
+  airTimeKnown: boolean;
+}) {
+  return {
+    episodeId: episode.episodeId,
+    season: episode.season,
+    number: episode.number,
+    order: episode.order,
+    name: episode.name,
+    summary: episode.summary,
+    runtime: episode.runtime,
+    imageUrl: episode.imageUrl,
+    airsAt: episode.airsAt,
+    airTimeKnown: episode.airTimeKnown,
+    watchedAt: Date.now(),
+  };
+}
+
 export function useWatchUpTo(target: {
   showId: Id<"shows"> | undefined;
   season: number;
@@ -35,12 +62,34 @@ export function useWatchUpTo(target: {
         tvmazeId: target.tvmazeId,
       });
       if (show === undefined || show === null) return;
+      const watchedCount = show.watchedCount + added;
+      const caughtUp =
+        typeof show.airedCount === "number" && watchedCount >= show.airedCount;
+      const currentOrder = show.leftOff?.order ?? -1;
+      const leftOff =
+        currentOrder >= chosen.order ? show.leftOff : leftOffNow(chosen);
+      const marked = new Set(
+        seasonResult.episodes
+          .filter((episode) => episode.aired && episode.order <= chosen.order)
+          .map((episode) => episode.episodeId)
+      );
+      const upNext =
+        caughtUp ||
+        (show.upNext !== null &&
+          show.upNext !== undefined &&
+          marked.has(show.upNext.episodeId))
+          ? null
+          : show.upNext;
       localStore.setQuery(
         api.shows.get,
         { tvmazeId: target.tvmazeId },
         {
           ...show,
-          watchedCount: show.watchedCount + added,
+          watchLater: false,
+          watchedCount,
+          waitingAfterNext: caughtUp ? 0 : show.waitingAfterNext,
+          leftOff,
+          upNext,
           seasons: show.seasons.map((season) =>
             season.number === target.season
               ? { ...season, watchedCount: season.watchedCount + added }

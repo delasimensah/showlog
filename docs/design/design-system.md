@@ -19,9 +19,10 @@ Tokens live in `packages/shared/src/constants/colors.ts` and the Tailwind theme 
 - **border** `#2a2a2e` — hairlines between rows and the skeleton shimmer highlight. A grey between surface and text, not a brand colour.
 - **text** `#f5f5f5` — titles and body text.
 - **muted** `#8a8a8d` — episode titles, dates, counts, inactive tabs.
-- **primary** `#3ddc97` (mint) — the watched tick, progress bars, the episode number line, the active tab, main buttons, links.
+- **primary** `#3ddc97` (mint) — the watched tick, a normal progress bar, the episode number line, the active tab, main buttons, links.
 - **onPrimary** `#0e0e10` — text and icons on a mint button.
-- **danger** `#ff453a` — iOS system red in dark mode. Only for actions that take something away: Remove from my list, Stop watching, Sign out. Red text on a transparent button, never a filled red button.
+- **later** `#0a84ff` — the progress bar when a show is on Watch later. iOS system blue in dark mode.
+- **danger** `#ff453a` — iOS system red in dark mode. The progress bar when a show is stopped, and actions that take something away: Remove from my list, Stop watching, Sign out. Those actions are red text on a transparent button, never a filled red button.
 
 Mint means "watched" or "do this". Do not use it for decoration.
 
@@ -64,7 +65,7 @@ Sizes:
 
 ## Differentiator (exactly one)
 
-**One accent, used only for progress.** Everything is ink and grey except mint, and mint only appears where you have watched something or should tap next. Glancing at Up next shows how far along each show is.
+**Mint means you are watching.** A normal progress bar is mint. Watch later is blue. Stopped is red. Everything else stays ink and grey.
 
 ---
 
@@ -83,7 +84,7 @@ Sizes:
 
 ## Navigation
 
-Four tabs: **Up next, Upcoming, Discover, My shows**. The tab bar is the iPhone's own glass tab bar. A pushed screen uses the iPhone's glass navigation bar, and its back button is the system's. Profile opens from a button at the top right of My shows. Search opens from Discover. Up next and My shows are shows already on the list.
+Four tabs: **Watching, Upcoming, Discover, My shows**. The tab bar is the iPhone's own glass tab bar. A pushed screen uses the iPhone's glass navigation bar, and its back button is the system's. Profile opens from a button at the top right of My shows. Search opens from Discover. Watching and My shows are shows already on the list. Discover's tab icon is a magnifying glass.
 
 ---
 

@@ -52,9 +52,36 @@ describe("useWatchUpTo", () => {
       { showId: "shows-1", season: 1 },
       {
         episodes: [
-          { episodeId: "episodes-1", order: 1, watched: false, aired: true },
-          { episodeId: "episodes-2", order: 2, watched: false, aired: true },
-          { episodeId: "episodes-3", order: 3, watched: false, aired: true },
+          {
+            episodeId: "episodes-1",
+            season: 1,
+            number: 1,
+            order: 1,
+            name: "One",
+            summary: null,
+            watched: false,
+            aired: true,
+          },
+          {
+            episodeId: "episodes-2",
+            season: 1,
+            number: 2,
+            order: 2,
+            name: "Two",
+            summary: null,
+            watched: false,
+            aired: true,
+          },
+          {
+            episodeId: "episodes-3",
+            season: 1,
+            number: 3,
+            order: 3,
+            name: "Three",
+            summary: null,
+            watched: false,
+            aired: true,
+          },
         ],
       }
     );
@@ -63,6 +90,9 @@ describe("useWatchUpTo", () => {
       { tvmazeId: 1 },
       {
         watchedCount: 0,
+        airedCount: 3,
+        leftOff: null,
+        upNext: { episodeId: "episodes-1", order: 1, name: "One" },
         seasons: [{ number: 1, watchedCount: 0, episodeCount: 3 }],
       }
     );
@@ -81,6 +111,8 @@ describe("useWatchUpTo", () => {
     });
     expect(store.getQuery(api.shows.get, { tvmazeId: 1 })).toMatchObject({
       watchedCount: 2,
+      upNext: null,
+      leftOff: { episodeId: "episodes-2", name: "Two" },
     });
   });
 });

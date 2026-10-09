@@ -29,11 +29,9 @@ describe("UpNextScreen", () => {
   });
 
   it("shows the empty list", () => {
-    const { getAllByText, getByText, queryByLabelText } = render(
-      <UpNextScreen />
-    );
+    const { getByText, queryByLabelText } = render(<UpNextScreen />);
 
-    expect(getAllByText("Up next").length).toBeGreaterThan(0);
+    expect(getByText("Watching")).toBeTruthy();
     expect(getByText("Add the shows you watch")).toBeTruthy();
     expect(getByText("Find them in Discover.")).toBeTruthy();
     expect(queryByLabelText("Profile")).toBeNull();
@@ -50,7 +48,7 @@ describe("UpNextScreen", () => {
     mockedList.mockReturnValue(undefined);
     const { getByText, getAllByTestId } = render(<UpNextScreen />);
 
-    expect(getByText("Up next")).toBeTruthy();
+    expect(getByText("Watching")).toBeTruthy();
     expect(getAllByTestId("skeleton-card").length).toBeGreaterThan(0);
   });
 

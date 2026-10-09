@@ -50,8 +50,27 @@ describe("useWatchSeason", () => {
       { showId: "shows-1", season: 1 },
       {
         episodes: [
-          { episodeId: "episodes-1", watched: false, aired: true },
-          { episodeId: "episodes-2", watched: false, aired: false },
+          {
+            episodeId: "episodes-1",
+            season: 1,
+            number: 1,
+            order: 1,
+            name: "One",
+            summary: null,
+            watched: true,
+            aired: true,
+          },
+          {
+            episodeId: "episodes-2",
+            season: 1,
+            number: 2,
+            order: 2,
+            name: "Two",
+            summary: null,
+            watched: false,
+            aired: true,
+          },
+          { episodeId: "episodes-3", order: 3, watched: false, aired: false },
         ],
       }
     );
@@ -59,8 +78,11 @@ describe("useWatchSeason", () => {
       api.shows.get,
       { tvmazeId: 1 },
       {
-        watchedCount: 0,
-        seasons: [{ number: 1, watchedCount: 0, episodeCount: 2 }],
+        watchedCount: 1,
+        airedCount: 2,
+        leftOff: { episodeId: "episodes-1", order: 1, name: "One" },
+        upNext: { episodeId: "episodes-2", order: 2, name: "Two" },
+        seasons: [{ number: 1, watchedCount: 1, episodeCount: 3 }],
       }
     );
 
@@ -72,12 +94,15 @@ describe("useWatchSeason", () => {
     ).toMatchObject({
       episodes: [
         { episodeId: "episodes-1", watched: true },
-        { episodeId: "episodes-2", watched: false },
+        { episodeId: "episodes-2", watched: true },
+        { episodeId: "episodes-3", watched: false },
       ],
     });
     expect(store.getQuery(api.shows.get, { tvmazeId: 1 })).toMatchObject({
-      watchedCount: 1,
-      seasons: [{ number: 1, watchedCount: 1 }],
+      watchedCount: 2,
+      upNext: null,
+      leftOff: { episodeId: "episodes-2", name: "Two" },
+      seasons: [{ number: 1, watchedCount: 2 }],
     });
   });
 });

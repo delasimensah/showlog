@@ -32,6 +32,26 @@ const Stack = Object.assign(
             React.createElement(Text, null, accessibilityLabel)
           );
         },
+        Menu: function ToolbarMenu({ accessibilityLabel, children }) {
+          const { View } = require("react-native");
+          return React.createElement(View, { accessibilityLabel }, children);
+        },
+        MenuAction: function ToolbarMenuAction({
+          children,
+          onPress,
+          destructive,
+        }) {
+          const { Pressable, Text } = require("react-native");
+          return React.createElement(
+            Pressable,
+            { accessibilityLabel: children, onPress },
+            React.createElement(
+              Text,
+              destructive ? { className: "text-danger" } : null,
+              children
+            )
+          );
+        },
       }
     ),
     SearchBar: function SearchBar({

@@ -16,7 +16,7 @@ Every ticket follows `.cursor/rules/` and the docs `mandatory-project-docs.mdc` 
 **Where each ticket is tested:**
 
 - **Simulator:** the development app (`com.dmstudios.showlog.dev`) with Metro: `yarn dev:backend` in one terminal, `yarn dev:mobile` in another.
-- **iPhone:** the preview app (`com.dmstudios.showlog.staging`). Code reaches it with an update push, no new build. Only alerts (SHOW-11) need the iPhone.
+- **iPhone:** the preview app (`com.dmstudios.showlog.staging`). Code reaches it with an update push, no new build. Only alerts (SHOW-12) need the iPhone.
 
 **Before SHOW-1:** one iOS simulator development build and one iOS preview build. Every native package this version needs is already installed, so these two builds last the whole version.
 
@@ -24,7 +24,7 @@ Every ticket follows `.cursor/rules/` and the docs `mandatory-project-docs.mdc` 
 
 ## Status now
 
-- SHOW-1: **Done**. SHOW-2: **Done**. SHOW-3: **Done**. SHOW-4: **Done**. SHOW-5: **Done**. SHOW-6: **Done**. SHOW-7: **Done**. SHOW-8: **Done**. SHOW-9 to SHOW-12: **Todo**.
+- SHOW-1: **Done**. SHOW-2: **Done**. SHOW-3: **Done**. SHOW-4: **Done**. SHOW-5: **Done**. SHOW-6: **Done**. SHOW-7: **Done**. SHOW-8: **Done**. SHOW-9: **Done**. SHOW-10 to SHOW-12: **Todo**.
 
 ---
 
@@ -40,7 +40,7 @@ The app opens on Sign in. I create my one account, land on the four tabs, and st
 **How it is built**
 
 - Convex Auth Password is already in `convex/auth.ts`. Add the `createOrUpdateUser` callback that refuses a new user when one exists, with "This app already has an account."
-- Routes `(auth)/sign-in.tsx` and `(main-app)/(tabs)/` with Up next, Upcoming, Discover, and My shows. Each tab has its real large title and an empty state. The tab shell replaces the scaffold's name-and-one-line screen.
+- Routes `(auth)/sign-in.tsx` and `(main-app)/(tabs)/` with Watching, Upcoming, Discover, and My shows. Each tab has its real large title and an empty state. The tab shell replaces the scaffold's name-and-one-line screen.
 - `app/index.tsx` sends a signed-out person to sign in and a signed-in person to the tabs.
 - Profile route with the account name, the account email, and Sign out (red text, confirm). Opened from the My shows header. Create account asks for a name and saves it on the account.
 - Sign-in form with react-hook-form and zod, the same as other forms in this repo.
@@ -53,12 +53,12 @@ The app opens on Sign in. I create my one account, land on the four tabs, and st
 - A wrong password shows "Email or password is wrong."
 - Closing and reopening the app keeps me signed in.
 - Profile shows my name and my email. Sign out asks to confirm, then returns to Sign in.
-- The four tabs are in order Up next, Upcoming, Discover, My shows, with mint for the active tab.
+- The four tabs are in order Watching, Upcoming, Discover, My shows, with mint for the active tab.
 - A Convex test proves the second sign-up is refused.
 
 **Tested on:** simulator. Sign up once there. The same account then works on the iPhone.
 
-**Out of scope:** stats, alerts switch, export (SHOW-11, SHOW-12). Password reset.
+**Out of scope:** stats and export (SHOW-11). Alerts switch (SHOW-12). Password reset.
 
 ---
 
@@ -164,7 +164,7 @@ The app opens on Sign in. I create my one account, land on the four tabs, and st
 
 - `lists.upNext` query with the three sections. The Up next tab rows with the tick button and "+N".
 - The Where you left off card on the show screen, from the `lastWatchedEpisodeId` and `nextEpisodeId` progress fields.
-- The hourly clock job (`convex/crons.ts`, `clock.hourly` steps 1 and 2): recompute progress for shows with an episode that aired in the last hour. Alerts are added to this job in SHOW-11.
+- The hourly clock job (`convex/crons.ts`, `clock.hourly` steps 1 and 2): recompute progress for shows with an episode that aired in the last hour. Alerts are added to this job in SHOW-12.
 - Empty Up next with the Discover button. Discover opens the Discover tab, which is still empty until SHOW-10. Search stays on Discover.
 
 **Acceptance (yes or no)**
@@ -178,7 +178,7 @@ The app opens on Sign in. I create my one account, land on the four tabs, and st
 
 **Tested on:** simulator.
 
-**Out of scope:** alerts (SHOW-11).
+**Out of scope:** alerts (SHOW-12).
 
 ---
 
@@ -216,7 +216,7 @@ The app opens on Sign in. I create my one account, land on the four tabs, and st
 
 **How it is built**
 
-- `refresh.daily` cron from `system-design.md` section 8, steps 1 to 3. The premiere alert (step 4) is added in SHOW-11.
+- `refresh.daily` cron from `system-design.md` section 8, steps 1 to 3. The premiere alert (step 4) is added in SHOW-12.
 - Updated episodes are changed, new ones added, removed ones deleted along with their ticks, and `userStats` corrected.
 
 **Acceptance (yes or no)**
@@ -255,7 +255,7 @@ The app opens on Sign in. I create my one account, land on the four tabs, and st
 
 ## SHOW-9. I can put a show on Watch later, stop it, or remove it
 
-**Status:** Todo
+**Status:** Done
 **Apps:** phone, Convex
 **Branch:** `feature/SHOW-9`
 **Screens:** `screens.md` section 8 (menu)
@@ -272,6 +272,7 @@ The app opens on Sign in. I create my one account, land on the four tabs, and st
 - Remove from my list asks to confirm, then deletes the show and my ticks, and the stats drop by those ticks.
 - Stop watching and Remove are red text.
 - The Watch later and Stopped filters in My shows now show these shows.
+- A Watch later progress bar is blue. A stopped progress bar is red, and on the show screen the percentage reads Stopped.
 - Convex tests for each action.
 
 **Tested on:** simulator.
@@ -305,11 +306,36 @@ The app opens on Sign in. I create my one account, land on the four tabs, and st
 
 ---
 
-## SHOW-11. I get a phone alert when a new episode is out
+## SHOW-11. Profile shows my stats and I can export my history
+
+**Status:** Todo
+**Apps:** phone, Convex, shared
+**Branch:** `feature/SHOW-11`
+**Screens:** `screens.md` section 11
+
+**How it is built**
+
+- `profile.stats` query from `userStats`. TV time as months, days, and hours in `packages/shared` (a month is 30 days).
+- `profile.exportHistory` action. The phone writes `showlog-history-YYYY-MM-DD.json` with `expo-file-system` and opens the share sheet with `expo-sharing`.
+- "Show data from TVmaze" with a link and the app version on Profile.
+
+**Acceptance (yes or no)**
+
+- Profile shows episodes watched and TV time, matching my ticks. A missing runtime uses the show's average, or zero.
+- Export opens the share sheet and Save to Files writes one JSON file with every show (added time, status) and every watched episode (show, season, number, title, watched time).
+- Shared tests for the TV time format.
+
+**Tested on:** simulator for stats. The iPhone for Save to Files.
+
+**Out of scope:** the Alerts switch and phone alerts (SHOW-12).
+
+---
+
+## SHOW-12. I get a phone alert when a new episode is out
 
 **Status:** Todo
 **Apps:** phone, Convex
-**Branch:** `feature/SHOW-11`
+**Branch:** `feature/SHOW-12`
 **Screens:** `screens.md` sections 11 (Alerts switch) and 12
 
 **First, by Delasi (once):** add the Apple push key to the Expo project. Follow `project-template/docs/client-delivery/push-notifications-setup.md`, the iPhone (Apple) part only. No Firebase. The ticket cannot be tested until this is done.
@@ -335,29 +361,6 @@ The app opens on Sign in. I create my one account, land on the four tabs, and st
 - Shared tests for quiet hours at 21:59, 22:00, 07:59, and 08:00 in Accra time. Convex tests for grouping a season drop and for skipping Stopped shows.
 
 **Tested on:** the preview app on the iPhone, after an update push. The simulator cannot receive push alerts.
-
----
-
-## SHOW-12. Profile shows my stats and I can export my history
-
-**Status:** Todo
-**Apps:** phone, Convex, shared
-**Branch:** `feature/SHOW-12`
-**Screens:** `screens.md` section 11
-
-**How it is built**
-
-- `profile.stats` query from `userStats`. TV time as months, days, and hours in `packages/shared` (a month is 30 days).
-- `profile.exportHistory` action. The phone writes `showlog-history-YYYY-MM-DD.json` with `expo-file-system` and opens the share sheet with `expo-sharing`.
-- "Show data from TVmaze" with a link and the app version on Profile.
-
-**Acceptance (yes or no)**
-
-- Profile shows episodes watched and TV time, matching my ticks. A missing runtime uses the show's average, or zero.
-- Export opens the share sheet and Save to Files writes one JSON file with every show (added time, status) and every watched episode (show, season, number, title, watched time).
-- Shared tests for the TV time format.
-
-**Tested on:** simulator for stats. The iPhone for Save to Files.
 
 ---
 

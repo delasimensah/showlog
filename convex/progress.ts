@@ -47,11 +47,19 @@ export async function recomputeProgress(
           (episode) => episode.order > next.order && !ticked.has(episode._id)
         ).length;
 
+  // Furthest ticked episode. A shared watch time would otherwise stay on the first tick.
+  const orderOf = new Map(
+    episodes.map((episode) => [episode._id, episode.order])
+  );
   let lastTick: Doc<"watchedEpisodes"> | undefined;
   for (const tick of ticks) {
-    if (lastTick === undefined || tick.watchedAt > lastTick.watchedAt) {
+    if (lastTick === undefined) {
       lastTick = tick;
+      continue;
     }
+    const tickOrder = orderOf.get(tick.episodeId) ?? 0;
+    const lastOrder = orderOf.get(lastTick.episodeId) ?? 0;
+    if (tickOrder > lastOrder) lastTick = tick;
   }
 
   await ctx.db.patch(myShowId, {
