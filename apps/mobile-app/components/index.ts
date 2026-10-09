@@ -32,5 +32,6 @@ export { default as MyShowsScreen } from "./screens/main/MyShowsScreen/MyShowsSc
 export { default as ProfileScreen } from "./screens/main/ProfileScreen/ProfileScreen";
 export { default as UpcomingScreen } from "./screens/main/UpcomingScreen/UpcomingScreen";
 export { default as SearchScreen } from "./screens/main/SearchScreen/SearchScreen";
+export { default as SeasonScreen } from "./screens/main/SeasonScreen/SeasonScreen";
 export { default as ShowScreen } from "./screens/main/ShowScreen/ShowScreen";
 export { default as UpNextScreen } from "./screens/main/UpNextScreen/UpNextScreen";

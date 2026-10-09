@@ -11,6 +11,6 @@ function Title() {
 describe("ShowHeaderTitle", () => {
   it("shows the show name", () => {
     const { getByText } = render(<Title />);
-    expect(getByText("One Piece")).toBeTruthy();
+    expect(getByText("One Piece").props.numberOfLines).toBe(1);
   });
 });

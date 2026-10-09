@@ -1,7 +1,7 @@
 import type { Doc, Id } from "./_generated/dataModel";
 import type { MutationCtx } from "./_generated/server";
 
-function hasAired(episode: Doc<"episodes">, now: number): boolean {
+export function hasAired(episode: Doc<"episodes">, now: number): boolean {
   if (episode.airsAt === undefined) return false;
   if (!episode.airTimeKnown) {
     const today = new Date(now);

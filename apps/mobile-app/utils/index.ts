@@ -22,7 +22,9 @@ export {
   showSuccessToast,
 } from "./toastUtils";
 
+export { headerTitleFrame } from "./headerTitleFrame";
 export { fillOpacity } from "./showHeaderFade";
+export { playTickHaptic } from "./tickHaptic";
 export { joinMeta, seasonsLabel } from "./showLabel";
 export { watchedShare } from "./watchedShare";
 

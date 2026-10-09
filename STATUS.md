@@ -11,7 +11,7 @@
 - **Client / job:** Showlog. Personal iPhone app for tracking TV shows. No client, no invoice, not published.
 - **Backend:** Convex (dev deployment only, team `dm-studios`)
 - **Outcome:** B (studio accounts)
-- **Current phase:** SHOW-3 is Done. Open a show. Next is SHOW-4. Setup is already done: scaffold, GitHub, Expo, Convex, design system, icon, system design, screens, tickets SHOW-1 to SHOW-12, and both phone builds. iPhone app (Expo SDK 57), shared package, and Convex Auth. Native packages for this version are installed. Lint, format, type-check, and tests pass. Private GitHub repo on `main`. Branches are deleted automatically after merge. Convex agent guidelines and skills are installed.
+- **Current phase:** SHOW-4 is Done. Open a season and tick episodes. SHOW-5 is next. Setup is already done: scaffold, GitHub, Expo, Convex, design system, icon, system design, screens, tickets SHOW-1 to SHOW-12, and both phone builds. iPhone app (Expo SDK 57), shared package, and Convex Auth. Native packages for this version are installed. Private GitHub repo on `main`. Branches are deleted automatically after merge. Convex agent guidelines and skills are installed.
 - **Last updated:** 2026-10-09
 - **Blocked / open:** The Apple push key waits for SHOW-11.
 
@@ -46,7 +46,7 @@
 - [x] System design (8 Oct 2026) — `docs/product/system-design.md`
 - [x] Design system locked (8 Oct 2026): mint on ink, Plus Jakarta Sans — `docs/design/design-system.md`. Tokens wired into `packages/shared` colours, the Tailwind theme, and the font loader.
 - [x] Screen design (8 Oct 2026): TV Time screenshots plus Mobbin references for each screen — `docs/design/screens.md`. No UX Pilot.
-- [x] Tickets SHOW-1 to SHOW-12 in `docs/product/linear-tickets.md`. SHOW-1, SHOW-2, and SHOW-3 are Done. SHOW-4 to SHOW-12 are Todo.
+- [x] Tickets SHOW-1 to SHOW-12 in `docs/product/linear-tickets.md`. SHOW-1, SHOW-2, SHOW-3, and SHOW-4 are Done. SHOW-5 to SHOW-12 are Todo.
 - [x] One development build, one preview build (8 Oct 2026, Plus Jakarta Sans package already installed). Simulator: https://expo.dev/accounts/dm-studios/projects/showlog/builds/bf5a7b93-ccf6-41d4-8999-41b67c64bdec. Preview: https://expo.dev/accounts/dm-studios/projects/showlog/builds/21398ded-56e6-4244-ac90-336c5b0a4d0a.
 - [ ] Build
 
@@ -54,7 +54,7 @@
 
 ## Next action (one line)
 
-SHOW-4. Open a season and tick episodes.
+SHOW-5 is next. Up next shows what to watch, and the show remembers where you left off.
 
 ---
 

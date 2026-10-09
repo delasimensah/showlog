@@ -53,6 +53,10 @@ const MainAppLayout: React.FC = () => {
               scrollEdgeEffects: { top: "hidden" },
             }}
           />
+          <Stack.Screen
+            name="show/[tvmazeId]/season/[season]"
+            options={{ headerShown: true, title: "" }}
+          />
         </Stack>
       </ThemeProvider>
     </>

@@ -12,6 +12,15 @@ export {
   formatTime,
 } from "./formatText";
 
+export {
+  airedMeta,
+  airsMeta,
+  countdownText,
+  episodeLabel,
+  episodeSeasonLine,
+  formatAirDate,
+} from "./episodeLabel";
+
 // Date utilities
 export {
   parseLocalDate,

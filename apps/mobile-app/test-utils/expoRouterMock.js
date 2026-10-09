@@ -20,11 +20,15 @@ const Stack = Object.assign(
         return React.createElement(React.Fragment, null, children);
       },
       {
-        Button: function ToolbarButton({ accessibilityLabel, onPress }) {
+        Button: function ToolbarButton({
+          accessibilityLabel,
+          onPress,
+          disabled,
+        }) {
           const { Pressable, Text } = require("react-native");
           return React.createElement(
             Pressable,
-            { accessibilityLabel, onPress },
+            { accessibilityLabel, onPress, disabled },
             React.createElement(Text, null, accessibilityLabel)
           );
         },

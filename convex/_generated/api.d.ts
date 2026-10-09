@@ -18,6 +18,7 @@ import type * as progress from "../progress.js";
 import type * as search from "../search.js";
 import type * as shows from "../shows.js";
 import type * as tvmaze from "../tvmaze.js";
+import type * as watching from "../watching.js";
 
 import type {
   ApiFromModules,
@@ -36,6 +37,7 @@ declare const fullApi: ApiFromModules<{
   search: typeof search;
   shows: typeof shows;
   tvmaze: typeof tvmaze;
+  watching: typeof watching;
 }>;
 
 /**

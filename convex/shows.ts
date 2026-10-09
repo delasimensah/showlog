@@ -4,9 +4,9 @@ import { v } from "convex/values";
 import { internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
 import { action, internalMutation, internalQuery } from "./_generated/server";
-import { authedQuery } from "./lib/functions";
 import { ERROR_CODES, raise } from "./lib/errors";
-import { recomputeProgress } from "./progress";
+import { authedQuery } from "./lib/functions";
+import { hasAired, recomputeProgress } from "./progress";
 import {
   SHOW_STATUSES,
   copiesFromShowPayload,
@@ -213,6 +213,7 @@ export const get = authedQuery({
   args: { tvmazeId: v.number() },
   returns: v.union(
     v.object({
+      showId: v.id("shows"),
       tvmazeId: v.number(),
       name: v.string(),
       headerUrl: v.union(v.string(), v.null()),
@@ -256,6 +257,7 @@ export const get = authedQuery({
     }
 
     return {
+      showId: show._id,
       tvmazeId: show.tvmazeId,
       name: show.name,
       headerUrl: show.headerUrl ?? null,
@@ -311,6 +313,83 @@ export const preview = action({
       posterUrl: show.posterUrl ?? null,
       network: show.network ?? null,
       rating: show.rating ?? null,
+    };
+  },
+});
+
+const seasonEpisode = v.object({
+  episodeId: v.id("episodes"),
+  season: v.number(),
+  number: v.number(),
+  order: v.number(),
+  name: v.string(),
+  summary: v.union(v.string(), v.null()),
+  runtime: v.union(v.number(), v.null()),
+  imageUrl: v.union(v.string(), v.null()),
+  airsAt: v.union(v.number(), v.null()),
+  airTimeKnown: v.boolean(),
+  watched: v.boolean(),
+  aired: v.boolean(),
+});
+
+export const season = authedQuery({
+  args: { showId: v.id("shows"), season: v.number() },
+  returns: v.object({
+    showName: v.string(),
+    yearSeasons: v.boolean(),
+    headerUrl: v.union(v.string(), v.null()),
+    posterUrl: v.union(v.string(), v.null()),
+    episodes: v.array(seasonEpisode),
+  }),
+  handler: async (ctx, args) => {
+    const show = await ctx.db.get(args.showId);
+    if (show === null) raise(ERROR_CODES.INVALID, "Show not found");
+    const mine = await ctx.db
+      .query("myShows")
+      .withIndex("by_user_show", (q) =>
+        q.eq("userId", ctx.userId).eq("showId", args.showId)
+      )
+      .unique();
+    if (mine === null) raise(ERROR_CODES.NOT_PERMITTED);
+
+    const now = Date.now();
+    const episodes = await ctx.db
+      .query("episodes")
+      .withIndex("by_show_season", (q) =>
+        q.eq("showId", args.showId).eq("season", args.season)
+      )
+      .collect();
+    const ticks = await ctx.db
+      .query("watchedEpisodes")
+      .withIndex("by_user_show_season", (q) =>
+        q
+          .eq("userId", ctx.userId)
+          .eq("showId", args.showId)
+          .eq("season", args.season)
+      )
+      .collect();
+    const watched = new Set(ticks.map((tick) => tick.episodeId));
+    episodes.sort((left, right) => left.number - right.number);
+
+    return {
+      showName: show.name,
+      yearSeasons: show.yearSeasons,
+      headerUrl: show.headerUrl ?? null,
+      posterUrl: show.posterUrl ?? null,
+      episodes: episodes.map((episode) => ({
+        episodeId: episode._id,
+        season: episode.season,
+        number: episode.number,
+        order: episode.order,
+        name: episode.name,
+        summary: episode.summary ?? null,
+        runtime: episode.runtime ?? null,
+        imageUrl: episode.imageUrl ?? null,
+        airsAt: episode.airsAt ?? null,
+        airTimeKnown: episode.airTimeKnown,
+        watched: watched.has(episode._id),
+        aired: hasAired(episode, now),
+      })),
     };
   },
 });

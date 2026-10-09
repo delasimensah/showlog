@@ -215,7 +215,7 @@ Year-season shows read "Episode 1180" on the mint line and "2026 · E25" under t
 
 **On my list:**
 
-- Header picture full width, 16:10, with a dark fade into `page` over its lower half. The show name sits on that fade, up to two lines. Pulling down stretches the picture. Scrolling up fades `page` into the system navigation bar, and the show name fades in with it. The system back button sits in the navigation bar. The menu is a system bar button (ellipsis) on the right. A poster used in place of a wide picture stays 2:3 and centred in the header, so it is not stretched.
+- Header picture full width, 16:10, with a dark fade into `page` over its lower half. The show name sits on that fade, up to two lines. Pulling down stretches the picture. Scrolling up fades `page` into the system navigation bar, and the show name fades in with it, on one line, ending in an ellipsis when it does not fit between the back button and the menu. The system back button sits in the navigation bar. The menu is a system bar button (ellipsis) on the right. A poster used in place of a wide picture stays 2:3 and centred in the header, so it is not stretched.
 - Hero title (show name, up to two lines), then the meta line "5 seasons · Netflix", then a progress summary: "48 of 73 watched" (meta line) on the left, the percentage in mint on the right, and a full-width `ProgressBar` under them.
 - **Where you left off** card: the meta line "Last watched · 12 Mar", the `EpisodeLabel`, the episode title (17, Bold), and TVmaze's summary (body, three lines). Under a `border` hairline: "Up next" (meta line), the next `EpisodeLabel` and title, and a `TickButton` on the right. With nothing ticked: a mint play circle (36) on the left, "Start with S1 | E1" (17, Bold), "Nothing watched yet" as a meta line, and the `TickButton`. Tapping an episode in the card opens the episode sheet.
 - **Seasons** (section heading, the season count in muted on its right): one `surface` card, radius 16, with a hairline between rows. Each row: "Season 4" (or "2026" for year seasons, 17, Bold), "10/24" as a meta line (a mint check circle when every episode is watched), a chevron in muted, and a `ProgressBar` under them. Tapping opens the season.
@@ -251,7 +251,7 @@ Year-season shows read "Episode 1180" on the mint line and "2026 · E25" under t
 
 **Route:** `app/(main-app)/show/[tvmazeId]/season/[season].tsx`
 
-**Header:** the system navigation bar. The system back button, then the screen title "Season 4" (or "2026") with the show name as a meta line under it. A "Watch season" text button (15, Bold, mint) at the top right ticks every aired episode in the season. It reads "Season watched" in muted when nothing is left.
+**Header:** the system navigation bar. The system back button, then the screen title "Season 4" (or "2026") with the show name as a meta line under it. Both lines stay on one line. A long show name ends in an ellipsis before the Watch season button. A "Watch season" text button (15, Bold, mint) at the top right ticks every aired episode in the season. It reads "Season watched" in muted when nothing is left.
 
 **Episode row:**
 

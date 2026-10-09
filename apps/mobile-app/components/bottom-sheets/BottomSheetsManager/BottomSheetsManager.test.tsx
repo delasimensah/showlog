@@ -6,11 +6,23 @@ import BottomSheetsManager from "./BottomSheetsManager";
 
 // Mock hooks
 const mockSetGenericRef = jest.fn();
+const mockSetEpisodeSheetRef = jest.fn();
 
 jest.mock("@/hooks", () => ({
-  useBottomsheetStore: () => ({
-    setGenericRef: mockSetGenericRef,
-  }),
+  useBottomsheetStore: (
+    selector?: (state: Record<string, unknown>) => unknown
+  ) => {
+    const state = {
+      setGenericRef: mockSetGenericRef,
+      setEpisodeSheetRef: mockSetEpisodeSheetRef,
+      episode: null,
+    };
+    return selector ? selector(state) : state;
+  },
+  useOpenedAt: () => 0,
+  useTickEpisode: () => jest.fn(),
+  useUntickEpisode: () => jest.fn(),
+  useWatchUpTo: () => jest.fn(),
 }));
 
 // Wrapper component for tests
@@ -53,6 +65,9 @@ describe("BottomSheetsManager", () => {
 
       expect(mockSetGenericRef).toHaveBeenCalledTimes(1);
       expect(mockSetGenericRef).toHaveBeenCalledWith(
+        expect.objectContaining({ current: expect.anything() })
+      );
+      expect(mockSetEpisodeSheetRef).toHaveBeenCalledWith(
         expect.objectContaining({ current: expect.anything() })
       );
     });

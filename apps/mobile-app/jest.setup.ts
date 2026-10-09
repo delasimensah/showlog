@@ -138,3 +138,17 @@ jest.mock("react-native-safe-area-context", () => ({
   SafeAreaProvider: ({ children }: { children: unknown }) => children,
   useSafeAreaInsets: () => ({ top: 0, bottom: 0, left: 0, right: 0 }),
 }));
+
+jest.mock("expo-haptics", () => ({
+  impactAsync: jest.fn(),
+  ImpactFeedbackStyle: { Light: "light" },
+}));
+
+jest.mock("@expo/ui/community/menu", () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const mockReact = require("react");
+  return {
+    MenuView: ({ children }: { children?: unknown }) =>
+      mockReact.createElement(mockReact.Fragment, null, children),
+  };
+});
