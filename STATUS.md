@@ -70,3 +70,4 @@ SHOW-4. Open a season and tick episodes.
 - Tickets: `docs/product/linear-tickets.md`
 - SHOW-1 pull request: https://github.com/delasimensah/showlog/pull/1
 - SHOW-2 pull request: https://github.com/delasimensah/showlog/pull/2
+- SHOW-3 pull request: https://github.com/delasimensah/showlog/pull/3
