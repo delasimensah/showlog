@@ -64,6 +64,8 @@ const RootLayout = () => {
               }}
             >
               <Stack.Screen name="index" />
+              <Stack.Screen name="(auth)" />
+              <Stack.Screen name="(main-app)" />
             </Stack>
             <BottomSheetsManager />
             <Toast

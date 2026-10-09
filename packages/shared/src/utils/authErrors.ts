@@ -1,5 +1,6 @@
-const WRONG_PASSWORD_MESSAGE =
-  "Email or password is wrong. Check both and try again.";
+const WRONG_PASSWORD_MESSAGE = "Email or password is wrong.";
+
+const ACCOUNT_TAKEN_MESSAGE = "This app already has an account.";
 
 const WRONG_PASSWORD_KEYS = [
   "Invalid account ID",
@@ -34,11 +35,13 @@ export const handleAuthError = (
   const looksLikeWrongPassword = WRONG_PASSWORD_KEYS.some((key) =>
     rawMessage.toLowerCase().includes(key.toLowerCase())
   );
-  const customMessage = looksLikeWrongPassword
-    ? WRONG_PASSWORD_MESSAGE
-    : rawMessage
-      ? errorMessages[rawMessage]
-      : undefined;
+  const customMessage = rawMessage.includes(ACCOUNT_TAKEN_MESSAGE)
+    ? ACCOUNT_TAKEN_MESSAGE
+    : looksLikeWrongPassword
+      ? WRONG_PASSWORD_MESSAGE
+      : rawMessage
+        ? errorMessages[rawMessage]
+        : undefined;
   const code =
     typeof error === "object" && error !== null && "code" in error
       ? String((error as { code?: string }).code ?? "")

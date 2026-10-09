@@ -19,40 +19,57 @@ jest.mock("expo-constants", () => ({
   },
 }));
 
-jest.mock("expo-router", () => ({
-  useRouter: jest.fn(() => ({
-    push: jest.fn(),
-    replace: jest.fn(),
-    back: jest.fn(),
-    canGoBack: jest.fn(() => true),
-  })),
-  Href: {},
-  Link: "Link",
-  DarkTheme: {
-    dark: true,
-    colors: {
-      primary: "#000000",
-      background: "#000000",
-      card: "#000000",
-      text: "#ffffff",
-      border: "#333333",
-      notification: "#ff0000",
+jest.mock("expo-router", () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const extra = require("./test-utils/expoRouterMock");
+
+  return {
+    useRouter: jest.fn(() => ({
+      push: jest.fn(),
+      replace: jest.fn(),
+      back: jest.fn(),
+      canGoBack: jest.fn(() => true),
+    })),
+    Href: {},
+    Link: "Link",
+    Redirect: extra.Redirect,
+    Stack: extra.Stack,
+    Tabs: extra.Tabs,
+    DarkTheme: {
+      dark: true,
+      colors: {
+        primary: "#000000",
+        background: "#000000",
+        card: "#000000",
+        text: "#ffffff",
+        border: "#333333",
+        notification: "#ff0000",
+      },
+      fonts: {
+        regular: { fontFamily: "System", fontWeight: "400" },
+        medium: { fontFamily: "System", fontWeight: "500" },
+        bold: { fontFamily: "System", fontWeight: "600" },
+        heavy: { fontFamily: "System", fontWeight: "700" },
+      },
     },
-    fonts: {
-      regular: { fontFamily: "System", fontWeight: "400" },
-      medium: { fontFamily: "System", fontWeight: "500" },
-      bold: { fontFamily: "System", fontWeight: "600" },
-      heavy: { fontFamily: "System", fontWeight: "700" },
+    ThemeProvider: ({ children }: { children: unknown }) => children,
+    router: {
+      push: jest.fn(),
+      replace: jest.fn(),
+      back: jest.fn(),
+      canGoBack: jest.fn(() => true),
     },
-  },
-  ThemeProvider: ({ children }: { children: unknown }) => children,
-  router: {
-    push: jest.fn(),
-    replace: jest.fn(),
-    back: jest.fn(),
-    canGoBack: jest.fn(() => true),
-  },
-}));
+  };
+});
+
+jest.mock("expo-router/unstable-native-tabs", () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const extra = require("./test-utils/expoRouterMock");
+
+  return {
+    NativeTabs: extra.NativeTabs,
+  };
+});
 
 jest.mock("react-native-gesture-handler", () => {
   const actual = jest.requireActual("react-native-gesture-handler");

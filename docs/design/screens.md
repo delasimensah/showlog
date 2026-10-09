@@ -75,11 +75,11 @@ Every screen is built from these. One component each, used the same way everywhe
 
 **Route:** `app/(auth)/sign-in.tsx`
 
-**Layout:** centred column. The TV mark (72) and "Showlog" as the screen title. One line under it in muted: "Track the shows you watch." Email field, password field, a full-width mint Sign in button, then a text link "Create account".
+**Layout:** centred column. The TV mark (72). One line under it in muted: "Track the shows you watch." Email field, password field, a full-width mint Sign in button, then a text link "Create account".
 
-**Create account:** the same screen with the button reading Create account and the link reading "I already have an account". The server refuses a second account with "This app already has an account.", shown under the button in danger red.
+**Create account:** the same screen, with a Name field above Email. The button reads Create account and the link reads "I already have an account". The name is saved on the account. The server refuses a second account with "This app already has an account.", shown under the button in danger red.
 
-**States:** the button shows a spinner while signing in. Wrong password: "Email or password is wrong."
+**States:** the button shows a spinner while signing in. Wrong password: "Email or password is wrong." The password field starts hidden. A control on its right shows the characters, and the same control hides them again.
 
 **References:**
 
@@ -92,7 +92,7 @@ Every screen is built from these. One component each, used the same way everywhe
 
 **Route:** `app/(main-app)/(tabs)/_layout.tsx`
 
-Four tabs, in order: **Up next, Upcoming, Discover, My shows**. A floating, fully rounded tab bar in `surface`. Active tab icon and label in mint, inactive in muted. Icons from `@expo/vector-icons` (Ionicons): `play-circle`, `calendar`, `compass`, `grid`.
+Four tabs, in order: **Up next, Upcoming, Discover, My shows**. The tab bar is the iPhone's own glass tab bar, the system liquid glass bar. Active tab icon and label in mint, inactive in muted. Icons are the system symbols for play, calendar, compass, and grid.
 
 ---
 
@@ -293,11 +293,11 @@ Unaired: no buttons. "Airs Friday 21:00" instead.
 
 - A back `HeaderButton`, then the screen title "Profile".
 - Two stat cards side by side, equal width: **TV time** with "8 months 1 day 12 hours" (numbers 28 ExtraBold, units 13 Medium muted), and **Episodes watched** with "9,629". The label (13, Medium, muted) sits above the number.
-- Settings card: rows 52 tall with `border` hairlines between them. Account (email on the right in muted), Alerts (native switch from `@expo/ui`), Export my history (chevron). Export opens the share sheet with the JSON file.
+- Settings card: rows 52 tall with `border` hairlines between them. Name (the name on the right in muted), Account (email on the right in muted), Alerts (native switch from `@expo/ui`), Export my history (chevron). Export opens the share sheet with the JSON file.
 - "Show data from TVmaze" with a link and "Version 1.0.0", both meta lines, centred.
 - Sign out as a full-width `quietDanger` `Button`. It asks to confirm.
 
-**Loading:** the title, the stat labels (TV time, Episodes watched), and every settings row stay. Only the numbers wait: a bar 22 tall in each stat tile, the TV time bar about 160 wide and the episodes bar about 80 wide. The email shows a bar 11 tall, about 150 wide.
+**Loading:** the title, the stat labels (TV time, Episodes watched), and every settings row stay. Only the numbers wait: a bar 22 tall in each stat tile, the TV time bar about 160 wide and the episodes bar about 80 wide. The name and the email each show a bar 11 tall, about 150 wide.
 
 **References:**
 

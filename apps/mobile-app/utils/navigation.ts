@@ -1,9 +1,25 @@
+import { DarkTheme } from "expo-router";
+
 import { COLORS } from "@/constants";
 
 /**
  * Default screen options for Stack navigator
  * Provides consistent styling across all screens
  */
+/** The default navigator theme is light, so the glass bar samples white. */
+export const navigationTheme = {
+  ...DarkTheme,
+  colors: {
+    ...DarkTheme.colors,
+    primary: COLORS.primary,
+    background: COLORS.page,
+    card: COLORS.page,
+    text: COLORS.text,
+    border: COLORS.surface,
+    notification: COLORS.danger,
+  },
+};
+
 export const defaultStackScreenOptions = {
   headerStyle: {
     backgroundColor: COLORS.page,

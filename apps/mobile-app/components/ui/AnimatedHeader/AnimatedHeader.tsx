@@ -7,14 +7,21 @@ import Animated, {
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { VStack } from "../Stack/Stack";
+import { HStack } from "../Stack/Stack";
 
 interface AnimatedHeaderProps {
   title: string;
   scrollY: SharedValue<number>;
+  left?: React.ReactNode;
+  right?: React.ReactNode;
 }
 
-const AnimatedHeader: React.FC<AnimatedHeaderProps> = ({ title, scrollY }) => {
+const AnimatedHeader: React.FC<AnimatedHeaderProps> = ({
+  title,
+  scrollY,
+  left,
+  right,
+}) => {
   const insets = useSafeAreaInsets();
 
   // Calculate threshold: when large title starts going behind the fixed header
@@ -49,17 +56,19 @@ const AnimatedHeader: React.FC<AnimatedHeaderProps> = ({ title, scrollY }) => {
         paddingTop: insets.top,
       }}
     >
-      <VStack
-        paddingX="lg"
-        className="relative h-14 flex-row items-center justify-start"
-      >
-        <Animated.Text
-          className="font-app-extrabold text-2xl text-text"
-          style={smallTitleStyle}
-        >
-          {title}
-        </Animated.Text>
-      </VStack>
+      <HStack align="center" justify="between" className="h-14 px-5">
+        <HStack align="center" spacing="sm" className="min-w-0 flex-1">
+          {left}
+          <Animated.Text
+            className="font-app-extrabold text-2xl text-text"
+            style={smallTitleStyle}
+            numberOfLines={1}
+          >
+            {title}
+          </Animated.Text>
+        </HStack>
+        {right}
+      </HStack>
 
       <Animated.View
         className="absolute bottom-0 left-0 right-0 h-0.5 bg-border"
