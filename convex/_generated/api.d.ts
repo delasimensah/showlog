@@ -12,6 +12,7 @@ import type * as auth from "../auth.js";
 import type * as clock from "../clock.js";
 import type * as crons from "../crons.js";
 import type * as discover from "../discover.js";
+import type * as history from "../history.js";
 import type * as http from "../http.js";
 import type * as lib_errors from "../lib/errors.js";
 import type * as lib_functions from "../lib/functions.js";
@@ -36,6 +37,7 @@ declare const fullApi: ApiFromModules<{
   clock: typeof clock;
   crons: typeof crons;
   discover: typeof discover;
+  history: typeof history;
   http: typeof http;
   "lib/errors": typeof lib_errors;
   "lib/functions": typeof lib_functions;

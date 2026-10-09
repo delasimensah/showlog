@@ -40,7 +40,7 @@ const ShowHeaderTitle: React.FC<ShowHeaderTitleProps> = ({
           {
             width: "100%",
             color: COLORS.text,
-            fontFamily: FONTS.semibold,
+            fontFamily: FONTS.bold,
             fontSize: 17,
             textAlign: "center",
           },

@@ -102,7 +102,7 @@ Every outside thing this app depends on, with source, rights, and how it gets in
 8. **My shows** is a poster grid with a progress bar under each poster. I can sort by Last watched, Last added, or A to Z, and filter by Watching, Up to date, Not started, Watch later, Finished, or Stopped.
 9. I can mark a show **Watch later**. It stays out of Up next until I tick one of its episodes or take it off Watch later.
 10. I can mark a show **Stop watching** to move it out of Up next, Upcoming, and alerts without losing its history, and undo it.
-11. **Profile** shows my stats: episodes watched, and total TV time in months, days, and hours.
+11. **Profile** shows my stats: episodes watched, and Watch time in months, days, and hours.
 12. I get a phone alert when a new episode of one of my shows airs.
 13. I get a phone alert when a show on my list gets a new premiere date (for example "Severance season 3 premieres 12 January").
 14. I can export my whole list and watch history as a file from Profile, so a shutdown never takes my history again.
@@ -129,7 +129,7 @@ Every outside thing this app depends on, with source, rights, and how it gets in
   - Stopped: set by hand. Cleared when I tap Resume.
 - **Stats:**
   - Episodes watched = the number of episodes I have ticked.
-  - TV time = the runtime of every ticked episode, added up. An episode with no runtime on TVmaze uses the show's average runtime, and counts as zero if TVmaze has neither.
+  - Watch time = the runtime of every ticked episode, added up. An episode with no runtime on TVmaze uses the show's average runtime, and counts as zero if TVmaze has neither.
   - Shown as months, days, and hours, where a month is 30 days.
   - Stats start at zero, because history starts fresh. "Watched up to here" ticks count, so catching up a show also fills in its time.
 - Removing a show from my list deletes my ticks for it, after a confirm step. Stop watching keeps them.

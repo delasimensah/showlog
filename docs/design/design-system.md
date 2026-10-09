@@ -43,6 +43,7 @@ Weights and the Tailwind class for each:
 Sizes:
 
 - Screen title: 34, ExtraBold
+- Navigation bar title: 17, Bold
 - Section heading: 20, SemiBold
 - Show name in a row: 17, Bold
 - Body: 15–16, Regular

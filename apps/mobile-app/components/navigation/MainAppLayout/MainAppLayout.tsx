@@ -50,7 +50,12 @@ const MainAppLayout: React.FC = () => {
               headerShown: true,
               headerTransparent: true,
               title: "",
-              scrollEdgeEffects: { top: "hidden" },
+              scrollEdgeEffects: {
+                top: "hidden",
+                bottom: "hidden",
+                left: "hidden",
+                right: "hidden",
+              },
             }}
           />
           <Stack.Screen

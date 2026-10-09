@@ -28,7 +28,7 @@ describe("navigation utilities", () => {
     it("should have correct header title style", () => {
       expect(defaultStackScreenOptions.headerTitleStyle).toEqual({
         color: COLORS.text,
-        fontFamily: "App-Regular",
+        fontFamily: "App-Bold",
       });
     });
 

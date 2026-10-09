@@ -93,8 +93,8 @@ Each flow lists what must be true for it to count as done.
 
 **10. Profile and stats**
 
-- Stats at the top: episodes watched, and TV time as months, days, and hours (a month is 30 days).
-- TV time adds up the runtime of every ticked episode. A missing runtime uses the show's average runtime, or zero if TVmaze has neither.
+- Stats at the top: episodes watched, and Watch time as months, days, and hours (a month is 30 days).
+- Watch time adds up the runtime of every ticked episode. A missing runtime uses the show's average runtime, or zero if TVmaze has neither.
 - Below: account email, an alerts on or off switch, Export my history, "Show data from TVmaze" with a link, and the app version.
 - Sign out is red text and asks me to confirm.
 - Profile opens from an icon in the My shows header.

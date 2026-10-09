@@ -23,6 +23,7 @@ export {
 } from "./toastUtils";
 
 export { keepDayShows, localDay } from "./dayShows";
+export { saveHistoryFile } from "./exportHistory";
 export { headerTitleFrame } from "./headerTitleFrame";
 export { fillOpacity } from "./showHeaderFade";
 export { playTickHaptic } from "./tickHaptic";

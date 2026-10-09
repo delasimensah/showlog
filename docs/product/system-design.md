@@ -23,7 +23,7 @@ Three parts:
 
 - **The iPhone app** (`apps/mobile-app`). Expo Router screens, NativeWind styling, Convex React hooks for data. It never calls TVmaze for data. It only loads pictures from TVmaze's image servers with `expo-image`.
 - **Convex** (`convex/`). The database, the server functions the app calls, and the jobs that run on a clock. It is the only part that talks to TVmaze and to Expo push.
-- **The shared package** (`packages/shared`). Pure functions both sides use and that need no network: the episode label ("S4 | E11" or "Episode 1180"), show status, "+N", TV time as months, days, and hours, quiet hours. Unit tested.
+- **The shared package** (`packages/shared`). Pure functions both sides use and that need no network: the episode label ("S4 | E11" or "Episode 1180"), show status, "+N", Watch time as months, days, and hours, quiet hours. Unit tested.
 
 Outside services:
 

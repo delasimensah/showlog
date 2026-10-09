@@ -60,7 +60,7 @@ In order of importance:
 7. Discover shows I may like, including anime, even before I have added anything.
 8. Mark a show Watch later, or stop watching it without losing its history.
 9. Get an alert when a new episode airs or a premiere date is announced.
-10. See my stats: episodes watched and total TV time.
+10. See my stats: episodes watched and Watch time.
 11. Export my list and history as a file.
 
 **Nouns:** show, season, episode, my show (a show on my list), watched episode, push token.

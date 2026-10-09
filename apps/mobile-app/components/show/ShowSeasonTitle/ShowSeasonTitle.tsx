@@ -25,7 +25,7 @@ const ShowSeasonTitle: React.FC<ShowSeasonTitleProps> = ({
       style={headerTitleFrame(width, "label")}
     >
       <Text
-        className="text-center font-app-semibold text-[17px] text-text"
+        className="text-center font-app-bold text-[17px] text-text"
         numberOfLines={1}
       >
         {title}

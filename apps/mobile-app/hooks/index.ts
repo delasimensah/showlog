@@ -12,6 +12,8 @@ export {
 } from "./my-shows/useMyShowsChoice";
 export type { MyShowsFilter, MyShowsSort } from "./my-shows/useMyShowsChoice";
 export { useAccount } from "./profile/useAccount";
+export { useExportHistory } from "./profile/useExportHistory";
+export { useProfileStats } from "./profile/useProfileStats";
 export { useListedShows } from "./search/useListedShows";
 export { useSearchShows } from "./search/useSearchShows";
 export { useAddShow } from "./shows/useAddShow";
