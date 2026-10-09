@@ -114,16 +114,17 @@ describe("MyShowsScreen", () => {
     expect(push).toHaveBeenCalledWith("/show/1");
   });
 
-  it("shows an empty filter without a Discover button", () => {
+  it("opens Discover when a filter matches nothing", () => {
     mockedChoice.mockImplementation(
       (select: (state: typeof choice) => unknown) =>
         select({ ...choice, filter: "Finished" })
     );
     mockedShows.mockReturnValue([bear]);
-    const { getByText, queryByText } = render(<MyShowsScreen />);
+    const { getByText } = render(<MyShowsScreen />);
 
     expect(getByText("No Finished shows")).toBeTruthy();
     expect(getByText("Shows you finish show up here.")).toBeTruthy();
-    expect(queryByText("Discover")).toBeNull();
+    fireEvent.press(getByText("Discover"));
+    expect(push).toHaveBeenCalledWith("/discover");
   });
 });

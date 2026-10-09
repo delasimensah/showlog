@@ -32,6 +32,8 @@ describe("UpcomingScreen", () => {
     expect(getAllByText("Upcoming").length).toBeGreaterThan(0);
     expect(getByText("Nothing scheduled yet")).toBeTruthy();
     expect(getByText("Nothing scheduled for your shows yet.")).toBeTruthy();
+    fireEvent.press(getByText("Discover"));
+    expect(push).toHaveBeenCalledWith("/discover");
   });
 
   it("keeps the title and shows skeletons while the list loads", () => {

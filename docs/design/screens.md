@@ -137,7 +137,7 @@ Year-season shows read "Episode 1180" on the mint line and "2026 · E25" under t
 
 **No date yet rows:** the same card and `EpisodeImage` (the show's header picture, then the poster), the row title, and "Waiting for an air date" as the meta line. Ended shows are not listed.
 
-**Empty:** `EmptyState`: "Nothing scheduled yet", "Nothing scheduled for your shows yet.", no buttons.
+**Empty:** `EmptyState`: "Nothing scheduled yet", "Nothing scheduled for your shows yet.", Discover (primary).
 
 **Loading:** the title stays. Two groups of three separate cards, with the same gap as the loaded list. Above each group a heading bar (20 tall, 80 wide) with a date bar (9 tall, 44 wide) at the right end. Each card: a 128 × 72 picture block (radius 10), a name bar (11 tall), an episode line bar (9 tall), and a title bar (9 tall), and on the right a time bar (9 tall, 44 wide).
 
@@ -180,7 +180,7 @@ Year-season shows read "Episode 1180" on the mint line and "2026 · E25" under t
 
 **Sort and filter sheet** (native sheet from `@expo/ui`): Sort by Last watched, Last added, A to Z. Filter by All, Watching, Up to date, Not started, Watch later, Finished, Stopped. The choice is saved on the phone. The header shows the filter name when it is not All ("Watching · 12").
 
-**Empty:** `EmptyState`: "Your list is empty", "Find a show in Discover.", Discover (primary). With a filter and no matches: `EmptyState` "No Finished shows", "Shows you finish show up here.", no buttons (the filter name changes with the filter).
+**Empty:** `EmptyState`: "Your list is empty", "Find a show in Discover.", Discover (primary). With a filter and no matches: `EmptyState` "No Finished shows", "Shows you finish show up here.", Discover (primary). The filter name changes with the filter.
 
 **Loading:** the title and the sort and filter button stay. A three-column grid of twelve cells with the same gap as the loaded grid: a 2:3 poster block (radius 10), a 6-tall progress bar block, and a name bar (9 tall, width varying by cell).
 

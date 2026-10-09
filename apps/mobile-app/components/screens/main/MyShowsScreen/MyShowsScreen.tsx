@@ -79,6 +79,8 @@ const MyShowsScreen: React.FC = () => {
         title={`No ${filter} shows`}
         subtitle={FILTER_EMPTY[filter]}
         icon={<EmptyIcon name="grid-outline" />}
+        buttonText="Discover"
+        onButtonPress={() => router.push("/discover")}
       />
     );
   } else {

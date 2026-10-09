@@ -1,4 +1,4 @@
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import React from "react";
 import { ScrollView } from "react-native";
 import {
@@ -20,6 +20,7 @@ function deviceTimeZone() {
 }
 
 const UpcomingScreen: React.FC = () => {
+  const router = useRouter();
   const openedAt = useOpenedAt();
   const now = hourStart(openedAt);
   const list = useUpcoming(now);
@@ -48,6 +49,8 @@ const UpcomingScreen: React.FC = () => {
         title="Nothing scheduled yet"
         subtitle="Nothing scheduled for your shows yet."
         icon={<EmptyIcon name="calendar-outline" />}
+        buttonText="Discover"
+        onButtonPress={() => router.push("/discover")}
       />
     );
   } else {
