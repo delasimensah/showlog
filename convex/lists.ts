@@ -1,4 +1,5 @@
 import { v } from "convex/values";
+import { showStatus } from "shared";
 
 import type { Doc, Id } from "./_generated/dataModel";
 import type { QueryCtx } from "./_generated/server";
@@ -120,5 +121,71 @@ export const upNext = authedQuery({
       paused: paused.map(withoutAddedAt),
       notStarted: notStarted.map(withoutAddedAt),
     };
+  },
+});
+
+const listStatus = v.union(
+  v.literal("Stopped"),
+  v.literal("Watch later"),
+  v.literal("Not started"),
+  v.literal("Finished"),
+  v.literal("Up to date"),
+  v.literal("Watching")
+);
+
+const myShowSort = v.union(
+  v.literal("lastWatched"),
+  v.literal("lastAdded"),
+  v.literal("name")
+);
+
+export const myShows = authedQuery({
+  args: { sort: myShowSort },
+  returns: v.array(
+    v.object({
+      showId: v.id("shows"),
+      tvmazeId: v.number(),
+      name: v.string(),
+      posterUrl: v.union(v.string(), v.null()),
+      watchedCount: v.number(),
+      airedCount: v.number(),
+      status: listStatus,
+    })
+  ),
+  handler: async (ctx, args) => {
+    const mine = await ctx.db
+      .query("myShows")
+      .withIndex("by_user_addedAt", (q) => q.eq("userId", ctx.userId))
+      .collect();
+    const rows = [];
+    for (const row of mine) {
+      const show = await ctx.db.get(row.showId);
+      if (show === null) continue;
+      rows.push({
+        showId: show._id,
+        tvmazeId: show.tvmazeId,
+        name: show.name,
+        posterUrl: show.posterUrl ?? null,
+        watchedCount: row.watchedCount,
+        airedCount: row.airedCount,
+        status: showStatus({
+          watchedCount: row.watchedCount,
+          airedCount: row.airedCount,
+          watchLater: row.watchLater,
+          stopped: row.stoppedAt !== undefined,
+          tvmazeStatus: show.status,
+        }),
+        addedAt: row.addedAt,
+        lastWatchedAt: row.lastWatchedAt ?? null,
+      });
+    }
+    rows.sort((left, right) => {
+      if (args.sort === "name") return left.name.localeCompare(right.name);
+      if (args.sort === "lastAdded") return right.addedAt - left.addedAt;
+      return (right.lastWatchedAt ?? 0) - (left.lastWatchedAt ?? 0);
+    });
+    return rows.map(
+      ({ addedAt: _addedAt, lastWatchedAt: _watched, ...row }) => row
+    );
   },
 });

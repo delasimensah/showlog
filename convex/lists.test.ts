@@ -28,6 +28,7 @@ async function addShow(
     stoppedAt?: number;
     waitingAfterNext?: number;
     withNext?: boolean;
+    tvmazeStatus?: "Running" | "Ended";
   }
 ) {
   await t.run(async (ctx) => {
@@ -35,7 +36,7 @@ async function addShow(
       tvmazeId: input.tvmazeId,
       name: input.name,
       genres: [],
-      status: "Running",
+      status: input.tvmazeStatus ?? "Running",
       seasons: [],
       yearSeasons: false,
       tvmazeUpdatedAt: 0,
@@ -146,5 +147,65 @@ describe("upNext", () => {
       "Fresh",
       "Older add",
     ]);
+  });
+});
+
+describe("myShows", () => {
+  it("sorts the list and returns each status", async () => {
+    const t = convexTest(schema, modules);
+    const userId = await t.run(async (ctx) => {
+      return await ctx.db.insert("users", {
+        name: "Ada",
+        email: "me@example.com",
+      });
+    });
+    await addShow(t, userId, {
+      name: "Zebra",
+      tvmazeId: 1,
+      watchedCount: 1,
+      lastWatchedAt: now - 2 * DAY,
+      addedAt: now - 10 * DAY,
+    });
+    await addShow(t, userId, {
+      name: "Alpha",
+      tvmazeId: 2,
+      watchedCount: 0,
+      addedAt: now,
+    });
+    await addShow(t, userId, {
+      name: "Middle",
+      tvmazeId: 3,
+      watchedCount: 1,
+      lastWatchedAt: now,
+      addedAt: now - DAY,
+      tvmazeStatus: "Ended",
+    });
+
+    const asUser = t.withIdentity({ subject: `${userId}|test-session` });
+    const byWatch = await asUser.query(api.lists.myShows, {
+      sort: "lastWatched",
+    });
+    expect(byWatch.map((row) => row.name)).toEqual([
+      "Middle",
+      "Zebra",
+      "Alpha",
+    ]);
+    expect(byWatch.map((row) => row.status)).toEqual([
+      "Finished",
+      "Up to date",
+      "Not started",
+    ]);
+
+    const byAdded = await asUser.query(api.lists.myShows, {
+      sort: "lastAdded",
+    });
+    expect(byAdded.map((row) => row.name)).toEqual([
+      "Alpha",
+      "Middle",
+      "Zebra",
+    ]);
+
+    const byName = await asUser.query(api.lists.myShows, { sort: "name" });
+    expect(byName.map((row) => row.name)).toEqual(["Alpha", "Middle", "Zebra"]);
   });
 });

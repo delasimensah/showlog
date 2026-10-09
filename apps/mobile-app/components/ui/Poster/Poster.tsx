@@ -14,19 +14,26 @@ const SIZES = {
 interface PosterProps {
   uri?: string | null;
   size?: keyof typeof SIZES;
+  /** Grid width. Height stays 2:3. */
+  width?: number;
   accessibilityLabel: string;
 }
 
 const Poster: React.FC<PosterProps> = ({
   uri,
   size = "small",
+  width: columnWidth,
   accessibilityLabel,
 }) => {
-  const { width, height } = SIZES[size];
+  const sized = SIZES[size];
+  const width = columnWidth ?? sized.width;
+  const height = columnWidth === undefined ? sized.height : columnWidth * 1.5;
 
   return (
+    // View used: poster frame; do not change.
     <View
-      accessibilityLabel={accessibilityLabel}
+      accessible={accessibilityLabel.length > 0}
+      accessibilityLabel={accessibilityLabel || undefined}
       style={{
         width,
         height,
