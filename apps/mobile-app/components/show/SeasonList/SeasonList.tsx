@@ -21,7 +21,7 @@ const SeasonList: React.FC<SeasonListProps> = ({
 }) => {
   return (
     <VStack spacing="sm">
-      <HStack justify="between" className="items-baseline">
+      <HStack spacing="sm" className="items-baseline">
         <Text className="font-app-semibold text-xl text-text">Seasons</Text>
         <Text className="font-app-medium text-[13px] text-muted">
           {seasons.length}

@@ -15,7 +15,7 @@ const ShowSummary: React.FC<ShowSummaryProps> = ({ text }) => {
   const canExpand = text.length > SUMMARY_CLAMP;
 
   return (
-    <VStack spacing="xs">
+    <VStack spacing="sm">
       <Text
         className="font-app-regular text-[15px] leading-[22px] text-text"
         numberOfLines={expanded || !canExpand ? undefined : 4}

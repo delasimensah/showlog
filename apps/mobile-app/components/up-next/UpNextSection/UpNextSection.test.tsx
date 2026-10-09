@@ -7,7 +7,6 @@ describe("UpNextSection", () => {
     const { getByText } = render(
       <UpNextSection
         title="Paused for a while"
-        now={Date.UTC(2026, 9, 9)}
         onTick={jest.fn()}
         rows={[
           {

@@ -61,7 +61,7 @@ Each flow lists what must be true for it to count as done.
 **5. Up next**
 
 - One card per show on my list (not Watch later, not Stopped) that has an aired episode I have not ticked.
-- Each card shows the episode picture, show name, next episode number and title, "+3" when more aired episodes wait after it, and when I last watched the show (for example "7 months ago").
+- Each card shows the episode picture, show name, next episode number and title, and "+3" when more aired episodes wait after it.
 - A tick button on the card marks that episode watched, and the card moves to the following episode. When nothing is left, the card leaves the list.
 - Shows with a watch in the last 30 days come first, newest first. Shows with no watch in 30 days or more sit under **Paused for a while**. Shows I added but never ticked sit under **Not started**.
 - Tapping a card opens the show.
@@ -74,9 +74,8 @@ Each flow lists what must be true for it to count as done.
 
 **7. Upcoming**
 
-- Lists episodes of my shows (not Stopped) that have not aired yet, grouped Today, Tomorrow, the rest of this week by day name, then Later.
-- Each row shows the episode, the air time in my phone's time, and the network. An episode with no time shows the date only.
-- Later rows show a countdown ("in 7 days").
+- Lists episodes of my shows (not Stopped) that have not aired yet, grouped Today, Tomorrow, the rest of this week by day name, then one heading per later day with that date ("19 Oct").
+- Each row shows the episode and the air time in my phone's time. An episode with a date and no time shows "Time TBA". The network is on the show screen.
 - Episode 1 of a season is labelled Premiere.
 - Shows with nothing scheduled are listed at the bottom as "No date yet". Ended shows are left out.
 

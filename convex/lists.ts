@@ -4,6 +4,7 @@ import { showStatus } from "shared";
 import type { Doc, Id } from "./_generated/dataModel";
 import type { QueryCtx } from "./_generated/server";
 import { authedQuery } from "./lib/functions";
+import { hasAired } from "./progress";
 
 const RECENT_MS = 30 * 24 * 60 * 60 * 1000;
 
@@ -187,5 +188,117 @@ export const myShows = authedQuery({
     return rows.map(
       ({ addedAt: _addedAt, lastWatchedAt: _watched, ...row }) => row
     );
+  },
+});
+
+/** The TVmaze ids of every show on my list, so search can mark them live. */
+export const myTvmazeIds = authedQuery({
+  args: {},
+  returns: v.array(v.number()),
+  handler: async (ctx) => {
+    const mine = await ctx.db
+      .query("myShows")
+      .withIndex("by_user_addedAt", (q) => q.eq("userId", ctx.userId))
+      .collect();
+    const ids: number[] = [];
+    for (const row of mine) {
+      const show = await ctx.db.get(row.showId);
+      if (show !== null) ids.push(show.tvmazeId);
+    }
+    return ids;
+  },
+});
+
+const upcomingEpisode = v.object({
+  showId: v.id("shows"),
+  tvmazeId: v.number(),
+  showName: v.string(),
+  headerUrl: v.union(v.string(), v.null()),
+  posterUrl: v.union(v.string(), v.null()),
+  yearSeasons: v.boolean(),
+  network: v.union(v.string(), v.null()),
+  episodeId: v.id("episodes"),
+  season: v.number(),
+  number: v.number(),
+  order: v.number(),
+  name: v.string(),
+  imageUrl: v.union(v.string(), v.null()),
+  airsAt: v.number(),
+  airTimeKnown: v.boolean(),
+});
+
+const upcomingShow = v.object({
+  showId: v.id("shows"),
+  tvmazeId: v.number(),
+  showName: v.string(),
+  headerUrl: v.union(v.string(), v.null()),
+  posterUrl: v.union(v.string(), v.null()),
+});
+
+export const upcoming = authedQuery({
+  args: { now: v.number() },
+  returns: v.object({
+    episodes: v.array(upcomingEpisode),
+    noDate: v.array(upcomingShow),
+  }),
+  handler: async (ctx, args) => {
+    const mine = await ctx.db
+      .query("myShows")
+      .withIndex("by_user_addedAt", (q) => q.eq("userId", ctx.userId))
+      .collect();
+    const episodes = [];
+    const noDate = [];
+
+    for (const row of mine) {
+      if (row.stoppedAt !== undefined) continue;
+      const show = await ctx.db.get(row.showId);
+      if (show === null || show.status === "Ended") continue;
+      const catalog = await ctx.db
+        .query("episodes")
+        .withIndex("by_show_order", (q) => q.eq("showId", show._id))
+        .collect();
+      const scheduled = catalog.filter(
+        (episode) =>
+          episode.airsAt !== undefined && !hasAired(episode, args.now)
+      );
+
+      if (scheduled.length === 0) {
+        if (catalog.some((episode) => episode.airsAt === undefined)) {
+          noDate.push({
+            showId: show._id,
+            tvmazeId: show.tvmazeId,
+            showName: show.name,
+            headerUrl: show.headerUrl ?? null,
+            posterUrl: show.posterUrl ?? null,
+          });
+        }
+        continue;
+      }
+
+      for (const episode of scheduled) {
+        if (episode.airsAt === undefined) continue;
+        episodes.push({
+          showId: show._id,
+          tvmazeId: show.tvmazeId,
+          showName: show.name,
+          headerUrl: show.headerUrl ?? null,
+          posterUrl: show.posterUrl ?? null,
+          yearSeasons: show.yearSeasons,
+          network: show.network ?? null,
+          episodeId: episode._id,
+          season: episode.season,
+          number: episode.number,
+          order: episode.order,
+          name: episode.name,
+          imageUrl: episode.imageUrl ?? null,
+          airsAt: episode.airsAt,
+          airTimeKnown: episode.airTimeKnown,
+        });
+      }
+    }
+
+    episodes.sort((left, right) => left.airsAt - right.airsAt);
+    noDate.sort((left, right) => left.showName.localeCompare(right.showName));
+    return { episodes, noDate };
   },
 });

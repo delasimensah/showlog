@@ -30,7 +30,7 @@ Every screen is built from these. One component each, used the same way everywhe
 
 - Screen title: 34, ExtraBold. Hero title (show name on the show screen, Before alerts headline): 28, ExtraBold.
 - Section heading (Up next sections, Upcoming day groups, Discover rows, Seasons, About): 20, SemiBold, 12 above the first row.
-- Row title (the show name in Up next, Upcoming, and Search rows; the episode title in Season rows): 17, Bold, one line, two lines in Season rows.
+- Row title (the show name in Up next and Upcoming cards): 15, Bold, one line. Search rows and the episode title in Season rows stay 17, Bold.
 - Episode line (`EpisodeLabel`): 13, SemiBold, mint. "S4 | E11", or "Episode 1180" with "2026 · E25" as a meta line under the title.
 - Meta line: 13, Medium, muted. Parts joined with " · ".
 - Poster label (under a poster in Discover and My shows): 13, SemiBold, text colour. Two lines in Discover, one in My shows.
@@ -45,7 +45,7 @@ Every screen is built from these. One component each, used the same way everywhe
 **Pictures:** `expo-image`, radius 10 for every poster and episode picture, `surface` behind while loading, a fade-in of 150 ms. When a picture is missing, the fallback is the TV mark in muted on `surface`, never an empty box.
 
 - `Poster`: 2:3. Sizes: small 48 × 72 (Upcoming, Search), medium 120 × 180 (Discover), grid (a third of the row width, My shows).
-- `EpisodeImage`: 16:9, 128 × 72 in Up next and Season rows, full width in the episode sheet. Falls back to the show's header picture, then the poster, then the TV mark.
+- `EpisodeImage`: 16:9, 128 × 72 in Up next, Upcoming, and Season rows, full width in the episode sheet. Falls back to the show's header picture, then the poster, then the TV mark.
 
 **Controls:**
 
@@ -54,7 +54,7 @@ Every screen is built from these. One component each, used the same way everywhe
 - `HeaderButton`: 36 circle, `surface`, an 18 Ionicons icon in text colour. Sort and filter uses this until that control is a system bar button. Profile, search on Discover, and a back or close control are the system bar buttons. That bar is the iPhone's liquid glass bar. Do not draw those.
 - `Button`: primary (mint, ink text), secondary (`surface`, text colour), `quietDanger` (red text, no fill). Height 50, fully rounded, Bold 16.
 - `Chip`: 22 tall, fully rounded, `surface`, 12 SemiBold. "+3" and genres in text colour, Premiere in mint.
-- `ProgressBar`: 4 tall, fully rounded, mint on `surface`. My shows grid, the show header, and Season rows on the show screen.
+- `ProgressBar`: 6 tall, fully rounded, mint on `surface`. My shows grid, the show header, and Season rows on the show screen.
 - Pressed state on everything tappable: opacity 0.7 on rows and text buttons, scale 0.96 on circles.
 
 **Rows and spacing:**
@@ -102,20 +102,20 @@ Four tabs, in order: **Up next, Upcoming, Discover, My shows**. The tab bar is t
 
 **Header:** the system navigation bar, title "Up next".
 
-**Sections, in order:** Up next, Paused for a while, Not started. A section heading shows only when it has rows.
+**Sections, in order:** Up next, Paused for a while, Not started. A section heading shows only when it has rows. Each row is its own rounded card (surface colour, radius 16), with a 16 gap between cards.
 
 **Row (one per show):**
 
 - Left: `EpisodeImage`.
-- Right of the picture: the row title (show name), the `EpisodeLabel` with a "+3" `Chip` when more episodes wait, then a meta line with the episode title and "7 months ago" ("Milim's Friend · 7 months ago", one line).
-- Far right: `TickButton`. Tapping it moves the row to the next episode. When nothing is left, the row leaves the list.
+- Right of the picture: the row title (show name), the `EpisodeLabel` with a "+3" `Chip` when more episodes wait, then a meta line with the episode title ("Milim's Friend", one line).
+- Far right: `TickButton`. Tapping it fills the tick, holds that for a moment, then slides that episode out to the left and the next episode in from the right. The new episode's tick is empty again. When nothing is left, the card slides out with the tick still filled, and the cards below move up.
 - Tapping anywhere else on the row opens the show.
 
 Year-season shows read "Episode 1180" on the mint line and "2026 · E25" under the title.
 
 **Empty:** `EmptyState`: "Add the shows you watch", "Find them in Discover.", Discover (primary). No search on this tab.
 
-**Loading:** the title stays. A section heading bar (20 tall, 110 wide), then five rows: a 128 × 72 picture block (radius 10); beside it a name bar (14 tall), an episode line bar (9 tall, about 60 wide) with a 28 × 18 chip block beside it on rows 1 and 3, a title bar (9 tall), and a time bar (9 tall, about 70 wide); a 40 circle at the far right.
+**Loading:** the title stays. A section heading bar (20 tall, 110 wide), then five separate cards with the same gap as the loaded list. Each card: a 128 × 72 picture block (radius 10); beside it a name bar (11 tall), an episode line bar (9 tall, about 60 wide) with a 28 × 18 chip block beside it on rows 1 and 3, and a title bar (9 tall); a 40 circle at the far right.
 
 **References:**
 
@@ -131,19 +131,19 @@ Year-season shows read "Episode 1180" on the mint line and "2026 · E25" under t
 
 **Header:** the system navigation bar, title "Upcoming".
 
-**Groups** (section headings): Today, Tomorrow, each remaining day of this week by name ("Friday"), then Later. Then "No date yet" at the bottom.
+**Groups** (section headings): Today, Tomorrow, each remaining day of this week by name ("Friday"), then one heading per later day, the date itself ("19 Oct", plus the year when it is not this year). Then "No date yet" at the bottom. Today, Tomorrow, and a weekday show that date ("9 Oct", 13, Medium, meta colour) at the right end of the heading. A heading that is already the date, and No date yet, do not repeat it. Each row is its own rounded card (surface colour, radius 16), with a 16 gap between cards, the same card as Up next.
 
-**Row:** small `Poster`, the row title (show name), the `EpisodeLabel`, and a meta line with the episode title. Right side, right-aligned: the air time (13, SemiBold, text colour) over the network (meta line). Later rows show "in 7 days" instead of the time. Episode 1 of a season shows a Premiere `Chip` after the label. An episode with a date and no time shows the date only.
+**Row:** `EpisodeImage` (the episode picture, then the show's header picture, then the poster), the row title (show name, one line), the `EpisodeLabel`, and a meta line with the episode title. Episode 1 of a season shows a Premiere `Chip` after the label. Right side, right-aligned: the air time (13, SemiBold, text colour). An episode with a date and no time shows "Time TBA". The network stays on the show screen.
 
-**No date yet rows:** small `Poster`, the row title, and "No date yet" as the meta line. Ended shows are not listed.
+**No date yet rows:** the same card and `EpisodeImage` (the show's header picture, then the poster), the row title, and "Waiting for an air date" as the meta line. Ended shows are not listed.
 
 **Empty:** `EmptyState`: "Nothing scheduled yet", "Nothing scheduled for your shows yet.", no buttons.
 
-**Loading:** the title stays. A group heading bar (20 tall, 80 wide), then six rows: a 48 × 72 poster block (radius 10), a name bar (14 tall), an episode line bar (9 tall), and a title bar (9 tall), and on the right a time bar (9 tall, 44 wide) over a network bar (9 tall, 56 wide). A second heading bar after row three, as the loaded list would have.
+**Loading:** the title stays. Two groups of three separate cards, with the same gap as the loaded list. Above each group a heading bar (20 tall, 80 wide) with a date bar (9 tall, 44 wide) at the right end. Each card: a 128 × 72 picture block (radius 10), a name bar (11 tall), an episode line bar (9 tall), and a title bar (9 tall), and on the right a time bar (9 tall, 44 wide).
 
 **References:**
 
-- TV Time `04-upcoming-today-later.jpg`: the day grouping, time and network on the right, and the "7 days" countdown.
+- TV Time `04-upcoming-today-later.jpg`: Today and a weekday as headings, then each later day under its own date. The air time stays on the row.
 - TV Time `03-upcoming-recent.jpg`: how a dense list of episodes reads in day groups.
 - [Plex upcoming airings](https://mobbin.com/screens/d8575cec-b063-456a-8ee2-2fddb6585021): kept for the plain two-line row ("Today at 19:40 on Plex") with no decoration.
 
@@ -182,7 +182,7 @@ Year-season shows read "Episode 1180" on the mint line and "2026 · E25" under t
 
 **Empty:** `EmptyState`: "Your list is empty", "Find a show in Discover.", Discover (primary). With a filter and no matches: `EmptyState` "No Finished shows", "Shows you finish show up here.", no buttons (the filter name changes with the filter).
 
-**Loading:** the title and the sort and filter button stay. A three-column grid of twelve cells with the same gap as the loaded grid: a 2:3 poster block (radius 10), a 4-tall progress bar block, and a name bar (9 tall, width varying by cell).
+**Loading:** the title and the sort and filter button stay. A three-column grid of twelve cells with the same gap as the loaded grid: a 2:3 poster block (radius 10), a 6-tall progress bar block, and a name bar (9 tall, width varying by cell).
 
 **References:**
 
@@ -196,9 +196,9 @@ Year-season shows read "Episode 1180" on the mint line and "2026 · E25" under t
 
 **Route:** `app/(main-app)/search.tsx`, pushed from the search button on Discover.
 
-**Layout:** the system search field, focused on open. Its Cancel button leaves the screen. There is no back button. Results start after 2 characters, 300 ms after typing stops.
+**Layout:** the system search field. It opens low, then moves up as soon as the screen has finished opening, with the keyboard up and the system x beside it. The x leaves the screen, so I never have to tap the field first. There is no back button and no second x in the top bar. Results start after 2 characters, 300 ms after typing stops.
 
-**Result row:** small `Poster`, the row title, and the meta line "Animation · Japanese · 1999 · Fuji TV". Right side: `AddButton`, shown as added when the show is on my list. Tapping the row opens the show.
+**Result row:** small `Poster`, the row title, and the meta line "Animation · Japanese · 1999 · Fuji TV". Right side: `AddButton`, shown as added when the show is on my list. The list is live: a show added on its own screen shows as added here when I come back. Tapping the row opens the show.
 
 **States:** before typing: `EmptyState` "Search for a show", "Type a name. Show data comes from TVmaze.". No results: `EmptyState` "No matches", "No shows match "query"." Searching: the system search field stays, and the current results stay until new ones arrive. On the first search, four rows under the field: a 48 × 72 poster block (radius 10), a name bar (14 tall), a meta bar (9 tall, about 70%), and on the right a 32 circle where the `AddButton` goes.
 
@@ -215,11 +215,11 @@ Year-season shows read "Episode 1180" on the mint line and "2026 · E25" under t
 
 **On my list:**
 
-- Header picture full width, 16:10, with a dark fade into `page` over its lower half. The show name sits on that fade, up to two lines. Pulling down stretches the picture. Scrolling up fades `page` into the system navigation bar, and the show name fades in with it, on one line, ending in an ellipsis when it does not fit between the back button and the menu. The system back button sits in the navigation bar. The menu is a system bar button (ellipsis) on the right. A poster used in place of a wide picture stays 2:3 and centred in the header, so it is not stretched.
+- Header picture full width, 16:10, with a dark fade into `page` over its lower half. The show name sits on that fade, up to two lines. Pulling down stretches the picture. Scrolling up fades `page` into the system navigation bar, and the show name fades in with it, centred on the bar, on one line, ending in an ellipsis when it does not fit. The system back button sits in the navigation bar. The menu button (ellipsis) sits on the right only once the menu below exists. A poster used in place of a wide picture stays 2:3 and centred in the header, so it is not stretched.
 - Hero title (show name, up to two lines), then the meta line "5 seasons · Netflix", then a progress summary: "48 of 73 watched" (meta line) on the left, the percentage in mint on the right, and a full-width `ProgressBar` under them.
 - **Where you left off** card: the meta line "Last watched · 12 Mar", the `EpisodeLabel`, the episode title (17, Bold), and TVmaze's summary (body, three lines). Under a `border` hairline: "Up next" (meta line), the next `EpisodeLabel` and title, and a `TickButton` on the right. With nothing ticked: a mint play circle (36) on the left, "Start with S1 | E1" (17, Bold), "Nothing watched yet" as a meta line, and the `TickButton`. Tapping an episode in the card opens the episode sheet.
-- **Seasons** (section heading, the season count in muted on its right): one `surface` card, radius 16, with a hairline between rows. Each row: "Season 4" (or "2026" for year seasons, 17, Bold), "10/24" as a meta line (a mint check circle when every episode is watched), a chevron in muted, and a `ProgressBar` under them. Tapping opens the season.
-- **About** (section heading): summary (body, four lines, "More" in mint expands it, "Less" closes it), genre `Chip`s, and "Show data from TVmaze" as a meta line with a link.
+- **Seasons** (section heading, the season count in muted beside it): one `surface` card, radius 16, with a hairline between rows. Each row: "Season 4" (or "2026" for year seasons, 17, Bold) with "10/24" beside it as a meta line (a mint check circle when every episode is watched). The chevron stays at the far end. A `ProgressBar` sits under them. Tapping opens the season.
+- **About** (section heading): summary (body, four lines, "More" in mint expands it, "Less" closes it), genre `Chip`s, and "Show data from TVmaze" as a meta line with a link. 16 between the heading, the summary, the chips, and the link. 8 between the summary and More.
 - **Menu** (native menu from `@expo/ui`): Watch later (or Remove from Watch later), Stop watching (red) or Resume, Remove from my list (red). Remove asks to confirm first.
 
 **Not on my list** (opened from Discover or Search):
@@ -232,7 +232,7 @@ Year-season shows read "Episode 1180" on the mint line and "2026 · E25" under t
 **Loading:** the system back button and the menu button stay.
 
 - A 16:10 header block, full width.
-- A name bar (22 tall, 70%), a meta bar (9 tall, 40%), and a progress bar block (4 tall) with a count bar on its right.
+- A name bar (22 tall, 70%), a meta bar (9 tall, 40%), and a progress bar block (6 tall) with a count bar on its right.
 - The Where you left off card as a `surface` card of the loaded size, with a label bar, an episode line bar, a title bar, three summary bars, a hairline, and a 40 circle.
 - Four season rows: a season name bar, a count bar, a thin progress block, and the chevron as a small block.
 - A show not on my list instead shows a full-width 50-tall pill block where Add goes, three chip blocks, and four summary bars.

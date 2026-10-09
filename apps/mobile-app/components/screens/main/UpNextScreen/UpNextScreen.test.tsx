@@ -1,19 +1,17 @@
 import { fireEvent, render } from "@testing-library/react-native";
 import { useRouter } from "expo-router";
 
-import { useOpenedAt, useTickUpNext, useUpNext } from "@/hooks";
+import { useTickUpNext, useUpNext } from "@/hooks";
 
 import UpNextScreen from "./UpNextScreen";
 
 jest.mock("@/hooks", () => ({
   useUpNext: jest.fn(),
   useTickUpNext: jest.fn(),
-  useOpenedAt: jest.fn(),
 }));
 
 const mockedList = useUpNext as jest.Mock;
 const mockedTick = useTickUpNext as jest.Mock;
-const mockedNow = useOpenedAt as jest.Mock;
 
 const empty = { upNext: [], paused: [], notStarted: [] };
 
@@ -27,7 +25,6 @@ describe("UpNextScreen", () => {
     tick.mockResolvedValue(null);
     (useRouter as jest.Mock).mockReturnValue({ push });
     mockedTick.mockReturnValue(tick);
-    mockedNow.mockReturnValue(Date.UTC(2026, 9, 9));
     mockedList.mockReturnValue(empty);
   });
 
@@ -58,6 +55,7 @@ describe("UpNextScreen", () => {
   });
 
   it("ticks the episode on a row", () => {
+    jest.useFakeTimers();
     mockedList.mockReturnValue({
       ...empty,
       upNext: [
@@ -83,6 +81,9 @@ describe("UpNextScreen", () => {
 
     expect(getByText("S4 | E11")).toBeTruthy();
     fireEvent.press(getByLabelText("Mark as watched"));
+    expect(tick).not.toHaveBeenCalled();
+    jest.advanceTimersByTime(320);
     expect(tick).toHaveBeenCalledWith({ episodeId: "episodes-1" });
+    jest.useRealTimers();
   });
 });

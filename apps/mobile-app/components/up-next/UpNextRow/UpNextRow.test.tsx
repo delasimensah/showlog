@@ -22,22 +22,30 @@ const row: UpNextRowData = {
 };
 
 describe("UpNextRow", () => {
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
   it("shows the next episode and ticks it", () => {
+    jest.useFakeTimers();
     const push = jest.fn();
     const onTick = jest.fn();
     (useRouter as jest.Mock).mockReturnValue({ push });
-    const { getByText, getByLabelText } = render(
-      <UpNextRow row={row} now={now} onTick={onTick} />
+    const { getByText, getByLabelText, queryByText } = render(
+      <UpNextRow row={row} onTick={onTick} />
     );
 
     expect(getByText("Episode 1180")).toBeTruthy();
     expect(getByText("2026 · E25")).toBeTruthy();
     expect(getByText("+3")).toBeTruthy();
     expect(getByText("Milim's Friend")).toBeTruthy();
-    expect(getByText("· 7 months ago")).toBeTruthy();
+    expect(queryByText(/ago/)).toBeNull();
     fireEvent.press(getByLabelText("One Piece"));
     expect(push).toHaveBeenCalledWith("/show/1505");
     fireEvent.press(getByLabelText("Mark as watched"));
+    expect(getByLabelText("Watched")).toBeTruthy();
+    expect(onTick).not.toHaveBeenCalled();
+    jest.advanceTimersByTime(320);
     expect(onTick).toHaveBeenCalled();
   });
 });

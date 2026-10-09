@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
-import { Pressable } from "react-native";
+import { Pressable, View } from "react-native";
 
 import { COLORS } from "@/constants";
 import { watchedShare } from "@/utils";
@@ -37,9 +37,7 @@ const ShowSeasonRow: React.FC<ShowSeasonRowProps> = ({
         className={`px-4 py-3.5 ${first ? "" : "border-t border-border"}`.trim()}
       >
         <HStack align="center" spacing="sm">
-          <Text className="min-w-0 flex-1 font-app-bold text-[17px] text-text">
-            {label}
-          </Text>
+          <Text className="font-app-bold text-[17px] text-text">{label}</Text>
           {done ? (
             <Ionicons
               name="checkmark-circle"
@@ -51,6 +49,7 @@ const ShowSeasonRow: React.FC<ShowSeasonRowProps> = ({
               {watchedCount}/{episodeCount}
             </Text>
           )}
+          <View className="min-w-0 flex-1" />
           <Ionicons name="chevron-forward" size={18} color={COLORS.muted} />
         </HStack>
         <HStack>

@@ -1,6 +1,7 @@
 export { useSession } from "./auth/useSession";
 export { useBottomsheetStore } from "./bottom-sheets/useBottomsheetStore";
 export { useTickUpNext } from "./lists/useTickUpNext";
+export { useUpcoming } from "./lists/useUpcoming";
 export { useUpNext } from "./lists/useUpNext";
 export { useMyShows } from "./my-shows/useMyShows";
 export {
@@ -10,6 +11,7 @@ export {
 } from "./my-shows/useMyShowsChoice";
 export type { MyShowsFilter, MyShowsSort } from "./my-shows/useMyShowsChoice";
 export { useAccount } from "./profile/useAccount";
+export { useListedShows } from "./search/useListedShows";
 export { useSearchShows } from "./search/useSearchShows";
 export { useAddShow } from "./shows/useAddShow";
 export { useOpenedAt } from "./shows/useOpenedAt";
