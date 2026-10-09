@@ -69,3 +69,4 @@ SHOW-3. Open a show.
 - Screens: `docs/design/screens.md`
 - Tickets: `docs/product/linear-tickets.md`
 - SHOW-1 pull request: https://github.com/delasimensah/showlog/pull/1
+- SHOW-2 pull request: https://github.com/delasimensah/showlog/pull/2
