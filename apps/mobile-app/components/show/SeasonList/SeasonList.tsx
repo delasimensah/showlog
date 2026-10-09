@@ -11,9 +11,14 @@ interface SeasonListProps {
     watchedCount: number;
   }[];
   yearSeasons: boolean;
+  onOpenSeason: (season: number) => void;
 }
 
-const SeasonList: React.FC<SeasonListProps> = ({ seasons, yearSeasons }) => {
+const SeasonList: React.FC<SeasonListProps> = ({
+  seasons,
+  yearSeasons,
+  onOpenSeason,
+}) => {
   return (
     <VStack spacing="sm">
       <HStack justify="between" className="items-baseline">
@@ -32,6 +37,7 @@ const SeasonList: React.FC<SeasonListProps> = ({ seasons, yearSeasons }) => {
             watchedCount={season.watchedCount}
             episodeCount={season.episodeCount}
             first={index === 0}
+            onPress={() => onOpenSeason(season.number)}
           />
         ))}
       </VStack>

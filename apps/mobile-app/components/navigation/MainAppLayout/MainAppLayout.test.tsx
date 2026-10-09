@@ -33,5 +33,6 @@ describe("MainAppLayout", () => {
     expect(getByText("(tabs)")).toBeTruthy();
     expect(getByText("profile")).toBeTruthy();
     expect(getByText("search")).toBeTruthy();
+    expect(getByText("show/[tvmazeId]/season/[season]")).toBeTruthy();
   });
 });

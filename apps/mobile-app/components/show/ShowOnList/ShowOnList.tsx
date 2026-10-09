@@ -1,3 +1,4 @@
+import { useRouter } from "expo-router";
 import React from "react";
 
 import { joinMeta, seasonsLabel } from "@/utils";
@@ -32,6 +33,8 @@ interface ShowOnListProps {
 }
 
 const ShowOnList: React.FC<ShowOnListProps> = ({ show, width }) => {
+  const router = useRouter();
+
   return (
     <>
       <ShowHero
@@ -43,7 +46,13 @@ const ShowOnList: React.FC<ShowOnListProps> = ({ show, width }) => {
       </ShowHero>
       <VStack spacing="lg" className="mt-6 bg-page px-5 pb-10">
         <ContinueCard />
-        <SeasonList seasons={show.seasons} yearSeasons={show.yearSeasons} />
+        <SeasonList
+          seasons={show.seasons}
+          yearSeasons={show.yearSeasons}
+          onOpenSeason={(season) => {
+            router.push(`/show/${show.tvmazeId}/season/${season}`);
+          }}
+        />
         <VStack spacing="sm">
           <Text className="font-app-semibold text-xl text-text">About</Text>
           {show.summary ? <ShowSummary text={show.summary} /> : null}

@@ -3,6 +3,7 @@ import React, { useEffect, useRef } from "react";
 
 import { useBottomsheetStore } from "@/hooks";
 
+import EpisodeSheet from "../EpisodeSheet/EpisodeSheet";
 import GenericBottomSheet from "../GenericBottomSheet/GenericBottomSheet";
 
 /**
@@ -29,21 +30,22 @@ import GenericBottomSheet from "../GenericBottomSheet/GenericBottomSheet";
  * ```
  */
 const BottomSheetsManager: React.FC = () => {
-  const { setGenericRef } = useBottomsheetStore();
+  const { setGenericRef, setEpisodeSheetRef } = useBottomsheetStore();
 
-  // Create refs locally in this component
   const genericRef = useRef<BottomSheetModal>(null);
+  const episodeSheetRef = useRef<BottomSheetModal>(null);
 
-  // Register refs with the store on mount
   useEffect(() => {
     setGenericRef(genericRef);
-  }, [setGenericRef]);
+    setEpisodeSheetRef(episodeSheetRef);
+  }, [setEpisodeSheetRef, setGenericRef]);
 
   return (
     <>
       <GenericBottomSheet ref={genericRef} title="Example Sheet">
         {/* Add your bottom sheet content here */}
       </GenericBottomSheet>
+      <EpisodeSheet ref={episodeSheetRef} />
     </>
   );
 };

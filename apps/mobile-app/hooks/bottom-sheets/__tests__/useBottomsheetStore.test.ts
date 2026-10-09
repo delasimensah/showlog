@@ -66,6 +66,40 @@ describe("useBottomsheetStore", () => {
       expect(mockPresent).toHaveBeenCalledTimes(1);
     });
 
+    it("should present the episode sheet with the chosen episode", () => {
+      const { result } = renderHook(() => useBottomsheetStore());
+      const mockPresent = jest.fn();
+      const episode = {
+        episodeId: "episodes-1",
+        showId: "shows-1",
+        tvmazeId: 1,
+        season: 1,
+        number: 1,
+        order: 1,
+        name: "Romance Dawn",
+        summary: null,
+        airsAt: null,
+        airTimeKnown: false,
+        runtime: null,
+        imageUrl: null,
+        headerUrl: null,
+        posterUrl: null,
+        watched: false,
+        aired: true,
+        yearSeasons: false,
+      };
+
+      act(() => {
+        result.current.setEpisodeSheetRef({
+          current: { present: mockPresent } as never,
+        });
+        result.current.openEpisodeSheet(episode);
+      });
+
+      expect(result.current.episode).toEqual(episode);
+      expect(mockPresent).toHaveBeenCalledTimes(1);
+    });
+
     it("should not throw when calling methods with null refs", () => {
       const { result } = renderHook(() => useBottomsheetStore());
 
