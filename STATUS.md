@@ -78,3 +78,4 @@ SHOW-12 is next. I get a phone alert when a new episode is out. Add the Apple pu
 - SHOW-8 pull request: https://github.com/delasimensah/showlog/pull/8
 - SHOW-9 pull request: https://github.com/delasimensah/showlog/pull/9
 - SHOW-10 pull request: https://github.com/delasimensah/showlog/pull/10
+- SHOW-11 pull request: https://github.com/delasimensah/showlog/pull/11
