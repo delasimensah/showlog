@@ -74,7 +74,7 @@ Sizes:
 - No purple, plum, or violet (rejected).
 - No lime (rejected).
 - No coral or rose accents. They read as the red of a destructive action.
-- No gradients on the page, no glow effects, and no glassy blur painted in the app. The tab bar is the iPhone's own glass bar.
+- No gradients on the page, no glow effects, and no glassy blur painted in the app. The tab bar and the navigation bar are the iPhone's own glass.
 - No light mode in this version.
 - No grey boxes where a poster should be. While a poster loads, its skeleton keeps the 2:3 shape.
 - No emoji in the interface.
@@ -83,7 +83,7 @@ Sizes:
 
 ## Navigation
 
-Four tabs: **Up next, Upcoming, Discover, My shows**. The tab bar is the iPhone's own glass tab bar. Profile opens from a button at the top right of Up next. Search opens from Discover, My shows, and an empty Up next.
+Four tabs: **Up next, Upcoming, Discover, My shows**. The tab bar is the iPhone's own glass tab bar. A pushed screen uses the iPhone's glass navigation bar, and its back button is the system's. Profile opens from a button at the top right of My shows. Search opens from Discover. Up next and My shows are shows already on the list.
 
 ---
 

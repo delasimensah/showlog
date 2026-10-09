@@ -1,9 +1,10 @@
-import { Redirect, Stack } from "expo-router";
+import { Redirect, Stack, ThemeProvider } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 
 import { COLORS } from "@/constants";
 import { useSession } from "@/hooks";
+import { defaultStackScreenOptions, navigationTheme } from "@/utils";
 
 import LoadingScreen from "../../shared/LoadingScreen/LoadingScreen";
 
@@ -21,15 +22,29 @@ const MainAppLayout: React.FC = () => {
   return (
     <>
       <StatusBar style="light" />
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          contentStyle: { backgroundColor: COLORS.page },
-        }}
-      >
-        <Stack.Screen name="(tabs)" />
-        <Stack.Screen name="profile" />
-      </Stack>
+      <ThemeProvider value={navigationTheme}>
+        <Stack
+          screenOptions={{
+            ...defaultStackScreenOptions,
+            headerShown: false,
+            contentStyle: { backgroundColor: COLORS.page },
+          }}
+        >
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="profile"
+            options={{ headerShown: true, title: "Profile" }}
+          />
+          <Stack.Screen
+            name="search"
+            options={{
+              headerShown: true,
+              title: "",
+              headerBackVisible: false,
+            }}
+          />
+        </Stack>
+      </ThemeProvider>
     </>
   );
 };

@@ -6,6 +6,7 @@ export {
   defaultStackScreenOptions,
   navigationTheme,
   screenPresets,
+  tabStackScreenOptions,
 } from "./navigation";
 
 export {

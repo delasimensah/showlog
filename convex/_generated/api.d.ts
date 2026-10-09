@@ -14,6 +14,10 @@ import type * as lib_errors from "../lib/errors.js";
 import type * as lib_functions from "../lib/functions.js";
 import type * as lib_singleAccount from "../lib/singleAccount.js";
 import type * as profile from "../profile.js";
+import type * as progress from "../progress.js";
+import type * as search from "../search.js";
+import type * as shows from "../shows.js";
+import type * as tvmaze from "../tvmaze.js";
 
 import type {
   ApiFromModules,
@@ -28,6 +32,10 @@ declare const fullApi: ApiFromModules<{
   "lib/functions": typeof lib_functions;
   "lib/singleAccount": typeof lib_singleAccount;
   profile: typeof profile;
+  progress: typeof progress;
+  search: typeof search;
+  shows: typeof shows;
+  tvmaze: typeof tvmaze;
 }>;
 
 /**

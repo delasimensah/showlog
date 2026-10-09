@@ -26,6 +26,6 @@ describe("AuthLayout", () => {
       isLoading: false,
     });
     const { getByText } = render(<AuthLayout />);
-    expect(getByText("redirect:/(main-app)/(tabs)")).toBeTruthy();
+    expect(getByText("redirect:/(main-app)/(tabs)/up-next")).toBeTruthy();
   });
 });

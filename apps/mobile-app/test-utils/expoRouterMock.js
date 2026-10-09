@@ -12,6 +12,50 @@ const Stack = Object.assign(
     Screen: function StackScreen({ name }) {
       return React.createElement("Text", null, name);
     },
+    Title: function Title({ children }) {
+      return React.createElement("Text", null, children);
+    },
+    Toolbar: Object.assign(
+      function Toolbar({ children }) {
+        return React.createElement(React.Fragment, null, children);
+      },
+      {
+        Button: function ToolbarButton({ accessibilityLabel, onPress }) {
+          const { Pressable, Text } = require("react-native");
+          return React.createElement(
+            Pressable,
+            { accessibilityLabel, onPress },
+            React.createElement(Text, null, accessibilityLabel)
+          );
+        },
+      }
+    ),
+    SearchBar: function SearchBar({
+      placeholder,
+      onChangeText,
+      onCancelButtonPress,
+    }) {
+      const { Pressable, Text, TextInput } = require("react-native");
+      return React.createElement(
+        React.Fragment,
+        null,
+        React.createElement(TextInput, {
+          accessibilityLabel: placeholder ?? "Search",
+          placeholder,
+          onChangeText,
+        }),
+        onCancelButtonPress
+          ? React.createElement(
+              Pressable,
+              {
+                accessibilityLabel: "Cancel",
+                onPress: onCancelButtonPress,
+              },
+              React.createElement(Text, null, "Cancel")
+            )
+          : null
+      );
+    },
   }
 );
 

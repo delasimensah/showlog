@@ -1,8 +1,9 @@
-import { Redirect, Stack } from "expo-router";
+import { Redirect, Stack, ThemeProvider } from "expo-router";
 import React from "react";
 
 import { COLORS } from "@/constants";
 import { useSession } from "@/hooks";
+import { defaultStackScreenOptions, navigationTheme } from "@/utils";
 
 import LoadingScreen from "../../shared/LoadingScreen/LoadingScreen";
 
@@ -14,18 +15,21 @@ const AuthLayout: React.FC = () => {
   }
 
   if (isAuthenticated) {
-    return <Redirect href="/(main-app)/(tabs)" />;
+    return <Redirect href="/(main-app)/(tabs)/up-next" />;
   }
 
   return (
-    <Stack
-      screenOptions={{
-        headerShown: false,
-        contentStyle: { backgroundColor: COLORS.page },
-      }}
-    >
-      <Stack.Screen name="sign-in" />
-    </Stack>
+    <ThemeProvider value={navigationTheme}>
+      <Stack
+        screenOptions={{
+          ...defaultStackScreenOptions,
+          headerShown: false,
+          contentStyle: { backgroundColor: COLORS.page },
+        }}
+      >
+        <Stack.Screen name="sign-in" />
+      </Stack>
+    </ThemeProvider>
   );
 };
 

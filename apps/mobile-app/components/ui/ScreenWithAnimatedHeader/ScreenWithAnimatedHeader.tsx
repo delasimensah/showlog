@@ -1,4 +1,5 @@
 import React from "react";
+import { ScrollView } from "react-native";
 import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
@@ -14,6 +15,7 @@ export interface ScreenWithAnimatedHeaderProps {
   contentContainerStyle?: object;
   headerLeft?: React.ReactNode;
   headerRight?: React.ReactNode;
+  scrollable?: boolean;
 }
 
 const ScreenWithAnimatedHeader: React.FC<ScreenWithAnimatedHeaderProps> = ({
@@ -22,6 +24,7 @@ const ScreenWithAnimatedHeader: React.FC<ScreenWithAnimatedHeaderProps> = ({
   contentContainerStyle,
   headerLeft,
   headerRight,
+  scrollable = true,
 }) => {
   const scrollY = useSharedValue(0);
 
@@ -40,17 +43,41 @@ const ScreenWithAnimatedHeader: React.FC<ScreenWithAnimatedHeaderProps> = ({
         right={headerRight}
       />
 
-      <Animated.ScrollView
-        onScroll={scrollHandler}
-        scrollEventThrottle={16}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 100, ...contentContainerStyle }}
-      >
-        <VStack spacing="2xl" paddingY="md" className="px-5">
-          <LargeTitle title={title} />
-          {children}
-        </VStack>
-      </Animated.ScrollView>
+      {scrollable ? (
+        <Animated.ScrollView
+          onScroll={scrollHandler}
+          scrollEventThrottle={16}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            paddingBottom: 100,
+            ...contentContainerStyle,
+          }}
+        >
+          <VStack spacing="2xl" paddingY="md" className="px-5">
+            <LargeTitle title={title} />
+            {children}
+          </VStack>
+        </Animated.ScrollView>
+      ) : (
+        <>
+          <VStack spacing="none" paddingY="md" className="px-5">
+            <LargeTitle title={title} />
+          </VStack>
+          <ScrollView
+            style={{ flex: 1 }}
+            scrollEnabled={false}
+            bounces={false}
+            contentInsetAdjustmentBehavior="automatic"
+            contentContainerStyle={{
+              flexGrow: 1,
+              justifyContent: "center",
+              paddingHorizontal: 20,
+            }}
+          >
+            {children}
+          </ScrollView>
+        </>
+      )}
     </VStack>
   );
 };

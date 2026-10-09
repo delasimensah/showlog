@@ -14,18 +14,20 @@ describe("navigation utilities", () => {
   });
 
   describe("defaultStackScreenOptions", () => {
-    it("should have correct header style", () => {
-      expect(defaultStackScreenOptions.headerStyle).toEqual({
-        backgroundColor: COLORS.page,
-      });
+    it("leaves the header bar to the system", () => {
+      expect(defaultStackScreenOptions).not.toHaveProperty("headerStyle");
+      expect(defaultStackScreenOptions.headerBackButtonDisplayMode).toBe(
+        "minimal"
+      );
     });
 
-    it("should have white header tint color", () => {
-      expect(defaultStackScreenOptions.headerTintColor).toBe("white");
+    it("should have the text color on the header", () => {
+      expect(defaultStackScreenOptions.headerTintColor).toBe(COLORS.text);
     });
 
     it("should have correct header title style", () => {
       expect(defaultStackScreenOptions.headerTitleStyle).toEqual({
+        color: COLORS.text,
         fontFamily: "App-Regular",
       });
     });
@@ -130,10 +132,8 @@ describe("navigation utilities", () => {
       };
 
       expect(customOptions.headerTitle).toBe("Custom Title");
-      expect(customOptions.headerTintColor).toBe("white");
-      expect(customOptions.headerStyle).toEqual({
-        backgroundColor: COLORS.page,
-      });
+      expect(customOptions.headerTintColor).toBe(COLORS.text);
+      expect(customOptions).not.toHaveProperty("headerStyle");
     });
 
     it("should handle spreading screenPresets", () => {
@@ -153,7 +153,7 @@ describe("navigation utilities", () => {
       };
 
       expect(combinedOptions.presentation).toBe("modal");
-      expect(combinedOptions.headerTintColor).toBe("white");
+      expect(combinedOptions.headerTintColor).toBe(COLORS.text);
     });
   });
 
@@ -165,7 +165,7 @@ describe("navigation utilities", () => {
       };
 
       expect(modalOptions.presentation).toBe("modal");
-      expect(modalOptions.headerTintColor).toBe("white");
+      expect(modalOptions.headerTintColor).toBe(COLORS.text);
     });
 
     it("should preserve colors from constants", () => {
@@ -173,10 +173,7 @@ describe("navigation utilities", () => {
         (defaultStackScreenOptions.contentStyle as { backgroundColor: string })
           ?.backgroundColor
       ).toBe(COLORS.page);
-      expect(
-        (defaultStackScreenOptions.headerStyle as { backgroundColor: string })
-          ?.backgroundColor
-      ).toBe(COLORS.page);
+      expect(defaultStackScreenOptions.headerTintColor).toBe(COLORS.text);
     });
   });
 });

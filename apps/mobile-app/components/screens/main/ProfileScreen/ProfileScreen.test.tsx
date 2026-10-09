@@ -31,9 +31,9 @@ describe("ProfileScreen", () => {
   });
 
   it("shows the account name and email", () => {
-    const { getAllByText, getByText } = render(<ProfileScreen />);
+    const { getByText, queryByLabelText } = render(<ProfileScreen />);
 
-    expect(getAllByText("Profile").length).toBeGreaterThan(0);
+    expect(queryByLabelText("Back")).toBeNull();
     expect(getByText("Ada")).toBeTruthy();
     expect(getByText("me@example.com")).toBeTruthy();
   });

@@ -11,17 +11,15 @@ describe("UpNextScreen", () => {
     (useRouter as jest.Mock).mockReturnValue({ push });
   });
 
-  it("shows the empty list and opens Profile", () => {
-    const { getAllByText, getByText, getByLabelText } = render(
+  it("shows the empty list", () => {
+    const { getAllByText, getByText, queryByLabelText } = render(
       <UpNextScreen />
     );
 
     expect(getAllByText("Up next").length).toBeGreaterThan(0);
     expect(getByText("Add the shows you watch")).toBeTruthy();
-    expect(getByText("Find them in Discover or search by name.")).toBeTruthy();
-
-    fireEvent.press(getByLabelText("Profile"));
-    expect(push).toHaveBeenCalledWith("/profile");
+    expect(getByText("Find them in Discover.")).toBeTruthy();
+    expect(queryByLabelText("Profile")).toBeNull();
   });
 
   it("opens Discover", () => {

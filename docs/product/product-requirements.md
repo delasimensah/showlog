@@ -32,7 +32,7 @@ Each flow lists what must be true for it to count as done.
 
 **2. Search and add a show**
 
-- Search opens from Discover, My shows, and the empty Up next screen.
+- Search opens from Discover.
 - Typing a name shows TVmaze matches with poster, type (for example Animation), language, first-air year, and network or streaming service. A typo still finds the show. Searching "one piece" lets me tell the 1999 Japanese anime on Fuji TV from the 2023 Netflix live-action series at a glance.
 - A show already on my list shows "On your list" instead of Add.
 - Adding a show saves the show and all its numbered episodes, and the show appears in My shows as Not started.
@@ -84,7 +84,7 @@ Each flow lists what must be true for it to count as done.
 
 - A three-column poster grid with a progress bar under each poster (episodes ticked out of episodes aired).
 - A sort and filter sheet: sort by Last watched, Last added, or A to Z. Filter by All, Watching, Up to date, Not started, Watch later, Finished, or Stopped. The choice is remembered on the phone.
-- A search button in the header opens Search.
+- Sort and filter only narrow the shows already on the list. A new show is found on Discover.
 
 **9. Watch later and Stop watching**
 
@@ -98,7 +98,7 @@ Each flow lists what must be true for it to count as done.
 - TV time adds up the runtime of every ticked episode. A missing runtime uses the show's average runtime, or zero if TVmaze has neither.
 - Below: account email, an alerts on or off switch, Export my history, "Show data from TVmaze" with a link, and the app version.
 - Sign out is red text and asks me to confirm.
-- Profile opens from an icon in the Up next header.
+- Profile opens from an icon in the My shows header.
 
 **11. New episode alert**
 
@@ -126,9 +126,9 @@ Each flow lists what must be true for it to count as done.
 References for each screen are in `docs/design/references/tvtime/`. Mobbin references are added in the design step.
 
 1. **Sign in** — email, password, Sign in button, Create account link.
-2. **Up next** (tab) — sections Up next, Paused for a while, Not started. Profile icon in the header. Empty state: "Add the shows you watch" with Discover and Search buttons. Reference: `01-watch-list.jpg`.
+2. **Up next** (tab) — sections Up next, Paused for a while, Not started. Empty state: "Add the shows you watch" with a Discover button. Reference: `01-watch-list.jpg`.
 3. **Upcoming** (tab) — date-grouped list. Empty state: "Nothing scheduled for your shows yet." References: `03`, `04`.
-4. **My shows** (tab) — poster grid, sort and filter sheet, search button. Empty state with a Search button. References: `06`, `07`.
+4. **My shows** (tab) — poster grid, sort and filter sheet. Profile icon in the header. Empty state sends you to Discover. References: `06`, `07`.
 5. **Discover** (tab) — rows of suggested shows, each card with poster, name, year, and Add. Search button in the header. Pull down to shuffle.
 6. **Search** — search field, results with Add.
 7. **Show** — header picture, name, seasons and network, progress bar, Where you left off card, seasons, menu (Watch later, Stop watching, Remove from my list), TVmaze credit. A show not on my list yet shows genres, rating, status, network, number of seasons, summary, and Add instead of episodes. References: `10`, `11`, `14`, `16`.

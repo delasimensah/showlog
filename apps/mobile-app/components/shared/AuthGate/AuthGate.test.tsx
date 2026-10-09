@@ -26,7 +26,7 @@ describe("AuthGate", () => {
       isLoading: false,
     });
     const { getByText } = render(<AuthGate />);
-    expect(getByText("redirect:/(main-app)/(tabs)")).toBeTruthy();
+    expect(getByText("redirect:/(main-app)/(tabs)/up-next")).toBeTruthy();
   });
 
   it("waits while the session is loading", () => {
@@ -34,8 +34,8 @@ describe("AuthGate", () => {
       isAuthenticated: false,
       isLoading: true,
     });
-    const { getByText, queryByText } = render(<AuthGate />);
-    expect(getByText("Loading...")).toBeTruthy();
+    const { getAllByTestId, queryByText } = render(<AuthGate />);
+    expect(getAllByTestId("skeleton-card").length).toBeGreaterThan(0);
     expect(queryByText(/redirect:/)).toBeNull();
   });
 });
