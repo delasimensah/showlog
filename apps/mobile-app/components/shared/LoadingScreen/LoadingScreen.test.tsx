@@ -9,9 +9,9 @@ describe("LoadingScreen Component", () => {
       expect(toJSON()).toBeTruthy();
     });
 
-    it("displays loading text", () => {
+    it("shows skeleton bars while the next screen is not ready", () => {
       render(<LoadingScreen />);
-      expect(screen.getByText("Loading...")).toBeTruthy();
+      expect(screen.getAllByTestId("skeleton-card").length).toBeGreaterThan(0);
     });
   });
 

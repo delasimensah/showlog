@@ -1,9 +1,7 @@
 import { Href, useRouter } from "expo-router";
 import React from "react";
-import { ActivityIndicator, Pressable, PressableProps } from "react-native";
+import { Pressable, PressableProps } from "react-native";
 import { cn } from "shared";
-
-import { COLORS } from "@/constants";
 
 import { HStack } from "../Stack/Stack";
 import Text from "../Text/Text";
@@ -137,32 +135,16 @@ const Button: React.FC<ButtonProps> = ({
     >
       <HStack spacing="sm" align="center" justify="center">
         {leftIcon && !loading ? leftIcon : null}
-
-        {loading ? (
-          <ActivityIndicator
-            size="small"
-            color={
-              variant === "primary"
-                ? COLORS.onPrimary
-                : variant === "quietDanger"
-                  ? COLORS.danger
-                  : COLORS.text
-            }
-            testID="button-loading"
-          />
-        ) : (
-          <Text
-            className={cn(
-              "text-center font-app-bold",
-              variantStyle.text,
-              sizeStyle.text,
-              textClassName
-            )}
-          >
-            {content}
-          </Text>
-        )}
-
+        <Text
+          className={cn(
+            "text-center font-app-bold",
+            variantStyle.text,
+            sizeStyle.text,
+            textClassName
+          )}
+        >
+          {content}
+        </Text>
         {rightIcon && !loading ? rightIcon : null}
       </HStack>
     </Pressable>

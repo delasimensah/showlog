@@ -1,16 +1,28 @@
+import { Stack, useRouter } from "expo-router";
 import React from "react";
 
-import EmptyState from "../../../ui/EmptyState/EmptyState";
-import TvMark from "../../../ui/TvMark/TvMark";
+import EmptyState, { EmptyIcon } from "../../../ui/EmptyState/EmptyState";
 
 const DiscoverScreen: React.FC = () => {
+  const router = useRouter();
+
   return (
-    <EmptyState
-      pageTitle="Discover"
-      title="No suggestions yet"
-      subtitle="Shows you may like show up here."
-      icon={<TvMark />}
-    />
+    <>
+      <Stack.Title large>Discover</Stack.Title>
+      <Stack.Toolbar placement="right">
+        <Stack.Toolbar.Button
+          accessibilityLabel="Search"
+          icon="magnifyingglass"
+          onPress={() => router.push("/search")}
+        />
+      </Stack.Toolbar>
+      <EmptyState
+        usesSystemHeader
+        title="No suggestions yet"
+        subtitle="Shows you may like show up here."
+        icon={<EmptyIcon name="compass-outline" />}
+      />
+    </>
   );
 };
 

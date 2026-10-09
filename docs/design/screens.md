@@ -51,7 +51,7 @@ Every screen is built from these. One component each, used the same way everywhe
 
 - `TickButton`: 40 circle, mint outline, mint tick. Watched: mint fill, ink tick. Light haptic on tap. Up next, the Where you left off card, and Season rows use this one.
 - `AddButton`: 32 circle, `surface`, mint plus. Added: mint fill, ink tick, the same as a watched `TickButton`. Discover cards (on the poster's bottom right) and Search rows (on the right) use this one. The show screen uses the full-width primary `Button` "Add to my list" instead, because there it is the page's main action.
-- `HeaderButton`: 36 circle, `surface`, an 18 Ionicons icon in text colour. The Profile, search, sort and filter, back, and menu buttons are all this one. Over the show's header picture it sits on `page` at 70% opacity so it stays readable on any picture.
+- `HeaderButton`: 36 circle, `surface`, an 18 Ionicons icon in text colour. Sort and filter uses this until that control is a system bar button. Profile, search on Discover, and a back or close control are the system bar buttons. That bar is the iPhone's liquid glass bar. Do not draw those.
 - `Button`: primary (mint, ink text), secondary (`surface`, text colour), `quietDanger` (red text, no fill). Height 50, fully rounded, Bold 16.
 - `Chip`: 22 tall, fully rounded, `surface`, 12 SemiBold. "+3" and genres in text colour, Premiere in mint.
 - `ProgressBar`: 4 tall, fully rounded, mint on `surface`. My shows grid, the show header, and Season rows on the show screen.
@@ -65,7 +65,7 @@ Every screen is built from these. One component each, used the same way everywhe
 
 **States:**
 
-- `EmptyState` on every empty list: the TV mark in muted (48), a title (20, Bold), one line in muted, and up to two buttons. Each screen gives its own words below.
+- `EmptyState` on every empty list: one muted icon (48) for that screen, a title (20, Bold), one line in muted, and up to two buttons. That group is centred in the space under the screen title. The page does not scroll. Up next uses a play circle, Upcoming a calendar, Discover a compass, My shows a grid, and Search a magnifying glass. A missing poster still uses the TV mark.
 - Error: the same `EmptyState` layout with "Could not load", "Pull down to try again.", and no buttons. Header and buttons stay.
 - Toasts (`Toast`): one line, for a refused tick or a failed add.
 
@@ -98,9 +98,9 @@ Four tabs, in order: **Up next, Upcoming, Discover, My shows**. The tab bar is t
 
 ## 3. Up next (tab)
 
-**Route:** `app/(main-app)/(tabs)/index.tsx`
+**Route:** `app/(main-app)/(tabs)/up-next/index.tsx`
 
-**Header:** screen title "Up next". A `HeaderButton` (person icon) at the top right opens Profile.
+**Header:** the system navigation bar, title "Up next".
 
 **Sections, in order:** Up next, Paused for a while, Not started. A section heading shows only when it has rows.
 
@@ -113,9 +113,9 @@ Four tabs, in order: **Up next, Upcoming, Discover, My shows**. The tab bar is t
 
 Year-season shows read "Episode 1180" on the mint line and "2026 · E25" under the title.
 
-**Empty:** `EmptyState`: "Add the shows you watch", "Find them in Discover or search by name.", Discover (primary) and Search (secondary).
+**Empty:** `EmptyState`: "Add the shows you watch", "Find them in Discover.", Discover (primary). No search on this tab.
 
-**Loading:** the title and Profile button stay. A section heading bar (20 tall, 110 wide), then five rows: a 128 × 72 picture block (radius 10); beside it a name bar (14 tall), an episode line bar (9 tall, about 60 wide) with a 28 × 18 chip block beside it on rows 1 and 3, a title bar (9 tall), and a time bar (9 tall, about 70 wide); a 40 circle at the far right.
+**Loading:** the title stays. A section heading bar (20 tall, 110 wide), then five rows: a 128 × 72 picture block (radius 10); beside it a name bar (14 tall), an episode line bar (9 tall, about 60 wide) with a 28 × 18 chip block beside it on rows 1 and 3, a title bar (9 tall), and a time bar (9 tall, about 70 wide); a 40 circle at the far right.
 
 **References:**
 
@@ -127,9 +127,9 @@ Year-season shows read "Episode 1180" on the mint line and "2026 · E25" under t
 
 ## 4. Upcoming (tab)
 
-**Route:** `app/(main-app)/(tabs)/upcoming.tsx`
+**Route:** `app/(main-app)/(tabs)/upcoming/index.tsx`
 
-**Header:** screen title "Upcoming".
+**Header:** the system navigation bar, title "Upcoming".
 
 **Groups** (section headings): Today, Tomorrow, each remaining day of this week by name ("Friday"), then Later. Then "No date yet" at the bottom.
 
@@ -151,9 +151,9 @@ Year-season shows read "Episode 1180" on the mint line and "2026 · E25" under t
 
 ## 5. Discover (tab)
 
-**Route:** `app/(main-app)/(tabs)/discover.tsx`
+**Route:** `app/(main-app)/(tabs)/discover/index.tsx`
 
-**Header:** screen title "Discover". A `HeaderButton` (search icon) at the top right opens Search.
+**Header:** the system navigation bar, title "Discover". The search control is the system bar button on the right (magnifying glass). It opens Search.
 
 **Rows:** each row has a section heading and a horizontal list of 20 cards, 12 apart, starting at the screen edge inset. Before I add any shows: Popular anime, Popular right now, Top rated. After: Because you watch anime (only when anime is on my list), More Drama and More Comedy (my two most common genres), Top rated.
 
@@ -172,17 +172,17 @@ Year-season shows read "Episode 1180" on the mint line and "2026 · E25" under t
 
 ## 6. My shows (tab)
 
-**Route:** `app/(main-app)/(tabs)/my-shows.tsx`
+**Route:** `app/(main-app)/(tabs)/my-shows/index.tsx`
 
-**Header:** screen title "My shows". Right side: two `HeaderButton`s, sort and filter (options icon) and search.
+**Header:** the system navigation bar, title "My shows". The profile control is the system bar button on the right. It opens Profile. Sort and filter is a second system bar button when the grid is on screen. No search. A new show is found on Discover.
 
 **Grid:** three columns, gap 12. Grid `Poster`, then a `ProgressBar` 8 below it (episodes ticked out of episodes aired), then the poster label (one line) 6 below the bar.
 
 **Sort and filter sheet** (native sheet from `@expo/ui`): Sort by Last watched, Last added, A to Z. Filter by All, Watching, Up to date, Not started, Watch later, Finished, Stopped. The choice is saved on the phone. The header shows the filter name when it is not All ("Watching · 12").
 
-**Empty:** `EmptyState`: "Your list is empty", "Search for a show to add it.", Search (primary). With a filter and no matches: `EmptyState` "No Finished shows", "Shows you finish show up here.", no buttons (the filter name changes with the filter).
+**Empty:** `EmptyState`: "Your list is empty", "Find a show in Discover.", Discover (primary). With a filter and no matches: `EmptyState` "No Finished shows", "Shows you finish show up here.", no buttons (the filter name changes with the filter).
 
-**Loading:** the title and both header buttons stay. A three-column grid of twelve cells with the same gap as the loaded grid: a 2:3 poster block (radius 10), a 4-tall progress bar block, and a name bar (9 tall, width varying by cell).
+**Loading:** the title and the sort and filter button stay. A three-column grid of twelve cells with the same gap as the loaded grid: a 2:3 poster block (radius 10), a 4-tall progress bar block, and a name bar (9 tall, width varying by cell).
 
 **References:**
 
@@ -194,13 +194,13 @@ Year-season shows read "Episode 1180" on the mint line and "2026 · E25" under t
 
 ## 7. Search
 
-**Route:** `app/(main-app)/search.tsx`, pushed from Discover, My shows, and empty Up next.
+**Route:** `app/(main-app)/search.tsx`, pushed from the search button on Discover.
 
-**Layout:** a search field focused on open, with a Cancel button. Results start after 2 characters, 300 ms after typing stops.
+**Layout:** the system search field, focused on open. Its Cancel button leaves the screen. There is no back button. Results start after 2 characters, 300 ms after typing stops.
 
 **Result row:** small `Poster`, the row title, and the meta line "Animation · Japanese · 1999 · Fuji TV". Right side: `AddButton`, shown as added when the show is on my list. Tapping the row opens the show.
 
-**States:** before typing: `EmptyState` "Search for a show", "Type a name. Show data comes from TVmaze.". No results: `EmptyState` "No matches", "No shows match "query"." Searching: the field and Cancel stay, and the current results stay until new ones arrive. On the first search, four rows under the field: a 48 × 72 poster block (radius 10), a name bar (14 tall), a meta bar (9 tall, about 70%), and on the right a 32 circle where the `AddButton` goes.
+**States:** before typing: `EmptyState` "Search for a show", "Type a name. Show data comes from TVmaze.". No results: `EmptyState` "No matches", "No shows match "query"." Searching: the system search field stays, and the current results stay until new ones arrive. On the first search, four rows under the field: a 48 × 72 poster block (radius 10), a name bar (14 tall), a meta bar (9 tall, about 70%), and on the right a 32 circle where the `AddButton` goes.
 
 **References:**
 
@@ -215,7 +215,7 @@ Year-season shows read "Episode 1180" on the mint line and "2026 · E25" under t
 
 **On my list:**
 
-- Header picture full width, 16:10, with a dark fade into `page` over its bottom third. Back and menu (ellipsis) `HeaderButton`s float over it under the status bar.
+- Header picture full width, 16:10, with a dark fade into `page` over its bottom third. The system back button sits in the navigation bar. The menu is a system bar button (ellipsis) on the right.
 - Hero title (show name, up to two lines), then the meta line "5 seasons · Netflix", then a `ProgressBar` with "48 / 73" (meta line) on its right.
 - **Where you left off** card: the meta line "Last watched · 12 Mar", the `EpisodeLabel`, the episode title (17, Bold), and TVmaze's summary (body, three lines). Under a `border` hairline: "Up next" (meta line), the next `EpisodeLabel` and title, and a `TickButton` on the right. With nothing ticked: "Start with S1 | E1" and the `TickButton`. Tapping an episode in the card opens the episode sheet.
 - **Seasons** (section heading): one row per season, 56 tall: "Season 4" (or "2026" for year seasons, 17, Bold), "10/24" as a meta line, a `ProgressBar` under them, and a chevron in muted. Tapping opens the season.
@@ -229,7 +229,7 @@ Year-season shows read "Episode 1180" on the mint line and "2026 · E25" under t
 - A meta line "Running · Rated 8.7", genre `Chip`s, and the summary (body).
 - "Show data from TVmaze". No seasons until the show is added. After Add, the screen becomes the on-my-list version.
 
-**Loading:** the back and menu buttons stay over the header.
+**Loading:** the system back button and the menu button stay.
 
 - A 16:10 header block, full width.
 - A name bar (22 tall, 70%), a meta bar (9 tall, 40%), and a progress bar block (4 tall) with a count bar on its right.
@@ -251,7 +251,7 @@ Year-season shows read "Episode 1180" on the mint line and "2026 · E25" under t
 
 **Route:** `app/(main-app)/show/[tvmazeId]/season/[season].tsx`
 
-**Header:** a back `HeaderButton`, then the screen title "Season 4" (or "2026") with the show name as a meta line under it. A "Watch season" text button (15, Bold, mint) at the top right ticks every aired episode in the season. It reads "Season watched" in muted when nothing is left.
+**Header:** the system navigation bar. The system back button, then the screen title "Season 4" (or "2026") with the show name as a meta line under it. A "Watch season" text button (15, Bold, mint) at the top right ticks every aired episode in the season. It reads "Season watched" in muted when nothing is left.
 
 **Episode row:**
 
@@ -287,11 +287,11 @@ Unaired: no buttons. "Airs Friday 21:00" instead.
 
 ## 11. Profile
 
-**Route:** `app/(main-app)/profile.tsx`, pushed from the Up next header.
+**Route:** `app/(main-app)/profile.tsx`, pushed from the My shows header.
 
 **Layout:**
 
-- A back `HeaderButton`, then the screen title "Profile".
+- The system navigation bar. The system back button, and the screen title "Profile".
 - Two stat cards side by side, equal width: **TV time** with "8 months 1 day 12 hours" (numbers 28 ExtraBold, units 13 Medium muted), and **Episodes watched** with "9,629". The label (13, Medium, muted) sits above the number.
 - Settings card: rows 52 tall with `border` hairlines between them. Name (the name on the right in muted), Account (email on the right in muted), Alerts (native switch from `@expo/ui`), Export my history (chevron). Export opens the share sheet with the JSON file.
 - "Show data from TVmaze" with a link and "Version 1.0.0", both meta lines, centred.

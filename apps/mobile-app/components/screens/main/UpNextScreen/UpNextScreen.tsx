@@ -1,29 +1,23 @@
-import { useRouter } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import React from "react";
 
-import EmptyState from "../../../ui/EmptyState/EmptyState";
-import HeaderButton from "../../../ui/HeaderButton/HeaderButton";
-import TvMark from "../../../ui/TvMark/TvMark";
+import EmptyState, { EmptyIcon } from "../../../ui/EmptyState/EmptyState";
 
 const UpNextScreen: React.FC = () => {
   const router = useRouter();
 
   return (
-    <EmptyState
-      pageTitle="Up next"
-      title="Add the shows you watch"
-      subtitle="Find them in Discover or search by name."
-      icon={<TvMark />}
-      buttonText="Discover"
-      onButtonPress={() => router.push("/discover")}
-      headerRight={
-        <HeaderButton
-          icon="person"
-          accessibilityLabel="Profile"
-          onPress={() => router.push("/profile")}
-        />
-      }
-    />
+    <>
+      <Stack.Title large>Up next</Stack.Title>
+      <EmptyState
+        usesSystemHeader
+        title="Add the shows you watch"
+        subtitle="Find them in Discover."
+        icon={<EmptyIcon name="play-circle-outline" />}
+        buttonText="Discover"
+        onButtonPress={() => router.push("/discover")}
+      />
+    </>
   );
 };
 

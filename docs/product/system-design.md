@@ -251,7 +251,7 @@ Files under `convex/`, one per area. Public functions are signed-in only.
 
 - Routes in `apps/mobile-app/app/`:
   - `(auth)/sign-in.tsx`
-  - `(main-app)/(tabs)/_layout.tsx` with `index.tsx` (Up next), `upcoming.tsx`, `discover.tsx`, `my-shows.tsx`
+  - `(main-app)/(tabs)/_layout.tsx` with a stack on each tab: `up-next/`, `upcoming/`, `discover/`, `my-shows/`. Each stack's first screen is `index.tsx`.
   - `(main-app)/search.tsx`
   - `(main-app)/show/[tvmazeId]/index.tsx` and `(main-app)/show/[tvmazeId]/season/[season].tsx`
   - `(main-app)/profile.tsx`, `(main-app)/alerts-intro.tsx`

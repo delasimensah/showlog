@@ -31,4 +31,5 @@ export { default as DiscoverScreen } from "./screens/main/DiscoverScreen/Discove
 export { default as MyShowsScreen } from "./screens/main/MyShowsScreen/MyShowsScreen";
 export { default as ProfileScreen } from "./screens/main/ProfileScreen/ProfileScreen";
 export { default as UpcomingScreen } from "./screens/main/UpcomingScreen/UpcomingScreen";
+export { default as SearchScreen } from "./screens/main/SearchScreen/SearchScreen";
 export { default as UpNextScreen } from "./screens/main/UpNextScreen/UpNextScreen";

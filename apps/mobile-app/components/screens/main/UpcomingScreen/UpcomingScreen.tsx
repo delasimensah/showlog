@@ -1,16 +1,19 @@
+import { Stack } from "expo-router";
 import React from "react";
 
-import EmptyState from "../../../ui/EmptyState/EmptyState";
-import TvMark from "../../../ui/TvMark/TvMark";
+import EmptyState, { EmptyIcon } from "../../../ui/EmptyState/EmptyState";
 
 const UpcomingScreen: React.FC = () => {
   return (
-    <EmptyState
-      pageTitle="Upcoming"
-      title="Nothing scheduled yet"
-      subtitle="Nothing scheduled for your shows yet."
-      icon={<TvMark />}
-    />
+    <>
+      <Stack.Title large>Upcoming</Stack.Title>
+      <EmptyState
+        usesSystemHeader
+        title="Nothing scheduled yet"
+        subtitle="Nothing scheduled for your shows yet."
+        icon={<EmptyIcon name="calendar-outline" />}
+      />
+    </>
   );
 };
 

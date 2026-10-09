@@ -15,7 +15,7 @@ const AppTabs: React.FC = () => {
         disableTransparentOnScrollEdge
         tintColor={COLORS.primary}
       >
-        <NativeTabs.Trigger name="index" contentStyle={tabScreenStyle}>
+        <NativeTabs.Trigger name="up-next" contentStyle={tabScreenStyle}>
           <NativeTabs.Trigger.Label>Up next</NativeTabs.Trigger.Label>
           <NativeTabs.Trigger.Icon
             sf={{ default: "play.circle", selected: "play.circle.fill" }}

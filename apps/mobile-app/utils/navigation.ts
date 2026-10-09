@@ -1,6 +1,6 @@
 import { DarkTheme } from "expo-router";
 
-import { COLORS } from "@/constants";
+import { COLORS, FONTS } from "@/constants";
 
 /**
  * Default screen options for Stack navigator
@@ -20,16 +20,32 @@ export const navigationTheme = {
   },
 };
 
+/**
+ * The iPhone draws the navigation bar, including its back button, in liquid glass.
+ * A solid header background replaces that glass, so this leaves the bar alone.
+ * https://docs.expo.dev/router/advanced/stack/
+ */
 export const defaultStackScreenOptions = {
-  headerStyle: {
-    backgroundColor: COLORS.page,
-  },
-  headerTintColor: "white",
+  headerShadowVisible: false,
+  headerBackButtonDisplayMode: "minimal" as const,
+  headerTintColor: COLORS.text,
   headerTitleStyle: {
+    color: COLORS.text,
     fontFamily: "App-Regular",
   },
   contentStyle: {
     backgroundColor: COLORS.page,
+  },
+};
+
+/** Same glass bar and large title on every tab. */
+export const tabStackScreenOptions = {
+  ...defaultStackScreenOptions,
+  headerShown: true,
+  headerLargeTitleEnabled: true,
+  headerLargeTitleStyle: {
+    color: COLORS.text,
+    fontFamily: FONTS.extrabold,
   },
 };
 

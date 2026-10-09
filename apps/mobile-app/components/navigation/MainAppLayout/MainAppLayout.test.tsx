@@ -32,5 +32,6 @@ describe("MainAppLayout", () => {
     const { getByText } = render(<MainAppLayout />);
     expect(getByText("(tabs)")).toBeTruthy();
     expect(getByText("profile")).toBeTruthy();
+    expect(getByText("search")).toBeTruthy();
   });
 });

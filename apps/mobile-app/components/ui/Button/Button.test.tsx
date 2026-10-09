@@ -130,7 +130,7 @@ describe("Button Component", () => {
           <View>Right</View>
         </View>
       );
-      const { queryByTestId, getByTestId } = render(
+      const { queryByTestId, getByText } = render(
         <Button
           text="Loading"
           leftIcon={leftIcon}
@@ -140,7 +140,8 @@ describe("Button Component", () => {
       );
       expect(queryByTestId("left-icon")).toBeNull();
       expect(queryByTestId("right-icon")).toBeNull();
-      expect(getByTestId("button-loading")).toBeTruthy();
+      expect(queryByTestId("button-loading")).toBeNull();
+      expect(getByText("Loading")).toBeTruthy();
     });
   });
 
@@ -230,12 +231,12 @@ describe("Button Component", () => {
   });
 
   describe("Loading State", () => {
-    it("shows loading indicator when loading", () => {
-      const { getByTestId, queryByText } = render(
+    it("keeps the label while loading", () => {
+      const { queryByTestId, getByText } = render(
         <Button text="Loading" loading />
       );
-      expect(getByTestId("button-loading")).toBeTruthy();
-      expect(queryByText("Loading")).toBeNull();
+      expect(queryByTestId("button-loading")).toBeNull();
+      expect(getByText("Loading")).toBeTruthy();
     });
 
     it("does not call onPress when loading", () => {

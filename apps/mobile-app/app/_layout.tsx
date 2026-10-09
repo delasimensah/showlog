@@ -5,7 +5,7 @@ import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { useFonts } from "expo-font";
 import { Image, ImageBackground } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
-import { Stack } from "expo-router";
+import { Stack, ThemeProvider } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { cssInterop } from "nativewind";
 import { useEffect } from "react";
@@ -22,8 +22,12 @@ import {
   NeutralToast,
   SuccessToast,
 } from "@/components";
-import { FONT_LOADING_MAP } from "@/constants";
-import { defaultStackScreenOptions, screenPresets } from "@/utils";
+import { COLORS, FONT_LOADING_MAP } from "@/constants";
+import {
+  defaultStackScreenOptions,
+  navigationTheme,
+  screenPresets,
+} from "@/utils";
 
 cssInterop(Image, { className: "style" });
 cssInterop(ImageBackground, { className: "style" });
@@ -53,31 +57,36 @@ const RootLayout = () => {
   }
 
   return (
-    <GestureHandlerRootView className="flex-1">
-      <SafeAreaProvider>
-        <AppProviders>
-          <BottomSheetModalProvider>
-            <Stack
-              screenOptions={{
-                ...defaultStackScreenOptions,
-                ...screenPresets.noHeader,
-              }}
-            >
-              <Stack.Screen name="index" />
-              <Stack.Screen name="(auth)" />
-              <Stack.Screen name="(main-app)" />
-            </Stack>
-            <BottomSheetsManager />
-            <Toast
-              config={{
-                active: (props) => <ActiveToast {...props} />,
-                neutral: (props) => <NeutralToast {...props} />,
-                success: (props) => <SuccessToast {...props} />,
-                error: (props) => <ErrorToast {...props} />,
-              }}
-            />
-          </BottomSheetModalProvider>
-        </AppProviders>
+    <GestureHandlerRootView
+      className="flex-1 bg-page"
+      style={{ flex: 1, backgroundColor: COLORS.page }}
+    >
+      <SafeAreaProvider style={{ flex: 1, backgroundColor: COLORS.page }}>
+        <ThemeProvider value={navigationTheme}>
+          <AppProviders>
+            <BottomSheetModalProvider>
+              <Stack
+                screenOptions={{
+                  ...defaultStackScreenOptions,
+                  ...screenPresets.noHeader,
+                }}
+              >
+                <Stack.Screen name="index" />
+                <Stack.Screen name="(auth)" />
+                <Stack.Screen name="(main-app)" />
+              </Stack>
+              <BottomSheetsManager />
+              <Toast
+                config={{
+                  active: (props) => <ActiveToast {...props} />,
+                  neutral: (props) => <NeutralToast {...props} />,
+                  success: (props) => <SuccessToast {...props} />,
+                  error: (props) => <ErrorToast {...props} />,
+                }}
+              />
+            </BottomSheetModalProvider>
+          </AppProviders>
+        </ThemeProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

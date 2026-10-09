@@ -24,7 +24,7 @@ Every ticket follows `.cursor/rules/` and the docs `mandatory-project-docs.mdc` 
 
 ## Status now
 
-- SHOW-1: **Done**. SHOW-2 to SHOW-12: **Todo**.
+- SHOW-1: **Done**. SHOW-2: **Done**. SHOW-3 to SHOW-12: **Todo**.
 
 ---
 
@@ -42,7 +42,7 @@ The app opens on Sign in. I create my one account, land on the four tabs, and st
 - Convex Auth Password is already in `convex/auth.ts`. Add the `createOrUpdateUser` callback that refuses a new user when one exists, with "This app already has an account."
 - Routes `(auth)/sign-in.tsx` and `(main-app)/(tabs)/` with Up next, Upcoming, Discover, and My shows. Each tab has its real large title and an empty state. The tab shell replaces the scaffold's name-and-one-line screen.
 - `app/index.tsx` sends a signed-out person to sign in and a signed-in person to the tabs.
-- Profile route with the account name, the account email, and Sign out (red text, confirm). Opened from the Up next header. Create account asks for a name and saves it on the account.
+- Profile route with the account name, the account email, and Sign out (red text, confirm). Opened from the My shows header. Create account asks for a name and saves it on the account.
 - Sign-in form with react-hook-form and zod, the same as other forms in this repo.
 
 **Acceptance (yes or no)**
@@ -64,10 +64,10 @@ The app opens on Sign in. I create my one account, land on the four tabs, and st
 
 ## SHOW-2. I can search TVmaze and add a show
 
-**Status:** Todo
+**Status:** Done
 **Apps:** phone, Convex
 **Branch:** `feature/SHOW-2`
-**Screens:** `screens.md` section 7, and the Search button on the empty Up next (section 3)
+**Screens:** `screens.md` section 7, and the Search button on Discover (section 5)
 
 **How it is built**
 
@@ -75,7 +75,7 @@ The app opens on Sign in. I create my one account, land on the four tabs, and st
 - `convex/tvmaze.ts`: `fetchJson` with the User-Agent and 429 retry, and the copy helpers (strip HTML, header picture, drop specials, `order`, `airsAt`, `airTimeKnown`, `seasons`, `yearSeasons`).
 - `search.searchShows` action and `shows.add` action, plus the internal mutations that save in batches of 500.
 - `convex/progress.ts` with `recomputeProgress`. On add, it sets `airedCount` and the next episode.
-- Search screen opened from the empty Up next's Search button.
+- Search screen opened from the Search button on Discover.
 
 **Acceptance (yes or no)**
 
@@ -165,7 +165,7 @@ The app opens on Sign in. I create my one account, land on the four tabs, and st
 - `lists.upNext` query with the three sections. The Up next tab rows with the tick button, "+N", and "7 months ago".
 - The Where you left off card on the show screen, from the `lastWatchedEpisodeId` and `nextEpisodeId` progress fields.
 - The hourly clock job (`convex/crons.ts`, `clock.hourly` steps 1 and 2): recompute progress for shows with an episode that aired in the last hour. Alerts are added to this job in SHOW-11.
-- Empty Up next with the Discover and Search buttons. Discover opens the Discover tab, which is still empty until SHOW-10.
+- Empty Up next with the Discover button. Discover opens the Discover tab, which is still empty until SHOW-10. Search stays on Discover.
 
 **Acceptance (yes or no)**
 
@@ -194,7 +194,7 @@ The app opens on Sign in. I create my one account, land on the four tabs, and st
 - `lists.myShows` query with sort. Filter on the phone.
 - Show status in `packages/shared` from `system-design.md` section 6.
 - The sort and filter sheet with `@expo/ui`. The choice saved with Zustand and AsyncStorage.
-- The search button opens Search. Tapping a poster opens the show.
+- Tapping a poster opens the show. There is no search on this tab.
 
 **Acceptance (yes or no)**
 

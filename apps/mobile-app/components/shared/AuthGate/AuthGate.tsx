@@ -13,7 +13,7 @@ const AuthGate: React.FC = () => {
   }
 
   if (isAuthenticated) {
-    return <Redirect href="/(main-app)/(tabs)" />;
+    return <Redirect href="/(main-app)/(tabs)/up-next" />;
   }
 
   return <Redirect href="/(auth)/sign-in" />;
