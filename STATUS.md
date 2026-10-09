@@ -74,3 +74,4 @@ SHOW-8 is next. Upcoming lists what airs next.
 - SHOW-4 pull request: https://github.com/delasimensah/showlog/pull/4
 - SHOW-5 pull request: https://github.com/delasimensah/showlog/pull/5
 - SHOW-6 pull request: https://github.com/delasimensah/showlog/pull/6
+- SHOW-7 pull request: https://github.com/delasimensah/showlog/pull/7
