@@ -24,6 +24,9 @@ jest.mock("expo-router", () => {
   const extra = require("./test-utils/expoRouterMock");
 
   return {
+    useNavigation: jest.fn(() => ({
+      setOptions: jest.fn(),
+    })),
     useRouter: jest.fn(() => ({
       push: jest.fn(),
       replace: jest.fn(),

@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   NativeScrollEvent,
   NativeSyntheticEvent,
+  Pressable,
   ScrollView,
   View,
 } from "react-native";
@@ -210,26 +211,35 @@ const SearchScreen: React.FC = () => {
               spacing="none"
               className="gap-3"
             >
-              <Poster
-                uri={hit.posterUrl}
-                accessibilityLabel={`${hit.name} poster`}
-              />
-              <VStack spacing="xs" className="min-w-0 flex-1">
-                <Text
-                  className="font-app-bold text-[17px] text-text"
-                  numberOfLines={1}
-                >
-                  {hit.name}
-                </Text>
-                {meta.length > 0 ? (
-                  <Text
-                    className="font-app-medium text-[13px] text-muted"
-                    numberOfLines={1}
-                  >
-                    {meta}
-                  </Text>
-                ) : null}
-              </VStack>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel={hit.name}
+                onPress={() => router.push(`/show/${hit.tvmazeId}`)}
+                className="min-w-0 flex-1"
+              >
+                <HStack align="center" spacing="none" className="gap-3">
+                  <Poster
+                    uri={hit.posterUrl}
+                    accessibilityLabel={`${hit.name} poster`}
+                  />
+                  <VStack spacing="xs" className="min-w-0 flex-1">
+                    <Text
+                      className="font-app-bold text-[17px] text-text"
+                      numberOfLines={1}
+                    >
+                      {hit.name}
+                    </Text>
+                    {meta.length > 0 ? (
+                      <Text
+                        className="font-app-medium text-[13px] text-muted"
+                        numberOfLines={1}
+                      >
+                        {meta}
+                      </Text>
+                    ) : null}
+                  </VStack>
+                </HStack>
+              </Pressable>
               <AddButton
                 added={hit.onList}
                 disabled={addingId === hit.tvmazeId}

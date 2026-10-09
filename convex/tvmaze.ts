@@ -290,6 +290,14 @@ export function toShowCopy(show: unknown, episodes: EpisodeCopy[]): ShowCopy {
   };
 }
 
+export function countNumberedSeasons(payload: unknown): number {
+  if (!Array.isArray(payload)) return 0;
+  return payload.filter(
+    (season) =>
+      isRecord(season) && typeof season.number === "number" && season.number > 0
+  ).length;
+}
+
 export function copiesFromShowPayload(payload: unknown): {
   show: ShowCopy;
   episodes: EpisodeCopy[];

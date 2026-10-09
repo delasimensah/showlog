@@ -4,12 +4,15 @@ import { v } from "convex/values";
 import { internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
 import { action, internalMutation, internalQuery } from "./_generated/server";
+import { authedQuery } from "./lib/functions";
 import { ERROR_CODES, raise } from "./lib/errors";
 import { recomputeProgress } from "./progress";
 import {
   SHOW_STATUSES,
   copiesFromShowPayload,
+  countNumberedSeasons,
   fetchJson,
+  toShowCopy,
   type EpisodeCopy,
   type ShowCopy,
 } from "./tvmaze";
@@ -197,5 +200,117 @@ export const add = action({
       { userId, showId }
     );
     return { myShowId };
+  },
+});
+
+const seasonRow = v.object({
+  number: v.number(),
+  episodeCount: v.number(),
+  watchedCount: v.number(),
+});
+
+export const get = authedQuery({
+  args: { tvmazeId: v.number() },
+  returns: v.union(
+    v.object({
+      tvmazeId: v.number(),
+      name: v.string(),
+      headerUrl: v.union(v.string(), v.null()),
+      posterUrl: v.union(v.string(), v.null()),
+      network: v.union(v.string(), v.null()),
+      summary: v.union(v.string(), v.null()),
+      genres: v.array(v.string()),
+      yearSeasons: v.boolean(),
+      seasons: v.array(seasonRow),
+      watchedCount: v.number(),
+      airedCount: v.number(),
+    }),
+    v.null()
+  ),
+  handler: async (ctx, args) => {
+    const show = await ctx.db
+      .query("shows")
+      .withIndex("by_tvmazeId", (q) => q.eq("tvmazeId", args.tvmazeId))
+      .unique();
+    if (show === null) return null;
+    const mine = await ctx.db
+      .query("myShows")
+      .withIndex("by_user_show", (q) =>
+        q.eq("userId", ctx.userId).eq("showId", show._id)
+      )
+      .unique();
+    if (mine === null) return null;
+
+    const ticks = await ctx.db
+      .query("watchedEpisodes")
+      .withIndex("by_user_show", (q) =>
+        q.eq("userId", ctx.userId).eq("showId", show._id)
+      )
+      .collect();
+    const watchedBySeason = new Map<number, number>();
+    for (const tick of ticks) {
+      watchedBySeason.set(
+        tick.season,
+        (watchedBySeason.get(tick.season) ?? 0) + 1
+      );
+    }
+
+    return {
+      tvmazeId: show.tvmazeId,
+      name: show.name,
+      headerUrl: show.headerUrl ?? null,
+      posterUrl: show.posterUrl ?? null,
+      network: show.network ?? null,
+      summary: show.summary ?? null,
+      genres: show.genres,
+      yearSeasons: show.yearSeasons,
+      seasons: show.seasons.map((season) => ({
+        number: season.number,
+        episodeCount: season.episodeCount,
+        watchedCount: watchedBySeason.get(season.number) ?? 0,
+      })),
+      watchedCount: mine.watchedCount,
+      airedCount: mine.airedCount,
+    };
+  },
+});
+
+export const preview = action({
+  args: { tvmazeId: v.number() },
+  returns: v.object({
+    tvmazeId: v.number(),
+    name: v.string(),
+    genres: v.array(v.string()),
+    status: showStatus,
+    seasonCount: v.number(),
+    summary: v.union(v.string(), v.null()),
+    headerUrl: v.union(v.string(), v.null()),
+    posterUrl: v.union(v.string(), v.null()),
+    network: v.union(v.string(), v.null()),
+    rating: v.union(v.number(), v.null()),
+  }),
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (userId === null) raise(ERROR_CODES.UNAUTHENTICATED);
+
+    const payload = await fetchJson(`/shows/${args.tvmazeId}?embed[]=images`);
+    const seasons = await fetchJson(`/shows/${args.tvmazeId}/seasons`);
+    const show = toShowCopy(payload, []);
+    if (show.tvmazeId !== args.tvmazeId) {
+      throw new Error("TVmaze returned a different show");
+    }
+
+    return {
+      tvmazeId: show.tvmazeId,
+      name: show.name,
+      genres: show.genres,
+      status: show.status,
+      seasonCount: countNumberedSeasons(seasons),
+      summary: show.summary ?? null,
+      headerUrl: show.headerUrl ?? null,
+      posterUrl: show.posterUrl ?? null,
+      network: show.network ?? null,
+      rating: show.rating ?? null,
+    };
   },
 });

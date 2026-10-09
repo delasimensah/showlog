@@ -43,6 +43,16 @@ const MainAppLayout: React.FC = () => {
               headerBackVisible: false,
             }}
           />
+          {/* The show is a screen of this stack, so the system back button can return. */}
+          <Stack.Screen
+            name="show/[tvmazeId]"
+            options={{
+              headerShown: true,
+              headerTransparent: true,
+              title: "",
+              scrollEdgeEffects: { top: "hidden" },
+            }}
+          />
         </Stack>
       </ThemeProvider>
     </>

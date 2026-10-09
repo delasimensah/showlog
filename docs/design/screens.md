@@ -215,18 +215,18 @@ Year-season shows read "Episode 1180" on the mint line and "2026 · E25" under t
 
 **On my list:**
 
-- Header picture full width, 16:10, with a dark fade into `page` over its bottom third. The system back button sits in the navigation bar. The menu is a system bar button (ellipsis) on the right.
-- Hero title (show name, up to two lines), then the meta line "5 seasons · Netflix", then a `ProgressBar` with "48 / 73" (meta line) on its right.
-- **Where you left off** card: the meta line "Last watched · 12 Mar", the `EpisodeLabel`, the episode title (17, Bold), and TVmaze's summary (body, three lines). Under a `border` hairline: "Up next" (meta line), the next `EpisodeLabel` and title, and a `TickButton` on the right. With nothing ticked: "Start with S1 | E1" and the `TickButton`. Tapping an episode in the card opens the episode sheet.
-- **Seasons** (section heading): one row per season, 56 tall: "Season 4" (or "2026" for year seasons, 17, Bold), "10/24" as a meta line, a `ProgressBar` under them, and a chevron in muted. Tapping opens the season.
-- **About** (section heading): summary (body, four lines, "More" in mint expands it), genre `Chip`s, and "Show data from TVmaze" as a meta line with a link.
+- Header picture full width, 16:10, with a dark fade into `page` over its lower half. The show name sits on that fade, up to two lines. Pulling down stretches the picture. Scrolling up fades `page` into the system navigation bar, and the show name fades in with it. The system back button sits in the navigation bar. The menu is a system bar button (ellipsis) on the right. A poster used in place of a wide picture stays 2:3 and centred in the header, so it is not stretched.
+- Hero title (show name, up to two lines), then the meta line "5 seasons · Netflix", then a progress summary: "48 of 73 watched" (meta line) on the left, the percentage in mint on the right, and a full-width `ProgressBar` under them.
+- **Where you left off** card: the meta line "Last watched · 12 Mar", the `EpisodeLabel`, the episode title (17, Bold), and TVmaze's summary (body, three lines). Under a `border` hairline: "Up next" (meta line), the next `EpisodeLabel` and title, and a `TickButton` on the right. With nothing ticked: a mint play circle (36) on the left, "Start with S1 | E1" (17, Bold), "Nothing watched yet" as a meta line, and the `TickButton`. Tapping an episode in the card opens the episode sheet.
+- **Seasons** (section heading, the season count in muted on its right): one `surface` card, radius 16, with a hairline between rows. Each row: "Season 4" (or "2026" for year seasons, 17, Bold), "10/24" as a meta line (a mint check circle when every episode is watched), a chevron in muted, and a `ProgressBar` under them. Tapping opens the season.
+- **About** (section heading): summary (body, four lines, "More" in mint expands it, "Less" closes it), genre `Chip`s, and "Show data from TVmaze" as a meta line with a link.
 - **Menu** (native menu from `@expo/ui`): Watch later (or Remove from Watch later), Stop watching (red) or Resume, Remove from my list (red). Remove asks to confirm first.
 
 **Not on my list** (opened from Discover or Search):
 
-- The same header, name, and "5 seasons · Netflix".
+- The same header and name. One meta line: "2 seasons · Netflix · Running · Rated 8.7". Genre `Chip`s wrap under it.
 - A full-width primary `Button` "Add to my list".
-- A meta line "Running · Rated 8.7", genre `Chip`s, and the summary (body).
+- **About**: the summary (body, four lines, "More" expands it). A short summary has no More.
 - "Show data from TVmaze". No seasons until the show is added. After Add, the screen becomes the on-my-list version.
 
 **Loading:** the system back button and the menu button stay.
