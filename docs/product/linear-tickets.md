@@ -24,7 +24,7 @@ Every ticket follows `.cursor/rules/` and the docs `mandatory-project-docs.mdc` 
 
 ## Status now
 
-- SHOW-1: **Done**. SHOW-2: **Done**. SHOW-3: **Done**. SHOW-4: **Done**. SHOW-5: **Done**. SHOW-6: **Done**. SHOW-7: **Done**. SHOW-8: **Done**. SHOW-9: **Done**. SHOW-10 to SHOW-12: **Todo**.
+- SHOW-1: **Done**. SHOW-2: **Done**. SHOW-3: **Done**. SHOW-4: **Done**. SHOW-5: **Done**. SHOW-6: **Done**. SHOW-7: **Done**. SHOW-8: **Done**. SHOW-9: **Done**. SHOW-10: **Done**. SHOW-11 to SHOW-12: **Todo**.
 
 ---
 
@@ -281,7 +281,7 @@ The app opens on Sign in. I create my one account, land on the four tabs, and st
 
 ## SHOW-10. Discover suggests shows I may like
 
-**Status:** Todo
+**Status:** Done
 **Apps:** phone, Convex
 **Branch:** `feature/SHOW-10`
 **Screens:** `screens.md` section 5
@@ -290,7 +290,7 @@ The app opens on Sign in. I create my one account, land on the four tabs, and st
 
 - Table `suggestedShows` and the weekly `discover.refreshPool` cron from `system-design.md` section 8.
 - Run the pool once by hand on the dev deployment so Discover is not empty: `npx convex run discover:refreshPool`.
-- `discover.rows` query. The phone picks 20 at random from each row's 100 and reshuffles on open and pull down.
+- `discover.rows` query. The phone picks 20 from each row's 100 once a day and keeps that row until tomorrow.
 - Add from the card uses `shows.add`. Tapping the poster opens the show.
 
 **Acceptance (yes or no)**
@@ -298,7 +298,7 @@ The app opens on Sign in. I create my one account, land on the four tabs, and st
 - With no shows on my list, the rows are Popular anime, Popular right now, and Top rated.
 - With shows on my list, the rows are Because you watch anime (only with anime on my list), More of my two most common genres, and Top rated. Shows on my list are left out.
 - Add on a card saves the show and the card reads "Added".
-- Pulling down changes the shows in each row.
+- The same shows stay in each row until the next day. Opening the tab, scrolling, and pulling down do not change them.
 - The pool has only shows with a popularity of 85 or more and a poster.
 - A Convex test for the row rules and for the anime check (Anime genre, or Japanese animation).
 

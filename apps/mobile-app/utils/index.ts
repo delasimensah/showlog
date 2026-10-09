@@ -22,6 +22,7 @@ export {
   showSuccessToast,
 } from "./toastUtils";
 
+export { keepDayShows, localDay } from "./dayShows";
 export { headerTitleFrame } from "./headerTitleFrame";
 export { fillOpacity } from "./showHeaderFade";
 export { playTickHaptic } from "./tickHaptic";

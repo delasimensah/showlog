@@ -86,4 +86,24 @@ export default defineSchema({
     episodesWatched: v.number(),
     minutesWatched: v.number(),
   }).index("by_user", ["userId"]),
+  suggestedShows: defineTable({
+    tvmazeId: v.number(),
+    name: v.string(),
+    posterUrl: v.string(),
+    genres: v.array(v.string()),
+    type: v.optional(v.string()),
+    language: v.optional(v.string()),
+    premieredYear: v.optional(v.number()),
+    status: showStatus,
+    rating: v.optional(v.number()),
+    network: v.optional(v.string()),
+    weight: v.number(),
+    isAnime: v.boolean(),
+    refreshId: v.number(),
+  })
+    .index("by_tvmazeId", ["tvmazeId"])
+    .index("by_rating", ["rating"])
+    .index("by_anime_rating", ["isAnime", "rating"])
+    .index("by_status_rating", ["status", "rating"])
+    .index("by_refreshId", ["refreshId"]),
 });

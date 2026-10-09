@@ -13,4 +13,11 @@ crons.daily(
   {}
 );
 
+crons.weekly(
+  "discover pool",
+  { dayOfWeek: "monday", hourUTC: 3, minuteUTC: 0 },
+  internal.discover.refreshPool,
+  {}
+);
+
 export default crons;

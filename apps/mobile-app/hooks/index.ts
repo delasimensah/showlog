@@ -1,5 +1,6 @@
 export { useSession } from "./auth/useSession";
 export { useBottomsheetStore } from "./bottom-sheets/useBottomsheetStore";
+export { useDiscoverRows } from "./discover/useDiscoverRows";
 export { useTickUpNext } from "./lists/useTickUpNext";
 export { useUpcoming } from "./lists/useUpcoming";
 export { useUpNext } from "./lists/useUpNext";
