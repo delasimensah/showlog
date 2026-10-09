@@ -125,7 +125,7 @@ Each flow lists what must be true for it to count as done.
 References for each screen are in `docs/design/references/tvtime/`. Mobbin references are added in the design step.
 
 1. **Sign in** — email, password, Sign in button, Create account link.
-2. **Up next** (tab) — sections Up next, Paused for a while, Not started. Empty state: "Add the shows you watch" with a Discover button. Reference: `01-watch-list.jpg`.
+2. **Watching** (tab) — sections Up next, Paused for a while, Not started. Empty state: "Add the shows you watch" with a Discover button. Reference: `01-watch-list.jpg`.
 3. **Upcoming** (tab) — date-grouped list. Empty state: "Nothing scheduled for your shows yet." References: `03`, `04`.
 4. **My shows** (tab) — poster grid, sort and filter sheet. Profile icon in the header. Empty state sends you to Discover. References: `06`, `07`.
 5. **Discover** (tab) — rows of suggested shows, each card with poster, name, year, and Add. Search button in the header. Pull down to shuffle.
@@ -136,7 +136,7 @@ References for each screen are in `docs/design/references/tvtime/`. Mobbin refer
 10. **Profile** — stats, settings, export, sign out. Reference: `08`.
 11. **Before alerts** — one screen before the iPhone permission prompt: "Showlog tells you when a new episode of your shows is out, and when a new season gets a date." Allow and Not now.
 
-Tabs, in order: Up next, Upcoming, Discover, My shows.
+Tabs, in order: Watching, Upcoming, Discover, My shows.
 
 ---
 
@@ -186,4 +186,4 @@ Seasons are not stored as their own records. They come from the episode season n
 ## 9. Success and priorities
 
 - **Success:** I use Showlog for every show I watch for a month, and I no longer open Trakt.
-- **Priority if time runs short:** search and add, ticking, Up next, and Where you left off first. Then My shows, Upcoming, and Discover. Then alerts. Then stats and export.
+- **Priority if time runs short:** search and add, ticking, Up next, and Where you left off first. Then My shows, Upcoming, and Discover. Then stats and export. Then alerts.

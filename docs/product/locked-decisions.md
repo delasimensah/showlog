@@ -167,7 +167,7 @@ Every outside thing this app depends on, with source, rights, and how it gets in
 ## 9. Screens
 
 1. Sign in, with Create account (works only once)
-2. Up next (tab)
+2. Watching (tab)
 3. Upcoming (tab)
 4. My shows (tab), with a sort and filter sheet
 5. Discover (tab): rows of suggested shows with an Add button on each card, shuffled on open and on pull down
@@ -178,7 +178,7 @@ Every outside thing this app depends on, with source, rights, and how it gets in
 10. Profile: stats, account email, alerts on or off, export my history, TVmaze credit, app version, Sign out in red
 11. Empty states for Up next, Upcoming, and My shows. An empty Up next or an empty My shows sends you to Discover.
 
-Tabs, in order: Up next, Upcoming, Discover, My shows. 12. A short screen before the iPhone's own alert permission prompt, saying what alerts the app sends
+Tabs, in order: Watching, Upcoming, Discover, My shows. 12. A short screen before the iPhone's own alert permission prompt, saying what alerts the app sends
 
 ---
 

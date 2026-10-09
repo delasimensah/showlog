@@ -6,7 +6,7 @@ describe("AppTabs", () => {
   it("lists the four tabs in order", () => {
     const { getByText } = render(<AppTabs />);
 
-    expect(getByText("Up next")).toBeTruthy();
+    expect(getByText("Watching")).toBeTruthy();
     expect(getByText("Upcoming")).toBeTruthy();
     expect(getByText("Discover")).toBeTruthy();
     expect(getByText("My shows")).toBeTruthy();

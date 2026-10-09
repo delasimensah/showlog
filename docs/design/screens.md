@@ -92,15 +92,15 @@ Every screen is built from these. One component each, used the same way everywhe
 
 **Route:** `app/(main-app)/(tabs)/_layout.tsx`
 
-Four tabs, in order: **Up next, Upcoming, Discover, My shows**. The tab bar is the iPhone's own glass tab bar, the system liquid glass bar. Active tab icon and label in mint, inactive in muted. Icons are the system symbols for play, calendar, compass, and grid.
+Four tabs, in order: **Watching, Upcoming, Discover, My shows**. The tab bar is the iPhone's own glass tab bar, the system liquid glass bar. Active tab icon and label in mint, inactive in muted. Icons are the system symbols for play, calendar, magnifying glass, and grid.
 
 ---
 
-## 3. Up next (tab)
+## 3. Watching (tab)
 
 **Route:** `app/(main-app)/(tabs)/up-next/index.tsx`
 
-**Header:** the system navigation bar, title "Up next".
+**Header:** the system navigation bar, title "Watching".
 
 **Sections, in order:** Up next, Paused for a while, Not started. A section heading shows only when it has rows. Each row is its own rounded card (surface colour, radius 16), with a 16 gap between cards.
 
@@ -176,7 +176,7 @@ Year-season shows read "Episode 1180" on the mint line and "2026 · E25" under t
 
 **Header:** the system navigation bar, title "My shows". The profile control is the system bar button on the right. It opens Profile. Sort and filter is a second system bar button when the grid is on screen. No search. A new show is found on Discover.
 
-**Grid:** three columns, gap 12. Grid `Poster`, then a `ProgressBar` 8 below it (episodes ticked out of episodes aired), then the poster label (one line) 6 below the bar.
+**Grid:** three columns, gap 12. Grid `Poster`, then a `ProgressBar` 8 below it (episodes ticked out of episodes aired), then the poster label (one line) 6 below the bar. A normal bar is mint. Watch later is blue. Stopped is red.
 
 **Sort and filter sheet** (native sheet from `@expo/ui`): Sort by Last watched, Last added, A to Z. Filter by All, Watching, Up to date, Not started, Watch later, Finished, Stopped. The choice is saved on the phone. The header shows the filter name when it is not All ("Watching · 12").
 
@@ -216,8 +216,8 @@ Year-season shows read "Episode 1180" on the mint line and "2026 · E25" under t
 **On my list:**
 
 - Header picture full width, 16:10, with a dark fade into `page` over its lower half. The show name sits on that fade, up to two lines. Pulling down stretches the picture. Scrolling up fades `page` into the system navigation bar, and the show name fades in with it, centred on the bar, on one line, ending in an ellipsis when it does not fit. The system back button sits in the navigation bar. The menu button (ellipsis) sits on the right only once the menu below exists. A poster used in place of a wide picture stays 2:3 and centred in the header, so it is not stretched.
-- Hero title (show name, up to two lines), then the meta line "5 seasons · Netflix", then a progress summary: "48 of 73 watched" (meta line) on the left, the percentage in mint on the right, and a full-width `ProgressBar` under them.
-- **Where you left off** card: the meta line "Last watched · 12 Mar", the `EpisodeLabel`, the episode title (17, Bold), and TVmaze's summary (body, three lines). Under a `border` hairline: "Up next" (meta line), the next `EpisodeLabel` and title, and a `TickButton` on the right. With nothing ticked: a mint play circle (36) on the left, "Start with S1 | E1" (17, Bold), "Nothing watched yet" as a meta line, and the `TickButton`. Tapping an episode in the card opens the episode sheet.
+- Hero title (show name, up to two lines), then the meta line "5 seasons · Netflix", then a progress summary: "48 of 73 watched" (meta line) on the left, the percentage in mint on the right, and a full-width `ProgressBar` under them. When the show is on Watch later, the bar and the percentage are blue. When it is stopped, the percentage reads Stopped in red and the bar is red.
+- **Where you left off** card: the meta line "Last watched · 12 Mar" (12), the `EpisodeLabel` (12), the episode title (15, Bold), and TVmaze's summary (13, three lines). Lines sit 8 apart. Under a `border` hairline: "Up next" (meta line), the next `EpisodeLabel` and title, and a `TickButton` on the right. With nothing ticked: a mint play circle (36) on the left, "Start with S1 | E1" (15, Bold), "Nothing watched yet" as a meta line, and the `TickButton`. Tapping an episode in the card opens the episode sheet.
 - **Seasons** (section heading, the season count in muted beside it): one `surface` card, radius 16, with a hairline between rows. Each row: "Season 4" (or "2026" for year seasons, 17, Bold) with "10/24" beside it as a meta line (a mint check circle when every episode is watched). The chevron stays at the far end. A `ProgressBar` sits under them. Tapping opens the season.
 - **About** (section heading): summary (body, four lines, "More" in mint expands it, "Less" closes it), genre `Chip`s, and "Show data from TVmaze" as a meta line with a link. 16 between the heading, the summary, the chips, and the link. 8 between the summary and More.
 - **Menu** (native menu from `@expo/ui`): Watch later (or Remove from Watch later), Stop watching (red) or Resume, Remove from my list (red). Remove asks to confirm first.

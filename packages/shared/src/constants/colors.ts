@@ -9,5 +9,6 @@ export const COLORS = {
   muted: "#8a8a8d",
   primary: "#3ddc97",
   onPrimary: "#0e0e10",
+  later: "#0a84ff",
   danger: "#ff453a",
 } as const;

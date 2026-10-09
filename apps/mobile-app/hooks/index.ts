@@ -14,6 +14,12 @@ export { useAccount } from "./profile/useAccount";
 export { useListedShows } from "./search/useListedShows";
 export { useSearchShows } from "./search/useSearchShows";
 export { useAddShow } from "./shows/useAddShow";
+export {
+  useRemoveShow,
+  useResumeShow,
+  useSetWatchLater,
+  useStopShow,
+} from "./shows/useShowActions";
 export { useOpenedAt } from "./shows/useOpenedAt";
 export { usePreviewShow } from "./shows/usePreviewShow";
 export { useSeason } from "./shows/useSeason";

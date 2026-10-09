@@ -173,6 +173,23 @@ jest.mock("@expo/ui/swift-ui", () => {
     Picker: Pass,
     Text: ({ children }: { children?: unknown }) =>
       mockReact.createElement(Text, null, children),
+    Menu: ({ children, label }: { children?: unknown; label?: unknown }) =>
+      mockReact.createElement(
+        View,
+        {
+          accessibilityLabel: typeof label === "string" ? label : undefined,
+        },
+        children
+      ),
+    Button: ({ label, onPress }: { label?: string; onPress?: () => void }) => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const { Pressable } = require("react-native");
+      return mockReact.createElement(
+        Pressable,
+        { accessibilityLabel: label, onPress },
+        mockReact.createElement(Text, null, label)
+      );
+    },
   };
 });
 
@@ -182,6 +199,8 @@ jest.mock("@expo/ui/swift-ui/modifiers", () => ({
   frame: () => ({}),
   presentationDragIndicator: () => ({}),
   preferredColorScheme: () => ({}),
+  buttonStyle: () => ({}),
+  labelStyle: () => ({}),
 }));
 
 jest.mock("@expo/ui/community/menu", () => {

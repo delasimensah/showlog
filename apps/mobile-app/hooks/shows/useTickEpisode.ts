@@ -51,6 +51,7 @@ export function useTickEpisode(target: {
         { tvmazeId: target.tvmazeId },
         {
           ...show,
+          watchLater: false,
           watchedCount: show.watchedCount + 1,
           seasons: show.seasons.map((season) =>
             season.number === target.season

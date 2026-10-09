@@ -183,6 +183,24 @@ describe("watchSeason", () => {
     ).toBe(40);
     expect(saved.myShow?.watchedCount).toBe(2);
     expect(saved.myShow?.nextEpisodeId).toBe(seeded.nextSeason);
+    expect(saved.myShow?.lastWatchedEpisodeId).toBe(seeded.second);
+  });
+
+  it("moves last watched to the end of the season after an earlier tick", async () => {
+    const t = convexTest(schema, modules);
+    const seeded = await seed(t);
+    const user = asUser(t, seeded.userId);
+
+    await user.mutation(api.watching.tick, { episodeId: seeded.first });
+    await user.mutation(api.watching.watchSeason, {
+      showId: seeded.showId,
+      season: 1,
+    });
+
+    const myShow = await t.run(async (ctx) => ctx.db.get(seeded.myShowId));
+    expect(myShow?.watchedCount).toBe(2);
+    expect(myShow?.lastWatchedEpisodeId).toBe(seeded.second);
+    expect(myShow?.nextEpisodeId).toBe(seeded.nextSeason);
   });
 });
 
@@ -203,6 +221,8 @@ describe("watchUpTo", () => {
       [seeded.first, seeded.second, seeded.nextSeason].sort()
     );
     expect(new Set(ticks.map((tick) => tick.watchedAt)).size).toBe(1);
+    const myShow = await t.run(async (ctx) => ctx.db.get(seeded.myShowId));
+    expect(myShow?.lastWatchedEpisodeId).toBe(seeded.nextSeason);
   });
 });
 

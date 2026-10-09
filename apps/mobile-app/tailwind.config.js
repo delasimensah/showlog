@@ -30,6 +30,7 @@ module.exports = {
         muted: COLORS.muted,
         primary: COLORS.primary,
         onPrimary: COLORS.onPrimary,
+        later: COLORS.later,
         danger: COLORS.danger,
       },
       fontFamily: {

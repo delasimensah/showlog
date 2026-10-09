@@ -64,11 +64,11 @@ const ContinueCard: React.FC<ContinueCardProps> = ({
         >
           <HStack align="center" spacing="md">
             <Ionicons name="play-circle" size={36} color={COLORS.primary} />
-            <VStack spacing="xs" className="min-w-0 flex-1">
-              <Text className="font-app-bold text-[17px] text-text">
+            <VStack spacing="sm" className="min-w-0 flex-1">
+              <Text className="font-app-bold text-[15px] text-text">
                 {`Start with ${label}`}
               </Text>
-              <Text className="font-app-regular text-[13px] text-muted">
+              <Text className="font-app-regular text-[12px] text-muted">
                 Nothing watched yet
               </Text>
             </VStack>
@@ -91,19 +91,19 @@ const ContinueCard: React.FC<ContinueCardProps> = ({
         accessibilityLabel={leftOff.name}
         onPress={onOpenLeft}
       >
-        <VStack spacing="xs">
-          <Text className="font-app-medium text-[13px] text-muted">
+        <VStack spacing="sm">
+          <Text className="font-app-medium text-[12px] text-muted">
             {`Last watched · ${formatAirDate(leftOff.watchedAt, now)}`}
           </Text>
-          <Text className="font-app-semibold text-[13px] text-primary">
+          <Text className="font-app-semibold text-[12px] text-primary">
             {watchedLabel}
           </Text>
-          <Text className="font-app-bold text-[17px] text-text">
+          <Text className="font-app-bold text-[15px] text-text">
             {leftOff.name}
           </Text>
           {leftOff.summary ? (
             <Text
-              className="font-app-regular text-[15px] text-text"
+              className="font-app-regular text-[13px] text-text"
               numberOfLines={3}
             >
               {leftOff.summary}
@@ -122,15 +122,15 @@ const ContinueCard: React.FC<ContinueCardProps> = ({
               onPress={onOpenNext}
               className="min-w-0 flex-1"
             >
-              <VStack spacing="xs">
-                <Text className="font-app-medium text-[13px] text-muted">
+              <VStack spacing="sm">
+                <Text className="font-app-medium text-[12px] text-muted">
                   Up next
                 </Text>
-                <Text className="font-app-semibold text-[13px] text-primary">
+                <Text className="font-app-semibold text-[12px] text-primary">
                   {nextLabel}
                 </Text>
                 <Text
-                  className="font-app-bold text-[17px] text-text"
+                  className="font-app-bold text-[15px] text-text"
                   numberOfLines={2}
                 >
                   {upNext.name}

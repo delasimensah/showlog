@@ -1,20 +1,26 @@
+import type { Id } from "@convex/_generated/dataModel";
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "expo-router";
+import { useNavigation, useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
-import { useWindowDimensions, View } from "react-native";
+import { Alert, useWindowDimensions, View } from "react-native";
 import Animated from "react-native-reanimated";
 
 import { COLORS } from "@/constants";
 import {
   useAddShow,
   usePreviewShow,
+  useRemoveShow,
+  useResumeShow,
+  useSetWatchLater,
   useShow,
   useShowHeaderScroll,
+  useStopShow,
 } from "@/hooks";
 import { showErrorToast } from "@/utils";
 
 import ShowHeaderBackground from "../../../show/ShowHeaderBackground/ShowHeaderBackground";
 import ShowHeaderTitle from "../../../show/ShowHeaderTitle/ShowHeaderTitle";
+import ShowMenu from "../../../show/ShowMenu/ShowMenu";
 import ShowOnList from "../../../show/ShowOnList/ShowOnList";
 import ShowPicture from "../../../show/ShowPicture/ShowPicture";
 import ShowPreview from "../../../show/ShowPreview/ShowPreview";
@@ -50,6 +56,9 @@ interface OnListShow {
     episodeCount: number;
     watchedCount: number;
   }[];
+  myShowId: string;
+  watchLater: boolean;
+  stopped: boolean;
   watchedCount: number;
   airedCount: number;
   waitingAfterNext: number;
@@ -73,9 +82,14 @@ interface PreviewShow {
 const ShowScreen: React.FC<{ tvmazeId: number }> = ({ tvmazeId }) => {
   const { width } = useWindowDimensions();
   const navigation = useNavigation();
+  const router = useRouter();
   const mine = useShow(tvmazeId) as OnListShow | null | undefined;
   const previewShow = usePreviewShow();
   const addShow = useAddShow();
+  const setWatchLater = useSetWatchLater();
+  const stopShow = useStopShow();
+  const resumeShow = useResumeShow();
+  const removeShow = useRemoveShow();
   const [preview, setPreview] = useState<PreviewShow | undefined>();
   const [failed, setFailed] = useState(false);
   const [adding, setAdding] = useState(false);
@@ -144,6 +158,29 @@ const ShowScreen: React.FC<{ tvmazeId: number }> = ({ tvmazeId }) => {
     };
   }, [headerName, navigation, scrollY, threshold]);
 
+  const report = () => {
+    showErrorToast("Could not update this show.");
+  };
+
+  const confirmRemove = (myShowId: string) => {
+    Alert.alert(
+      "Remove from my list?",
+      "This deletes the show and the episodes you have ticked.",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Remove",
+          style: "destructive",
+          onPress: () => {
+            void removeShow({ myShowId: myShowId as Id<"myShows"> })
+              .then(() => router.back())
+              .catch(report);
+          },
+        },
+      ]
+    );
+  };
+
   const onAdd = () => {
     setAdding(true);
     void addShow({ tvmazeId })
@@ -205,6 +242,29 @@ const ShowScreen: React.FC<{ tvmazeId: number }> = ({ tvmazeId }) => {
           width={width}
           contained={cover.contained}
           scrollY={scrollY}
+        />
+      ) : null}
+      {mine !== null && mine !== undefined ? (
+        <ShowMenu
+          watchLater={mine.watchLater}
+          stopped={mine.stopped}
+          onWatchLater={() => {
+            void setWatchLater({
+              myShowId: mine.myShowId as Id<"myShows">,
+              on: !mine.watchLater,
+            }).catch(report);
+          }}
+          onStop={() => {
+            void stopShow({
+              myShowId: mine.myShowId as Id<"myShows">,
+            }).catch(report);
+          }}
+          onResume={() => {
+            void resumeShow({
+              myShowId: mine.myShowId as Id<"myShows">,
+            }).catch(report);
+          }}
+          onRemove={() => confirmRemove(mine.myShowId)}
         />
       ) : null}
       <Animated.ScrollView

@@ -3,9 +3,14 @@ import { v } from "convex/values";
 
 import { internal } from "./_generated/api";
 import type { Doc, Id } from "./_generated/dataModel";
-import { action, internalMutation, internalQuery } from "./_generated/server";
+import {
+  action,
+  internalMutation,
+  internalQuery,
+  type MutationCtx,
+} from "./_generated/server";
 import { ERROR_CODES, raise } from "./lib/errors";
-import { authedQuery } from "./lib/functions";
+import { authedMutation, authedQuery } from "./lib/functions";
 import { hasAired, recomputeProgress } from "./progress";
 import {
   SHOW_STATUSES,
@@ -251,6 +256,9 @@ export const get = authedQuery({
       genres: v.array(v.string()),
       yearSeasons: v.boolean(),
       seasons: v.array(seasonRow),
+      myShowId: v.id("myShows"),
+      watchLater: v.boolean(),
+      stopped: v.boolean(),
       watchedCount: v.number(),
       airedCount: v.number(),
       waitingAfterNext: v.number(),
@@ -317,6 +325,9 @@ export const get = authedQuery({
         episodeCount: season.episodeCount,
         watchedCount: watchedBySeason.get(season.number) ?? 0,
       })),
+      myShowId: mine._id,
+      watchLater: mine.watchLater,
+      stopped: mine.stoppedAt !== undefined,
       watchedCount: mine.watchedCount,
       airedCount: mine.airedCount,
       waitingAfterNext: mine.waitingAfterNext,
@@ -446,5 +457,126 @@ export const season = authedQuery({
         aired: hasAired(episode, now),
       })),
     };
+  },
+});
+
+async function requireOwned(
+  ctx: MutationCtx & { userId: Id<"users"> },
+  myShowId: Id<"myShows">
+) {
+  const mine = await ctx.db.get(myShowId);
+  if (mine === null || mine.userId !== ctx.userId) {
+    raise(ERROR_CODES.NOT_PERMITTED);
+  }
+  return mine;
+}
+
+async function subtractStats(
+  ctx: MutationCtx,
+  userId: Id<"users">,
+  episodes: number,
+  minutes: number
+) {
+  const stats = await ctx.db
+    .query("userStats")
+    .withIndex("by_user", (q) => q.eq("userId", userId))
+    .unique();
+  if (stats === null) return;
+  await ctx.db.patch(stats._id, {
+    episodesWatched: Math.max(0, stats.episodesWatched - episodes),
+    minutesWatched: Math.max(0, stats.minutesWatched - minutes),
+  });
+}
+
+export const setWatchLater = authedMutation({
+  args: { myShowId: v.id("myShows"), on: v.boolean() },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const mine = await requireOwned(ctx, args.myShowId);
+    if (mine.watchLater !== args.on) {
+      await ctx.db.patch(mine._id, { watchLater: args.on });
+    }
+    return null;
+  },
+});
+
+export const stop = authedMutation({
+  args: { myShowId: v.id("myShows") },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const mine = await requireOwned(ctx, args.myShowId);
+    if (mine.stoppedAt === undefined) {
+      await ctx.db.patch(mine._id, { stoppedAt: Date.now() });
+    }
+    return null;
+  },
+});
+
+export const resume = authedMutation({
+  args: { myShowId: v.id("myShows") },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const mine = await requireOwned(ctx, args.myShowId);
+    if (mine.stoppedAt !== undefined) {
+      const { _id, _creationTime, stoppedAt: _stopped, ...rest } = mine;
+      await ctx.db.replace(_id, rest);
+    }
+    return null;
+  },
+});
+
+export const remove = authedMutation({
+  args: { myShowId: v.id("myShows") },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const mine = await requireOwned(ctx, args.myShowId);
+    const ticks = await ctx.db
+      .query("watchedEpisodes")
+      .withIndex("by_user_show", (q) =>
+        q.eq("userId", ctx.userId).eq("showId", mine.showId)
+      )
+      .collect();
+    let minutes = 0;
+    for (const tick of ticks) {
+      minutes += tick.minutes;
+      await ctx.db.delete(tick._id);
+    }
+    await subtractStats(ctx, ctx.userId, ticks.length, minutes);
+    const showId = mine.showId;
+    await ctx.db.delete(mine._id);
+    await ctx.scheduler.runAfter(0, internal.shows.deleteShowCopy, { showId });
+    return null;
+  },
+});
+
+/**
+ * A long show can have over a thousand episodes, so the copy is deleted in
+ * batches. Another person's list row keeps the copy.
+ */
+export const deleteShowCopy = internalMutation({
+  args: { showId: v.id("shows") },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const stillListed = await ctx.db
+      .query("myShows")
+      .withIndex("by_show", (q) => q.eq("showId", args.showId))
+      .take(1);
+    if (stillListed.length > 0) return null;
+
+    const episodes = await ctx.db
+      .query("episodes")
+      .withIndex("by_show_order", (q) => q.eq("showId", args.showId))
+      .take(EPISODE_BATCH_SIZE);
+    for (const episode of episodes) {
+      await ctx.db.delete(episode._id);
+    }
+    if (episodes.length === EPISODE_BATCH_SIZE) {
+      await ctx.scheduler.runAfter(0, internal.shows.deleteShowCopy, {
+        showId: args.showId,
+      });
+      return null;
+    }
+    await ctx.db.delete(args.showId);
+    return null;
   },
 });

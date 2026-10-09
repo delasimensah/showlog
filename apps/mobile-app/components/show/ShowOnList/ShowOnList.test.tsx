@@ -22,6 +22,8 @@ const show = {
   seasons: [{ number: 1999, episodeCount: 12, watchedCount: 0 }],
   watchedCount: 0,
   airedCount: 20,
+  watchLater: false,
+  stopped: false,
   waitingAfterNext: 0,
   leftOff: null,
   upNext: null,
