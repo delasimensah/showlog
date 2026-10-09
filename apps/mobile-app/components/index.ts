@@ -8,6 +8,7 @@ export { default as FlashListContainer } from "./ui/FlashListContainer/FlashList
 export { default as Separator } from "./ui/Separator/Separator";
 
 export { default as AppProviders } from "./shared/AppProviders/AppProviders";
+export { default as AuthGate } from "./shared/AuthGate/AuthGate";
 export { default as LoadingScreen } from "./shared/LoadingScreen/LoadingScreen";
 
 export {
@@ -20,3 +21,14 @@ export {
 export { default as GenericBottomSheet } from "./bottom-sheets/GenericBottomSheet/GenericBottomSheet";
 export { default as BottomSheetsManager } from "./bottom-sheets/BottomSheetsManager/BottomSheetsManager";
 export { default as BottomSheetHeader } from "./bottom-sheets/BottomSheetHeader/BottomSheetHeader";
+
+export { default as AppTabs } from "./navigation/AppTabs/AppTabs";
+export { default as AuthLayout } from "./navigation/AuthLayout/AuthLayout";
+export { default as MainAppLayout } from "./navigation/MainAppLayout/MainAppLayout";
+
+export { default as SignInScreen } from "./screens/auth/SignInScreen/SignInScreen";
+export { default as DiscoverScreen } from "./screens/main/DiscoverScreen/DiscoverScreen";
+export { default as MyShowsScreen } from "./screens/main/MyShowsScreen/MyShowsScreen";
+export { default as ProfileScreen } from "./screens/main/ProfileScreen/ProfileScreen";
+export { default as UpcomingScreen } from "./screens/main/UpcomingScreen/UpcomingScreen";
+export { default as UpNextScreen } from "./screens/main/UpNextScreen/UpNextScreen";

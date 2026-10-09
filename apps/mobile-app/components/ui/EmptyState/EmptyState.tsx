@@ -14,7 +14,11 @@ export interface EmptyStateProps {
   subtitle: string;
   buttonText?: string;
   onButtonPress?: () => void;
+  secondaryButtonText?: string;
+  onSecondaryButtonPress?: () => void;
   icon?: React.ReactNode;
+  headerLeft?: React.ReactNode;
+  headerRight?: React.ReactNode;
 }
 
 const EmptyState: React.FC<EmptyStateProps> = ({
@@ -23,36 +27,57 @@ const EmptyState: React.FC<EmptyStateProps> = ({
   subtitle,
   buttonText,
   onButtonPress,
+  secondaryButtonText,
+  onSecondaryButtonPress,
   icon,
+  headerLeft,
+  headerRight,
 }) => {
   const defaultIcon = (
     <Ionicons name="folder-outline" size={64} color={COLORS.muted} />
   );
 
   return (
-    <ScreenWithAnimatedHeader title={pageTitle}>
-      <VStack
-        spacing="lg"
-        align="center"
-        justify="center"
-        className="mt-20 flex-1 px-8"
-      >
+    <ScreenWithAnimatedHeader
+      title={pageTitle}
+      headerLeft={headerLeft}
+      headerRight={headerRight}
+    >
+      <VStack spacing="lg" align="center" justify="center" className="flex-1">
         {icon || defaultIcon}
 
         <VStack spacing="sm" align="center">
           {title && (
-            <Text className="text-center font-app-extrabold text-xl text-text">
+            <Text className="text-center font-app-bold text-xl text-text">
               {title}
             </Text>
           )}
-          <Text className="text-center font-app-regular text-base text-muted">
+          <Text className="text-center font-app-regular text-[15px] text-muted">
             {subtitle}
           </Text>
         </VStack>
 
-        {buttonText && (
-          <Button text={buttonText} size="md" onPress={onButtonPress} />
-        )}
+        {buttonText || secondaryButtonText ? (
+          <VStack spacing="sm" align="stretch" className="w-full">
+            {buttonText ? (
+              <Button
+                text={buttonText}
+                size="lg"
+                fullWidth
+                onPress={onButtonPress}
+              />
+            ) : null}
+            {secondaryButtonText ? (
+              <Button
+                text={secondaryButtonText}
+                variant="secondary"
+                size="lg"
+                fullWidth
+                onPress={onSecondaryButtonPress}
+              />
+            ) : null}
+          </VStack>
+        ) : null}
       </VStack>
     </ScreenWithAnimatedHeader>
   );

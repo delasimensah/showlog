@@ -1,8 +1,18 @@
 import { COLORS } from "@/constants";
 
-import { defaultStackScreenOptions, screenPresets } from "../navigation";
+import {
+  defaultStackScreenOptions,
+  navigationTheme,
+  screenPresets,
+} from "../navigation";
 
 describe("navigation utilities", () => {
+  it("uses the page and mint for the navigator theme", () => {
+    expect(navigationTheme.dark).toBe(true);
+    expect(navigationTheme.colors.background).toBe(COLORS.page);
+    expect(navigationTheme.colors.primary).toBe(COLORS.primary);
+  });
+
   describe("defaultStackScreenOptions", () => {
     it("should have correct header style", () => {
       expect(defaultStackScreenOptions.headerStyle).toEqual({

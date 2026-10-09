@@ -11,8 +11,8 @@
 - **Client / job:** Showlog. Personal iPhone app for tracking TV shows. No client, no invoice, not published.
 - **Backend:** Convex (dev deployment only, team `dm-studios`)
 - **Outcome:** B (studio accounts)
-- **Current phase:** Setup done: scaffold, GitHub, Expo, Convex, design system, icon, system design, screens, tickets SHOW-1 to SHOW-12, and both phone builds started. SHOW-1 is next. iPhone app (Expo SDK 57), shared package, and a thin Convex start (Convex Auth tables and routes, signed-in function wrappers). First screen is the name and one line. Native packages for this version are installed. Lint, format, type-check, and tests pass. Private GitHub repo on `main`. Branches are deleted automatically after merge. Convex agent guidelines and skills installed (`convex/_generated/ai/guidelines.md`, `.agents/skills/`).
-- **Last updated:** 2026-10-08
+- **Current phase:** SHOW-1 is Done. Sign in, the four tabs, and Profile with the account name, the account email, and Sign out are on main. The name-and-one-line screen is gone. Next is SHOW-2. Setup is already done: scaffold, GitHub, Expo, Convex, design system, icon, system design, screens, tickets SHOW-1 to SHOW-12, and both phone builds. iPhone app (Expo SDK 57), shared package, and Convex Auth. Native packages for this version are installed. Lint, format, type-check, and tests pass. Private GitHub repo on `main`. Branches are deleted automatically after merge. Convex agent guidelines and skills are installed.
+- **Last updated:** 2026-10-09
 - **Blocked / open:** The Apple push key waits for SHOW-11.
 
 ---
@@ -46,7 +46,7 @@
 - [x] System design (8 Oct 2026) — `docs/product/system-design.md`
 - [x] Design system locked (8 Oct 2026): mint on ink, Plus Jakarta Sans — `docs/design/design-system.md`. Tokens wired into `packages/shared` colours, the Tailwind theme, and the font loader.
 - [x] Screen design (8 Oct 2026): TV Time screenshots plus Mobbin references for each screen — `docs/design/screens.md`. No UX Pilot.
-- [x] Tickets SHOW-1 to SHOW-12 in `docs/product/linear-tickets.md`, all Todo
+- [x] Tickets SHOW-1 to SHOW-12 in `docs/product/linear-tickets.md`. SHOW-1 is Done. SHOW-2 to SHOW-12 are Todo.
 - [x] One development build, one preview build (8 Oct 2026, Plus Jakarta Sans package already installed). Simulator: https://expo.dev/accounts/dm-studios/projects/showlog/builds/bf5a7b93-ccf6-41d4-8999-41b67c64bdec. Preview: https://expo.dev/accounts/dm-studios/projects/showlog/builds/21398ded-56e6-4244-ac90-336c5b0a4d0a.
 - [ ] Build
 
@@ -54,7 +54,7 @@
 
 ## Next action (one line)
 
-Start SHOW-1 on `feature/SHOW-1`.
+SHOW-2. I can search TVmaze and add a show.
 
 ---
 

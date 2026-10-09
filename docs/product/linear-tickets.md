@@ -24,16 +24,16 @@ Every ticket follows `.cursor/rules/` and the docs `mandatory-project-docs.mdc` 
 
 ## Status now
 
-- SHOW-1 to SHOW-12: **Todo**.
+- SHOW-1: **Done**. SHOW-2 to SHOW-12: **Todo**.
 
 ---
 
 ## SHOW-1. I can sign in and see the four tabs
 
-**Status:** Todo
+**Status:** Done
 **Apps:** phone, Convex
 **Branch:** `feature/SHOW-1`
-**Screens:** `screens.md` sections 1, 2, 3 (header only), and 11 (email and Sign out only)
+**Screens:** `screens.md` sections 1, 2, 3 (header only), and 11 (name, email, and Sign out only)
 
 The app opens on Sign in. I create my one account, land on the four tabs, and stay signed in after closing the app.
 
@@ -42,17 +42,17 @@ The app opens on Sign in. I create my one account, land on the four tabs, and st
 - Convex Auth Password is already in `convex/auth.ts`. Add the `createOrUpdateUser` callback that refuses a new user when one exists, with "This app already has an account."
 - Routes `(auth)/sign-in.tsx` and `(main-app)/(tabs)/` with Up next, Upcoming, Discover, and My shows. Each tab has its real large title and an empty state. The tab shell replaces the scaffold's name-and-one-line screen.
 - `app/index.tsx` sends a signed-out person to sign in and a signed-in person to the tabs.
-- Profile route with the account email and Sign out (red text, confirm). Opened from the Up next header.
+- Profile route with the account name, the account email, and Sign out (red text, confirm). Opened from the Up next header. Create account asks for a name and saves it on the account.
 - Sign-in form with react-hook-form and zod, the same as other forms in this repo.
 
 **Acceptance (yes or no)**
 
 - On a fresh install the app opens on Sign in.
-- Create account with email and password lands on Up next.
+- Create account with a name, an email, and a password lands on Up next.
 - A second Create account (another email) is refused with "This app already has an account."
 - A wrong password shows "Email or password is wrong."
 - Closing and reopening the app keeps me signed in.
-- Profile shows my email. Sign out asks to confirm, then returns to Sign in.
+- Profile shows my name and my email. Sign out asks to confirm, then returns to Sign in.
 - The four tabs are in order Up next, Upcoming, Discover, My shows, with mint for the active tab.
 - A Convex test proves the second sign-up is refused.
 

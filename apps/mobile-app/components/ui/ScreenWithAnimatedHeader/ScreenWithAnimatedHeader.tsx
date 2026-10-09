@@ -12,12 +12,16 @@ export interface ScreenWithAnimatedHeaderProps {
   title: string;
   children: React.ReactNode;
   contentContainerStyle?: object;
+  headerLeft?: React.ReactNode;
+  headerRight?: React.ReactNode;
 }
 
 const ScreenWithAnimatedHeader: React.FC<ScreenWithAnimatedHeaderProps> = ({
   title,
   children,
   contentContainerStyle,
+  headerLeft,
+  headerRight,
 }) => {
   const scrollY = useSharedValue(0);
 
@@ -29,7 +33,12 @@ const ScreenWithAnimatedHeader: React.FC<ScreenWithAnimatedHeaderProps> = ({
 
   return (
     <VStack spacing="none" className="flex-1">
-      <AnimatedHeader title={title} scrollY={scrollY} />
+      <AnimatedHeader
+        title={title}
+        scrollY={scrollY}
+        left={headerLeft}
+        right={headerRight}
+      />
 
       <Animated.ScrollView
         onScroll={scrollHandler}
@@ -37,7 +46,7 @@ const ScreenWithAnimatedHeader: React.FC<ScreenWithAnimatedHeaderProps> = ({
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 100, ...contentContainerStyle }}
       >
-        <VStack spacing="2xl" paddingX="lg" paddingY="md">
+        <VStack spacing="2xl" paddingY="md" className="px-5">
           <LargeTitle title={title} />
           {children}
         </VStack>

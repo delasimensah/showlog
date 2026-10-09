@@ -201,6 +201,7 @@ Files under `convex/`, one per area. Public functions are signed-in only.
 
 **`profile.ts`**
 
+- `account()` query: the signed-in person's name and email.
 - `stats()` query: from `userStats`.
 - `exportHistory()` action: reads my shows and ticks page by page through internal queries and returns one JSON text. The phone saves it with `expo-file-system` and opens the share sheet with `expo-sharing`.
 

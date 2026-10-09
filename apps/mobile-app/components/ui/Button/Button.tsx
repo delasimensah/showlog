@@ -1,15 +1,11 @@
 import { Href, useRouter } from "expo-router";
 import React from "react";
-import {
-  ActivityIndicator,
-  Pressable,
-  PressableProps,
-  View,
-} from "react-native";
+import { ActivityIndicator, Pressable, PressableProps } from "react-native";
 import { cn } from "shared";
 
 import { COLORS } from "@/constants";
 
+import { HStack } from "../Stack/Stack";
 import Text from "../Text/Text";
 
 export type ButtonVariant =
@@ -77,16 +73,16 @@ const variantStyles: Record<
 
 const sizeStyles: Record<ButtonSize, { container: string; text: string }> = {
   sm: {
-    container: "px-4 py-2 rounded-md",
+    container: "h-9 px-4 rounded-full",
     text: "text-sm",
   },
   md: {
-    container: "px-6 py-3 rounded-lg",
+    container: "h-11 px-6 rounded-full",
     text: "text-base",
   },
   lg: {
-    container: "px-6 py-4 rounded-lg",
-    text: "text-lg",
+    container: "h-[50px] px-6 rounded-full",
+    text: "text-base",
   },
 };
 
@@ -124,10 +120,11 @@ const Button: React.FC<ButtonProps> = ({
 
   return (
     <Pressable
+      accessibilityRole="button"
       onPress={handlePress}
       disabled={disabled || loading}
       style={({ pressed }) => ({
-        opacity: pressed ? 0.8 : disabled ? 0.5 : 1,
+        opacity: pressed ? 0.7 : disabled ? 0.5 : 1,
       })}
       className={cn(
         "flex-row items-center justify-center",
@@ -138,34 +135,36 @@ const Button: React.FC<ButtonProps> = ({
       )}
       {...pressableProps}
     >
-      {leftIcon && !loading && <View className="mr-2">{leftIcon}</View>}
+      <HStack spacing="sm" align="center" justify="center">
+        {leftIcon && !loading ? leftIcon : null}
 
-      {loading ? (
-        <ActivityIndicator
-          size="small"
-          color={
-            variant === "primary"
-              ? COLORS.onPrimary
-              : variant === "quietDanger"
-                ? COLORS.danger
-                : COLORS.text
-          }
-          testID="button-loading"
-        />
-      ) : (
-        <Text
-          className={cn(
-            "text-center font-app-bold",
-            variantStyle.text,
-            sizeStyle.text,
-            textClassName
-          )}
-        >
-          {content}
-        </Text>
-      )}
+        {loading ? (
+          <ActivityIndicator
+            size="small"
+            color={
+              variant === "primary"
+                ? COLORS.onPrimary
+                : variant === "quietDanger"
+                  ? COLORS.danger
+                  : COLORS.text
+            }
+            testID="button-loading"
+          />
+        ) : (
+          <Text
+            className={cn(
+              "text-center font-app-bold",
+              variantStyle.text,
+              sizeStyle.text,
+              textClassName
+            )}
+          >
+            {content}
+          </Text>
+        )}
 
-      {rightIcon && !loading && <View className="ml-2">{rightIcon}</View>}
+        {rightIcon && !loading ? rightIcon : null}
+      </HStack>
     </Pressable>
   );
 };
