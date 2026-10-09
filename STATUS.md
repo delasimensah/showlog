@@ -68,3 +68,4 @@ SHOW-2. I can search TVmaze and add a show.
 - System design: `docs/product/system-design.md`
 - Screens: `docs/design/screens.md`
 - Tickets: `docs/product/linear-tickets.md`
+- SHOW-1 pull request: https://github.com/delasimensah/showlog/pull/1
