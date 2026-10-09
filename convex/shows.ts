@@ -43,7 +43,7 @@ const seasonSummary = v.object({
   firstOrder: v.number(),
 });
 
-const showFields = {
+export const showFields = {
   tvmazeId: v.number(),
   name: v.string(),
   type: v.optional(v.string()),
@@ -63,7 +63,7 @@ const showFields = {
   tvmazeUpdatedAt: v.number(),
 };
 
-const episodeFields = {
+export const episodeFields = {
   tvmazeId: v.number(),
   season: v.number(),
   number: v.number(),
