@@ -75,3 +75,4 @@ SHOW-9 is next. I can put a show on Watch later, stop it, or remove it.
 - SHOW-5 pull request: https://github.com/delasimensah/showlog/pull/5
 - SHOW-6 pull request: https://github.com/delasimensah/showlog/pull/6
 - SHOW-7 pull request: https://github.com/delasimensah/showlog/pull/7
+- SHOW-8 pull request: https://github.com/delasimensah/showlog/pull/8
