@@ -73,3 +73,4 @@ SHOW-7 is next. TVmaze changes reach the app within a day.
 - SHOW-3 pull request: https://github.com/delasimensah/showlog/pull/3
 - SHOW-4 pull request: https://github.com/delasimensah/showlog/pull/4
 - SHOW-5 pull request: https://github.com/delasimensah/showlog/pull/5
+- SHOW-6 pull request: https://github.com/delasimensah/showlog/pull/6
