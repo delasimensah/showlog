@@ -27,6 +27,7 @@ export {
   formatDateString,
   formatDate,
   getRelativeTime,
+  timeAgo,
 } from "./date";
 
 // Validation utilities

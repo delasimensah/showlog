@@ -23,7 +23,21 @@ import { VStack } from "../../../ui/Stack/Stack";
 import Text from "../../../ui/Text/Text";
 import ShowScreenSkeleton from "./ShowScreenSkeleton";
 
+interface OnListEpisode {
+  episodeId: string;
+  season: number;
+  number: number;
+  order: number;
+  name: string;
+  summary: string | null;
+  runtime: number | null;
+  imageUrl: string | null;
+  airsAt: number | null;
+  airTimeKnown: boolean;
+}
+
 interface OnListShow {
+  showId: string;
   tvmazeId: number;
   name: string;
   headerUrl: string | null;
@@ -39,6 +53,9 @@ interface OnListShow {
   }[];
   watchedCount: number;
   airedCount: number;
+  waitingAfterNext: number;
+  leftOff: (OnListEpisode & { watchedAt: number }) | null;
+  upNext: OnListEpisode | null;
 }
 
 interface PreviewShow {

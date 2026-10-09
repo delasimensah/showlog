@@ -9,10 +9,13 @@
  */
 
 import type * as auth from "../auth.js";
+import type * as clock from "../clock.js";
+import type * as crons from "../crons.js";
 import type * as http from "../http.js";
 import type * as lib_errors from "../lib/errors.js";
 import type * as lib_functions from "../lib/functions.js";
 import type * as lib_singleAccount from "../lib/singleAccount.js";
+import type * as lists from "../lists.js";
 import type * as profile from "../profile.js";
 import type * as progress from "../progress.js";
 import type * as search from "../search.js";
@@ -28,10 +31,13 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
+  clock: typeof clock;
+  crons: typeof crons;
   http: typeof http;
   "lib/errors": typeof lib_errors;
   "lib/functions": typeof lib_functions;
   "lib/singleAccount": typeof lib_singleAccount;
+  lists: typeof lists;
   profile: typeof profile;
   progress: typeof progress;
   search: typeof search;

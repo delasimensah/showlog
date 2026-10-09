@@ -24,7 +24,7 @@ Every ticket follows `.cursor/rules/` and the docs `mandatory-project-docs.mdc` 
 
 ## Status now
 
-- SHOW-1: **Done**. SHOW-2: **Done**. SHOW-3: **Done**. SHOW-4: **Done**. SHOW-5 to SHOW-12: **Todo**.
+- SHOW-1: **Done**. SHOW-2: **Done**. SHOW-3: **Done**. SHOW-4: **Done**. SHOW-5: **Done**. SHOW-6 to SHOW-12: **Todo**.
 
 ---
 
@@ -155,7 +155,7 @@ The app opens on Sign in. I create my one account, land on the four tabs, and st
 
 ## SHOW-5. Up next shows what to watch, and the show remembers where I left off
 
-**Status:** Todo
+**Status:** Done
 **Apps:** phone, Convex
 **Branch:** `feature/SHOW-5`
 **Screens:** `screens.md` sections 3 and 8 (Where you left off)

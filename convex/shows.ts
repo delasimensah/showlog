@@ -2,7 +2,7 @@ import { getAuthUserId } from "@convex-dev/auth/server";
 import { v } from "convex/values";
 
 import { internal } from "./_generated/api";
-import type { Id } from "./_generated/dataModel";
+import type { Doc, Id } from "./_generated/dataModel";
 import { action, internalMutation, internalQuery } from "./_generated/server";
 import { ERROR_CODES, raise } from "./lib/errors";
 import { authedQuery } from "./lib/functions";
@@ -209,6 +209,34 @@ const seasonRow = v.object({
   watchedCount: v.number(),
 });
 
+const progressEpisode = v.object({
+  episodeId: v.id("episodes"),
+  season: v.number(),
+  number: v.number(),
+  order: v.number(),
+  name: v.string(),
+  summary: v.union(v.string(), v.null()),
+  runtime: v.union(v.number(), v.null()),
+  imageUrl: v.union(v.string(), v.null()),
+  airsAt: v.union(v.number(), v.null()),
+  airTimeKnown: v.boolean(),
+});
+
+function progressEpisodeView(episode: Doc<"episodes">) {
+  return {
+    episodeId: episode._id,
+    season: episode.season,
+    number: episode.number,
+    order: episode.order,
+    name: episode.name,
+    summary: episode.summary ?? null,
+    runtime: episode.runtime ?? null,
+    imageUrl: episode.imageUrl ?? null,
+    airsAt: episode.airsAt ?? null,
+    airTimeKnown: episode.airTimeKnown,
+  };
+}
+
 export const get = authedQuery({
   args: { tvmazeId: v.number() },
   returns: v.union(
@@ -225,6 +253,15 @@ export const get = authedQuery({
       seasons: v.array(seasonRow),
       watchedCount: v.number(),
       airedCount: v.number(),
+      waitingAfterNext: v.number(),
+      leftOff: v.union(
+        v.object({
+          ...progressEpisode.fields,
+          watchedAt: v.number(),
+        }),
+        v.null()
+      ),
+      upNext: v.union(progressEpisode, v.null()),
     }),
     v.null()
   ),
@@ -256,6 +293,15 @@ export const get = authedQuery({
       );
     }
 
+    const leftEpisode =
+      mine.lastWatchedEpisodeId === undefined
+        ? null
+        : await ctx.db.get(mine.lastWatchedEpisodeId);
+    const nextEpisode =
+      mine.nextEpisodeId === undefined
+        ? null
+        : await ctx.db.get(mine.nextEpisodeId);
+
     return {
       showId: show._id,
       tvmazeId: show.tvmazeId,
@@ -273,6 +319,15 @@ export const get = authedQuery({
       })),
       watchedCount: mine.watchedCount,
       airedCount: mine.airedCount,
+      waitingAfterNext: mine.waitingAfterNext,
+      leftOff:
+        leftEpisode === null || mine.lastWatchedAt === undefined
+          ? null
+          : {
+              ...progressEpisodeView(leftEpisode),
+              watchedAt: mine.lastWatchedAt,
+            },
+      upNext: nextEpisode === null ? null : progressEpisodeView(nextEpisode),
     };
   },
 });
