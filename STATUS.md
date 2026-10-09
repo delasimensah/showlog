@@ -76,3 +76,4 @@ SHOW-10 is next. Discover suggests shows I may like.
 - SHOW-6 pull request: https://github.com/delasimensah/showlog/pull/6
 - SHOW-7 pull request: https://github.com/delasimensah/showlog/pull/7
 - SHOW-8 pull request: https://github.com/delasimensah/showlog/pull/8
+- SHOW-9 pull request: https://github.com/delasimensah/showlog/pull/9
