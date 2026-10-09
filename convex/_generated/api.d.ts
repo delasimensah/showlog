@@ -18,6 +18,7 @@ import type * as lib_singleAccount from "../lib/singleAccount.js";
 import type * as lists from "../lists.js";
 import type * as profile from "../profile.js";
 import type * as progress from "../progress.js";
+import type * as refresh from "../refresh.js";
 import type * as search from "../search.js";
 import type * as shows from "../shows.js";
 import type * as tvmaze from "../tvmaze.js";
@@ -40,6 +41,7 @@ declare const fullApi: ApiFromModules<{
   lists: typeof lists;
   profile: typeof profile;
   progress: typeof progress;
+  refresh: typeof refresh;
   search: typeof search;
   shows: typeof shows;
   tvmaze: typeof tvmaze;
