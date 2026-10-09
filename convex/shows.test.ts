@@ -147,6 +147,8 @@ describe("get", () => {
       { number: 2026, episodeCount: 8, watchedCount: 0 },
     ]);
     expect(mine?.airedCount).toBe(20);
+    expect(mine?.leftOff).toBeNull();
+    expect(mine?.upNext).toBeNull();
     expect(missing).toBeNull();
   });
 });

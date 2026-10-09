@@ -3,9 +3,18 @@ import { useRouter } from "expo-router";
 
 import ShowOnList from "./ShowOnList";
 
+jest.mock("@/hooks", () => ({
+  useTickEpisode: () => jest.fn(),
+  useOpenedAt: () => Date.UTC(2026, 2, 12, 12),
+  useBottomsheetStore: () => ({ openEpisodeSheet: jest.fn() }),
+}));
+
 const show = {
+  showId: "shows-1",
   tvmazeId: 1505,
   name: "One Piece",
+  headerUrl: null,
+  posterUrl: null,
   network: "Fuji TV",
   summary: "Pirates.",
   genres: ["Action"],
@@ -13,6 +22,9 @@ const show = {
   seasons: [{ number: 1999, episodeCount: 12, watchedCount: 0 }],
   watchedCount: 0,
   airedCount: 20,
+  waitingAfterNext: 0,
+  leftOff: null,
+  upNext: null,
 };
 
 describe("ShowOnList", () => {

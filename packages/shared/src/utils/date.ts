@@ -36,15 +36,9 @@ export const formatDate = (
   return format(date, formatStr);
 };
 
-/**
- * Get relative time string (e.g., "2 hours ago", "in 3 days")
- * @param date - Date to format
- * @returns Relative time string
- */
-export const getRelativeTime = (date: Date | string): string => {
-  const dateObj = typeof date === "string" ? new Date(date) : date;
-  const now = new Date();
-  const diffInSeconds = Math.floor((now.getTime() - dateObj.getTime()) / 1000);
+/** How long ago `then` was, as of `now`. A month is 30 days. */
+export function timeAgo(then: number, now: number): string {
+  const diffInSeconds = Math.floor((now - then) / 1000);
 
   if (diffInSeconds < 60) {
     return "just now";
@@ -72,4 +66,9 @@ export const getRelativeTime = (date: Date | string): string => {
 
   const diffInYears = Math.floor(diffInMonths / 12);
   return `${diffInYears} year${diffInYears !== 1 ? "s" : ""} ago`;
+}
+
+export const getRelativeTime = (date: Date | string): string => {
+  const dateObj = typeof date === "string" ? new Date(date) : date;
+  return timeAgo(dateObj.getTime(), Date.now());
 };

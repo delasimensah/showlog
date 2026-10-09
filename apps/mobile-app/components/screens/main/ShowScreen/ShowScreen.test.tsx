@@ -13,6 +13,9 @@ jest.mock("@/hooks", () => ({
     scrollY: { value: 0 },
     onScroll: jest.fn(),
   }),
+  useTickEpisode: () => jest.fn(),
+  useOpenedAt: () => Date.UTC(2026, 2, 12, 12),
+  useBottomsheetStore: () => ({ openEpisodeSheet: jest.fn() }),
 }));
 
 jest.mock("@/utils", () => ({
@@ -25,6 +28,7 @@ const mockedPreview = usePreviewShow as jest.Mock;
 const mockedAdd = useAddShow as jest.Mock;
 
 const onList = {
+  showId: "shows-1",
   tvmazeId: 1505,
   name: "One Piece",
   headerUrl: "https://img.example/header.jpg",
@@ -39,6 +43,20 @@ const onList = {
   ],
   watchedCount: 0,
   airedCount: 20,
+  waitingAfterNext: 0,
+  leftOff: null,
+  upNext: {
+    episodeId: "episodes-1",
+    season: 1999,
+    number: 1,
+    order: 1,
+    name: "I'm Gonna Be King of the Pirates!",
+    summary: null,
+    runtime: 24,
+    imageUrl: null,
+    airsAt: null,
+    airTimeKnown: false,
+  },
 };
 
 const preview = {
@@ -89,7 +107,7 @@ describe("ShowScreen", () => {
     expect(getByText("0/12")).toBeTruthy();
     expect(getByText("2026")).toBeTruthy();
     expect(getByText("0/8")).toBeTruthy();
-    expect(getByText("Start with S1 | E1")).toBeTruthy();
+    expect(getByText("Start with Episode 1")).toBeTruthy();
     expect(queryByText("Add to my list")).toBeNull();
 
     fireEvent.press(getByRole("link"));

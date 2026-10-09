@@ -3,6 +3,7 @@ import {
   formatDateString,
   getRelativeTime,
   parseLocalDate,
+  timeAgo,
 } from "../date";
 
 // Mock date-fns format
@@ -101,6 +102,12 @@ describe("getRelativeTime", () => {
   it("should format years ago", () => {
     const date = new Date("2022-01-15T12:00:00Z");
     expect(getRelativeTime(date)).toBe("2 years ago");
+  });
+
+  it("counts a month as 30 days", () => {
+    const now = Date.parse("2024-01-15T12:00:00Z");
+    const then = now - 7 * 30 * 24 * 60 * 60 * 1000;
+    expect(timeAgo(then, now)).toBe("7 months ago");
   });
 
   it("should handle string dates", () => {
