@@ -82,7 +82,7 @@ A copy of every numbered TVmaze episode of a show on my list. Specials (episodes
 - `showId`, `tvmazeId`, `season`, `number`, `order` (position among the show's numbered episodes in airing order, starting at 1)
 - `name`, `summary` (plain text), `runtime` (may be missing), `imageUrl` (may be missing)
 - `airsAt`: when it airs. TVmaze's `airstamp` when there is one. If TVmaze has only a date, midnight UTC on that date, with `airTimeKnown: false` so the app shows the date only. If TVmaze has neither, `airsAt` is missing and the episode counts as "No date yet".
-- Indexes: `by_show_order` (`showId`, `order`), `by_show_season` (`showId`, `season`, `number`), `by_tvmazeId`, `by_airsAt` (`airsAt`)
+- Indexes: `by_show_order` (`showId`, `order`), `by_show_season` (`showId`, `season`, `number`), `by_show_airsAt` (`showId`, `airsAt`), `by_tvmazeId`, `by_airsAt` (`airsAt`)
 
 **Overall number** for year-season shows ("Episode 1180") is `order`. TVmaze already returns episodes in airing order, so `order` is their position in that list.
 
@@ -140,11 +140,20 @@ Seasons are not their own table. They come from `shows.seasons`.
 
 Up next, My shows progress bars, and status filters all read the progress fields on `myShows`. They are never worked out on the phone.
 
-One internal helper, `recomputeProgress(ctx, myShowId, now)` in `convex/progress.ts`, sets every progress field from the episodes and ticks. It runs:
+Two kinds of helper in `convex/progress.ts` keep these fields right.
 
-- after every tick, untick, watch season, and watched up to here (in the same mutation)
+`recomputeProgress(ctx, myShowId, now)` sets every progress field from the episodes and ticks. It reads the whole show, so it runs only when the aired episodes can have changed or many ticks changed at once:
+
+- after watch season and watched up to here (in the same mutation)
 - after a show is added or refreshed
 - in the hourly job, for every show that has an episode that aired in the last hour
+
+`tickProgress` and `untickProgress` update the fields for one tick or untick without reading the whole show:
+
+- Every tick is for an aired episode, and an episode that has aired stays aired. So the episodes still waiting are the aired ones minus the ticked ones, and `waitingAfterNext` is `airedCount - watchedCount - 1` while a next episode exists.
+- Ticking the next episode moves "next" forward to the first aired, un-ticked episode after it. The search reads episodes in order and stops at the first match, so watching in order reads one episode.
+- Un-ticking an episode before the next one makes it the next one. Un-ticking the last watched episode walks back to the nearest ticked episode.
+- When the row is out of step with the ticks (for example it was never computed), they fall back to `recomputeProgress`.
 
 **Why the hourly job matters:** "aired" depends on the clock, not on a write. Without the hourly pass, an episode that aired at 3 am would not appear in Up next until I ticked something. The hourly job is the app's clock.
 
@@ -156,7 +165,7 @@ One internal helper, `recomputeProgress(ctx, myShowId, now)` in `convex/progress
 - Last watched = the ticked episode furthest along in airing order. Watch season and watched up to here move it to the end of what they just marked, so a show that is caught up does not stay on an earlier single tick. The date is when that episode was ticked.
 - Show status (for filters and labels), worked out in `packages/shared` from the progress fields, the TVmaze status, `watchLater`, and `stoppedAt`: Stopped, Watch later, Not started, Finished, Up to date, Watching. Stopped and Watch later win when set.
 
-**Size check:** One Piece has 1,181 episodes. Recomputing reads that many rows once, which is far below Convex's per-function read limit. Up next itself reads only `myShows` rows and the next episode for each, so it stays small no matter how long a show is.
+**Size check:** One Piece has 1,181 episodes. A full recompute reads that many rows once, which is far below Convex's per-function read limit. It is not run on every tick, because Convex Free allows 1 GB of database reads and writes a month and a long show ticked one episode at a time would use it up. A single tick reads a few rows. Up next itself reads only `myShows` rows and the next episode for each, so it stays small no matter how long a show is.
 
 ---
 
@@ -188,17 +197,18 @@ Files under `convex/`, one per area. Public functions are signed-in only.
 
 **`watching.ts`**
 
-- `tick({ episodeId })`, `untick({ episodeId })`, `watchSeason({ showId, season })`, `watchUpTo({ episodeId })` mutations. Each refuses an episode that has not aired, saves one shared `watchedAt` for the batch, clears `watchLater` on that show, updates `userStats`, and runs `recomputeProgress`.
+- `tick({ episodeId })`, `untick({ episodeId })`, `watchSeason({ showId, season })`, `watchUpTo({ episodeId })` mutations. Each refuses an episode that has not aired, saves one shared `watchedAt` for the batch, clears `watchLater` on that show, and updates `userStats`. `tick` and `untick` then run `tickProgress` or `untickProgress`. Watch season and watched up to here run `recomputeProgress`.
 
 **`lists.ts`**
 
 - `upNext()` query: my shows with a next episode and not Watch later or Stopped, split into Up next (watched in the last 30 days), Paused for a while, and Not started.
 - `myShows({ sort })` query: every show on my list with poster, progress, and status. The filter runs on the phone because the list is small.
-- `upcoming({ now })` query: future episodes of my shows, not Stopped, plus shows with nothing scheduled. The phone passes the current time rounded down to the hour, so the answer refreshes each hour without the server guessing the time.
+- `upcoming({ now })` query: future episodes of my shows, not Stopped, plus shows with nothing scheduled. It reads each show's episodes from today onward through `by_show_airsAt`, not the whole show. The phone passes the current time rounded down to the hour, so the answer refreshes each hour without the server guessing the time.
 
 **`discover.ts`**
 
-- `rows()` query: the three rows for my state (section 5 of the locked decisions). Each row returns the 100 best-rated matches that are not on my list. The phone picks 20 once a day and keeps them until tomorrow. Picking on the phone is required, because Convex queries must give the same answer every time they run.
+- `taste()` query: the ids of the shows on my list, my two most common genres, and whether I watch anime. It is separate from `rows` so that `rows`, which reads the pool, does not run again every time a tick changes my list.
+- `rows({ listed, genres, watchesAnime })` query: the three rows for my state (section 5 of the locked decisions). The phone passes in what `taste` returned. Each row returns the 100 best-rated matches that are not on my list. The phone picks 20 once a day and keeps them until tomorrow. Picking on the phone is required, because Convex queries must give the same answer every time they run.
 
 **`profile.ts`**
 

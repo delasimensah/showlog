@@ -9,15 +9,36 @@ jest.mock("convex/react", () => ({
 }));
 
 const mockedUseQuery = useQuery as jest.Mock;
+const taste = { listed: [1], genres: ["Drama"], watchesAnime: false };
 
 describe("useDiscoverRows", () => {
-  it("loads the suggestion rows", () => {
+  it("loads the suggestion rows for my list", () => {
     const rows = [{ title: "Top rated", shows: [] }];
-    mockedUseQuery.mockReturnValue(rows);
+    mockedUseQuery.mockReturnValueOnce(taste).mockReturnValueOnce(rows);
 
     const { result } = renderHook(() => useDiscoverRows());
 
-    expect(mockedUseQuery).toHaveBeenCalledWith(api.discover.rows, {});
+    expect(mockedUseQuery).toHaveBeenCalledWith(api.discover.taste, {});
+    expect(mockedUseQuery).toHaveBeenCalledWith(api.discover.rows, taste);
+    expect(result.current).toBe(rows);
+  });
+
+  it("waits for my list and keeps the old rows while new ones load", () => {
+    const rows = [{ title: "Top rated", shows: [] }];
+    mockedUseQuery
+      .mockReturnValueOnce(undefined)
+      .mockReturnValueOnce(undefined);
+    const { result, rerender } = renderHook(() => useDiscoverRows());
+
+    expect(mockedUseQuery).toHaveBeenCalledWith(api.discover.rows, "skip");
+    expect(result.current).toBeUndefined();
+
+    mockedUseQuery.mockReturnValueOnce(taste).mockReturnValueOnce(rows);
+    rerender({});
+    expect(result.current).toBe(rows);
+
+    mockedUseQuery.mockReturnValue(undefined);
+    rerender({});
     expect(result.current).toBe(rows);
   });
 });

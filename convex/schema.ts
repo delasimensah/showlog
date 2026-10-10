@@ -51,6 +51,7 @@ export default defineSchema({
   })
     .index("by_show_order", ["showId", "order"])
     .index("by_show_season", ["showId", "season", "number"])
+    .index("by_show_airsAt", ["showId", "airsAt"])
     .index("by_tvmazeId", ["tvmazeId"])
     .index("by_airsAt", ["airsAt"]),
   myShows: defineTable({

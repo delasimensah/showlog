@@ -17,6 +17,15 @@ function asUser(t: ReturnType<typeof convexTest>, userId: Id<"users">) {
   return t.withIdentity({ subject: `${userId}|test-session` });
 }
 
+async function discoverRows(
+  t: ReturnType<typeof convexTest>,
+  userId: Id<"users">
+) {
+  const user = asUser(t, userId);
+  const taste = await user.query(api.discover.taste, {});
+  return await user.query(api.discover.rows, taste);
+}
+
 describe("isAnimeShow", () => {
   it("counts the Anime genre and Japanese animation", () => {
     expect(isAnimeShow({ genres: ["Drama", "Anime"], type: "Scripted" })).toBe(
@@ -118,7 +127,7 @@ describe("rows", () => {
       return userId;
     });
 
-    const rows = await asUser(t, userId).query(api.discover.rows, {});
+    const rows = await discoverRows(t, userId);
 
     expect(rows.map((row) => row.title)).toEqual([
       "Popular anime",
@@ -221,7 +230,7 @@ describe("rows", () => {
       return userId;
     });
 
-    const rows = await asUser(t, userId).query(api.discover.rows, {});
+    const rows = await discoverRows(t, userId);
 
     expect(rows.map((row) => row.title)).toEqual([
       "Because you watch anime",
@@ -234,5 +243,12 @@ describe("rows", () => {
     expect(
       rows.every((row) => row.shows.every((show) => show.name !== "Mine"))
     ).toBe(true);
+
+    const taste = await asUser(t, userId).query(api.discover.taste, {});
+    expect(taste).toEqual({
+      listed: [1, 5],
+      genres: ["Drama", "Anime"],
+      watchesAnime: true,
+    });
   });
 });

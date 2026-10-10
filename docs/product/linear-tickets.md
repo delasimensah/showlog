@@ -24,7 +24,7 @@ Every ticket follows `.cursor/rules/` and the docs `mandatory-project-docs.mdc` 
 
 ## Status now
 
-- SHOW-1: **Done**. SHOW-2: **Done**. SHOW-3: **Done**. SHOW-4: **Done**. SHOW-5: **Done**. SHOW-6: **Done**. SHOW-7: **Done**. SHOW-8: **Done**. SHOW-9: **Done**. SHOW-10: **Done**. SHOW-11: **Done**. SHOW-12: **Todo**.
+- SHOW-1: **Done**. SHOW-2: **Done**. SHOW-3: **Done**. SHOW-4: **Done**. SHOW-5: **Done**. SHOW-6: **Done**. SHOW-7: **Done**. SHOW-8: **Done**. SHOW-9: **Done**. SHOW-10: **Done**. SHOW-11: **Done**. SHOW-12: **Todo**. SHOW-13: **Done**.
 
 ---
 
@@ -361,6 +361,39 @@ The app opens on Sign in. I create my one account, land on the four tabs, and st
 - Shared tests for quiet hours at 21:59, 22:00, 07:59, and 08:00 in Accra time. Convex tests for grouping a season drop and for skipping Stopped shows.
 
 **Tested on:** the preview app on the iPhone, after an update push. The simulator cannot receive push alerts.
+
+---
+
+## SHOW-13. Ticking and adding shows stay inside the Convex Free database limit
+
+**Status:** Done
+**Apps:** phone, Convex
+**Branch:** `feature/SHOW-13`
+**Screens:** none. Nothing on screen changes.
+
+My Convex Free database reads and writes passed the 1 GB monthly cap after I added many shows and ticked many episodes. Ticking and adding must read a few rows, not the whole show.
+
+**How it is built**
+
+- `tickProgress` and `untickProgress` in `convex/progress.ts` update `watchedCount`, `waitingAfterNext`, the next episode, and last watched for one tick without reading the whole show. `tick` and `untick` use them. They fall back to `recomputeProgress` when the row is out of step with the ticks.
+- Watch season, watched up to here, adding a show, the hourly clock, and the daily refresh keep `recomputeProgress`.
+- `insertShow` reports whether it created the show. `insertEpisodeBatch` skips the per-episode duplicate lookup for a show that was just created.
+- New index `by_show_airsAt` on `episodes`. `lists.upcoming` reads each show's episodes from today onward through it, not the whole show.
+- `discover.taste` returns my list ids, two genres, and whether I watch anime. `discover.rows` takes them as arguments and reads only the pool, so ticking does not run it again. `useDiscoverRows` loads `taste`, then `rows`, and keeps the old rows on screen while new ones load.
+- `system-design.md` and `convex-usage.md` describe the new helpers and the I/O meter.
+
+**Acceptance (yes or no)**
+
+- A test ticks and un-ticks episodes in many orders and checks every progress field against `recomputeProgress` after each step.
+- A test ticks the first episode of a show with 1,200 episodes and checks the next episode and the waiting count.
+- A tick on a row that was never computed gives the same fields as a full recompute.
+- The Discover tab shows the same rows as before, and adding a show from Discover does not flash the loading skeleton.
+- Upcoming shows the same episodes and the same shows with no date as before.
+- Ticking ten episodes of a long show in a row adds a few hundredths of a gigabyte or less to Database I/O in `npx convex deployment usage`.
+
+**Out of scope:** Watch season and watched up to here on a long show still read the whole show once each. The weekly Discover refresh still rewrites the pool.
+
+**Tested on:** simulator.
 
 ---
 
