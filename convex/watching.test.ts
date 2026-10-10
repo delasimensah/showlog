@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 
 import { api } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
+import { recomputeProgress } from "./progress";
 import schema from "./schema";
 
 const modules = import.meta.glob([
@@ -16,7 +17,7 @@ const modules = import.meta.glob([
 const past = Date.now() - 2 * 24 * 60 * 60 * 1000;
 const future = Date.now() + 5 * 24 * 60 * 60 * 1000;
 
-async function seed(t: ReturnType<typeof convexTest>) {
+async function seed(t: ReturnType<typeof convexTest>, recompute = true) {
   return await t.run(async (ctx) => {
     const userId = await ctx.db.insert("users", {
       name: "Ada",
@@ -86,6 +87,7 @@ async function seed(t: ReturnType<typeof convexTest>) {
       watchedCount: 0,
       waitingAfterNext: 0,
     });
+    if (recompute) await recomputeProgress(ctx, myShowId, Date.now());
     return { userId, showId, myShowId, first, second, later, nextSeason };
   });
 }
@@ -117,6 +119,44 @@ describe("tick", () => {
     expect(saved.myShow?.watchLater).toBe(false);
     expect(saved.stats[0]?.episodesWatched).toBe(1);
     expect(saved.stats[0]?.minutesWatched).toBe(24);
+  });
+
+  it("moves the next episode and the waiting count along with each tick", async () => {
+    const t = convexTest(schema, modules);
+    const seeded = await seed(t);
+    const user = asUser(t, seeded.userId);
+
+    await user.mutation(api.watching.tick, { episodeId: seeded.first });
+    const afterFirst = await t.run(async (ctx) => ctx.db.get(seeded.myShowId));
+    expect(afterFirst?.nextEpisodeId).toBe(seeded.second);
+    expect(afterFirst?.waitingAfterNext).toBe(1);
+    expect(afterFirst?.lastWatchedEpisodeId).toBe(seeded.first);
+
+    await user.mutation(api.watching.tick, { episodeId: seeded.nextSeason });
+    const ahead = await t.run(async (ctx) => ctx.db.get(seeded.myShowId));
+    expect(ahead?.nextEpisodeId).toBe(seeded.second);
+    expect(ahead?.waitingAfterNext).toBe(0);
+    expect(ahead?.lastWatchedEpisodeId).toBe(seeded.nextSeason);
+
+    await user.mutation(api.watching.tick, { episodeId: seeded.second });
+    const caughtUp = await t.run(async (ctx) => ctx.db.get(seeded.myShowId));
+    expect(caughtUp?.nextEpisodeId).toBeUndefined();
+    expect(caughtUp?.waitingAfterNext).toBe(0);
+    expect(caughtUp?.watchedCount).toBe(3);
+  });
+
+  it("works out progress in full when the row was never computed", async () => {
+    const t = convexTest(schema, modules);
+    const seeded = await seed(t, false);
+    const user = asUser(t, seeded.userId);
+
+    await user.mutation(api.watching.tick, { episodeId: seeded.second });
+
+    const myShow = await t.run(async (ctx) => ctx.db.get(seeded.myShowId));
+    expect(myShow?.airedCount).toBe(3);
+    expect(myShow?.watchedCount).toBe(1);
+    expect(myShow?.nextEpisodeId).toBe(seeded.first);
+    expect(myShow?.waitingAfterNext).toBe(1);
   });
 
   it("refuses an episode that has not aired", async () => {
@@ -154,6 +194,9 @@ describe("untick", () => {
     expect(saved.myShow?.watchedCount).toBe(0);
     expect(saved.stats[0]?.episodesWatched).toBe(0);
     expect(saved.stats[0]?.minutesWatched).toBe(0);
+    expect(saved.myShow?.nextEpisodeId).toBe(seeded.first);
+    expect(saved.myShow?.lastWatchedEpisodeId).toBeUndefined();
+    expect(saved.myShow?.lastWatchedAt).toBeUndefined();
   });
 });
 

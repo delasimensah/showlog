@@ -4,7 +4,12 @@ import type { Doc, Id } from "./_generated/dataModel";
 import type { MutationCtx } from "./_generated/server";
 import { ERROR_CODES, raise } from "./lib/errors";
 import { authedMutation } from "./lib/functions";
-import { hasAired, recomputeProgress } from "./progress";
+import {
+  hasAired,
+  recomputeProgress,
+  tickProgress,
+  untickProgress,
+} from "./progress";
 
 function minutesFor(episode: Doc<"episodes">, show: Doc<"shows">) {
   if (episode.runtime !== undefined && episode.runtime > 0) {
@@ -106,7 +111,7 @@ export const tick = authedMutation({
     if (mine.watchLater) {
       await ctx.db.patch(mine._id, { watchLater: false });
     }
-    await recomputeProgress(ctx, mine._id, now);
+    if (saved) await tickProgress(ctx, mine, episode, now, now);
     return null;
   },
 });
@@ -122,8 +127,8 @@ export const untick = authedMutation({
     if (tickRow !== null) {
       await ctx.db.delete(tickRow._id);
       await changeStats(ctx, ctx.userId, -1, -tickRow.minutes);
+      await untickProgress(ctx, mine, episode, Date.now());
     }
-    await recomputeProgress(ctx, mine._id, Date.now());
     return null;
   },
 });

@@ -4,7 +4,7 @@ import { showStatus } from "shared";
 import type { Doc, Id } from "./_generated/dataModel";
 import type { QueryCtx } from "./_generated/server";
 import { authedQuery } from "./lib/functions";
-import { hasAired } from "./progress";
+import { hasAired, startOfUtcDay } from "./progress";
 
 const RECENT_MS = 30 * 24 * 60 * 60 * 1000;
 
@@ -253,17 +253,23 @@ export const upcoming = authedQuery({
       if (row.stoppedAt !== undefined) continue;
       const show = await ctx.db.get(row.showId);
       if (show === null || show.status === "Ended") continue;
-      const catalog = await ctx.db
-        .query("episodes")
-        .withIndex("by_show_order", (q) => q.eq("showId", show._id))
-        .collect();
-      const scheduled = catalog.filter(
-        (episode) =>
-          episode.airsAt !== undefined && !hasAired(episode, args.now)
-      );
+      const scheduled = (
+        await ctx.db
+          .query("episodes")
+          .withIndex("by_show_airsAt", (q) =>
+            q.eq("showId", show._id).gte("airsAt", startOfUtcDay(args.now))
+          )
+          .collect()
+      ).filter((episode) => !hasAired(episode, args.now));
 
       if (scheduled.length === 0) {
-        if (catalog.some((episode) => episode.airsAt === undefined)) {
+        const undated = await ctx.db
+          .query("episodes")
+          .withIndex("by_show_airsAt", (q) =>
+            q.eq("showId", show._id).eq("airsAt", undefined)
+          )
+          .take(1);
+        if (undated.length > 0) {
           noDate.push({
             showId: show._id,
             tvmazeId: show.tvmazeId,

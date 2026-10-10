@@ -25,7 +25,7 @@ Read **`STATUS.md`** at the repo root before planning or implementing. Update it
 
 - **`docs/product/locked-decisions.md`** and **`docs/product/product-requirements.md`** — What we are building. Do not invent features that are not in these files.
 - **`docs/product/system-design.md`** — Tables, server functions, clock jobs, and build order. Do not invent tables or permission rules beyond it.
-- **`docs/product/linear-tickets.md`** — Tickets `SHOW-1` to `SHOW-12`, build order, and status.
+- **`docs/product/linear-tickets.md`** — Tickets `SHOW-1` to `SHOW-13`, build order, and status.
 - **`docs/design/screens.md`** — One spec per screen with its references. **`docs/design/design-system.md`** — colours, type, spacing. `docs/design/references/tvtime/` holds layout references only.
 
 ## Stack and official docs

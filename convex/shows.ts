@@ -102,14 +102,14 @@ export const myShowForTvmaze = internalQuery({
 
 export const insertShow = internalMutation({
   args: showFields,
-  returns: v.id("shows"),
+  returns: v.object({ showId: v.id("shows"), created: v.boolean() }),
   handler: async (ctx, args) => {
     const existing = await ctx.db
       .query("shows")
       .withIndex("by_tvmazeId", (q) => q.eq("tvmazeId", args.tvmazeId))
       .unique();
-    if (existing !== null) return existing._id;
-    return await ctx.db.insert("shows", args);
+    if (existing !== null) return { showId: existing._id, created: false };
+    return { showId: await ctx.db.insert("shows", args), created: true };
   },
 });
 
@@ -117,15 +117,18 @@ export const insertEpisodeBatch = internalMutation({
   args: {
     showId: v.id("shows"),
     episodes: v.array(v.object(episodeFields)),
+    skipDuplicateCheck: v.boolean(),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
     for (const episode of args.episodes) {
-      const existing = await ctx.db
-        .query("episodes")
-        .withIndex("by_tvmazeId", (q) => q.eq("tvmazeId", episode.tvmazeId))
-        .unique();
-      if (existing !== null) continue;
+      if (!args.skipDuplicateCheck) {
+        const existing = await ctx.db
+          .query("episodes")
+          .withIndex("by_tvmazeId", (q) => q.eq("tvmazeId", episode.tvmazeId))
+          .unique();
+        if (existing !== null) continue;
+      }
       await ctx.db.insert("episodes", { ...episode, showId: args.showId });
     }
     return null;
@@ -190,14 +193,13 @@ export const add = action({
       throw new Error("TVmaze returned a different show");
     }
 
-    const showId: Id<"shows"> = await ctx.runMutation(
-      internal.shows.insertShow,
-      showArgs(show)
-    );
+    const { showId, created }: { showId: Id<"shows">; created: boolean } =
+      await ctx.runMutation(internal.shows.insertShow, showArgs(show));
     for (const batch of chunkEpisodes(episodes)) {
       await ctx.runMutation(internal.shows.insertEpisodeBatch, {
         showId,
         episodes: batch.map(episodeArgs),
+        skipDuplicateCheck: created,
       });
     }
     const myShowId: Id<"myShows"> = await ctx.runMutation(

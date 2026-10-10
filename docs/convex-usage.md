@@ -134,8 +134,10 @@ Showlog stores no files in Convex. Posters and show images load straight from TV
 
 The meters that matter here are:
 
+- **Database I/O** (1 GB a month) — the one this app uses up first. It counts the bytes every function reads and writes, so a function that reads a whole show on each tick costs far more than the tick itself. A single tick or untick updates the progress fields without reading the whole show. Watch season, watched up to here, adding a show, and the daily refresh read a whole show, so use them on a long show only when you need to. Discover reads the pool in `rows` and my list in `taste`, so ticking does not make it read the pool again.
 - **Function calls** — the hourly new-episode check, the weekly Discover refresh, and every screen query. At one person's use this stays far under 1,000,000 a month. Keep the hourly check to shows on the list, not the whole TVmaze index.
 - **Database storage** (0.5 GB) — show, episode, and Discover rows. A long anime like One Piece is about 1,200 episode rows. Keep the Discover pool to the few thousand shows the lock names, with only the fields the cards need.
-- **Database I/O** (1 GB a month) — the weekly Discover refresh rewrites the pool. Write only rows that changed.
+
+The weekly Discover refresh rewrites the pool, about 6,700 rows, so it is a steady few megabytes of I/O each week.
 
 The team meters are shared with every other project on the same Convex team. Check `npx convex deployment usage` if a usage email arrives.

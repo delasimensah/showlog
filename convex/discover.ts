@@ -303,17 +303,40 @@ async function myCopies(ctx: QueryCtx, userId: Doc<"myShows">["userId"]) {
   return shows;
 }
 
-export const rows = authedQuery({
+const tasteShape = v.object({
+  listed: v.array(v.number()),
+  genres: v.array(v.string()),
+  watchesAnime: v.boolean(),
+});
+
+/**
+ * What Discover needs to know about my list. It is a separate query so that
+ * `rows`, which scans the whole pool, never reads my list and does not run
+ * again every time I tick an episode.
+ */
+export const taste = authedQuery({
   args: {},
+  returns: tasteShape,
+  handler: async (ctx) => {
+    const mine = await myCopies(ctx, ctx.userId);
+    return {
+      listed: mine.map((show) => show.tvmazeId).sort((a, b) => a - b),
+      genres: commonGenres(mine),
+      watchesAnime: mine.some((show) => isAnimeShow(show)),
+    };
+  },
+});
+
+export const rows = authedQuery({
+  args: tasteShape.fields,
   returns: v.array(
     v.object({
       title: v.string(),
       shows: v.array(discoverCard),
     })
   ),
-  handler: async (ctx) => {
-    const mine = await myCopies(ctx, ctx.userId);
-    const listed = new Set(mine.map((show) => show.tvmazeId));
+  handler: async (ctx, args) => {
+    const listed = new Set(args.listed);
     const ranked = await ctx.db
       .query("suggestedShows")
       .withIndex("by_rating")
@@ -327,7 +350,7 @@ export const rows = authedQuery({
         (show) => show.rating !== undefined && show.rating >= TOP_RATING
       );
 
-    if (mine.length === 0) {
+    if (args.listed.length === 0) {
       return [
         {
           title: "Popular anime",
@@ -346,13 +369,13 @@ export const rows = authedQuery({
     }
 
     const built: { title: string; shows: ReturnType<typeof card>[] }[] = [];
-    if (mine.some((show) => isAnimeShow(show))) {
+    if (args.watchesAnime) {
       built.push({
         title: "Because you watch anime",
         shows: topMatches(ranked, listed, (show) => show.isAnime),
       });
     }
-    for (const genre of commonGenres(mine)) {
+    for (const genre of args.genres) {
       built.push({
         title: `More ${genre}`,
         shows: topMatches(ranked, listed, (show) =>
