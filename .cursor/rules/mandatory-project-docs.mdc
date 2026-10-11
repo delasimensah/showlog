@@ -9,6 +9,7 @@ alwaysApply: true
 
 - **Product / what to build:** `docs/product/locked-decisions.md` and `docs/product/product-requirements.md`
 - **Architecture / Convex:** `docs/product/system-design.md` (tables, functions, clock jobs). Do not invent tables or permission rules beyond it.
+- **Convex folder layout:** `docs/convex-folder-layout.md`. Feature folders hold queries, mutations, and actions. Helpers live in `convex/lib`.
 - **Screens:** `docs/design/screens.md`, `docs/design/design-system.md`, and the TV Time and Mobbin references the screen lists. TV Time references in `docs/design/references/tvtime/` are layout references only.
 - **Show data (TVmaze):** the data sources section of `docs/product/locked-decisions.md`. Credit line “Show data from TVmaze” stays on screen.
 - **Convex Auth env (sign-in):** `docs/convex-auth-env.md`. Sign-in is not done until `JWT_PRIVATE_KEY`, `JWKS`, and `SITE_URL` exist on the Convex deployment.

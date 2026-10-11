@@ -1,0 +1,26 @@
+---
+description: Convex feature folders hold only queries, mutations, and actions. Helpers go in convex/lib.
+alwaysApply: true
+---
+
+# Convex folder layout
+
+Read `docs/convex-folder-layout.md` before adding or moving anything under `convex/`.
+
+## Do
+
+- One folder per area. Inside it, only `queries.ts`, `mutations.ts`, and `actions.ts`, and only the kinds that area has.
+- Name each folder after an area in this app (`shows`, `discover`, `profile`). A new area uses the same file rules under its own name.
+- Call them so the path says the kind: `api.shows.actions.add`.
+- Put helpers that are not a query, mutation, or action in `convex/lib/`, named for the area (`discoverPool.ts`, `showModel.ts`).
+- Inside a file: values, then types, then private functions, then exports. Synchronous functions before `async` in each group.
+- Tests in `__tests__` next to the file, named after it (`queries.test.ts`).
+- Leave `schema.ts`, `crons.ts`, `http.ts`, `auth.ts`, `auth.config.ts`, and `testModules.ts` at the `convex/` root.
+
+## Do not
+
+- Mix queries, mutations, and actions in one file.
+- Put a helper in a feature folder.
+- Add an empty `queries.ts`, `mutations.ts`, or `actions.ts`.
+- Name a lib file `helpers.ts` or `utils.ts`.
+- Add a test whose only job is to prove `crons.ts` registered a job.

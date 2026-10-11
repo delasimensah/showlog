@@ -35,6 +35,13 @@ Follow the documented test structure. Do not put test files in the wrong locatio
 
 Wrong: `hooks/auth/useStaffSession.test.ts`. Right: `hooks/auth/__tests__/useStaffSession.test.ts`.
 
+### Convex
+
+Follow `docs/convex-folder-layout.md`.
+
+- A test sits in `__tests__` next to the file it covers: `convex/shows/__tests__/queries.test.ts`.
+- Name the test after the source file, not after a ticket.
+
 ## File naming
 
 - **Extension:** `.test.tsx` for React/JSX tests, `.test.ts` for non-JSX (utils, pure logic).
