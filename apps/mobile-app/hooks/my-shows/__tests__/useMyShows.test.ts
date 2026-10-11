@@ -17,7 +17,7 @@ describe("useMyShows", () => {
 
     const { result } = renderHook(() => useMyShows("name"));
 
-    expect(mockedUseQuery).toHaveBeenCalledWith(api.lists.myShows, {
+    expect(mockedUseQuery).toHaveBeenCalledWith(api.lists.queries.myShows, {
       sort: "name",
     });
     expect(result.current).toBe(shows);

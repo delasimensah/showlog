@@ -34,11 +34,14 @@ export function useWatchUpTo(target: {
   season: number;
   tvmazeId: number;
 }) {
-  return useMutation(api.watching.watchUpTo).withOptimisticUpdate(
+  return useMutation(api.watching.mutations.watchUpTo).withOptimisticUpdate(
     (localStore, args) => {
       if (target.showId === undefined) return;
       const seasonQuery = { showId: target.showId, season: target.season };
-      const seasonResult = localStore.getQuery(api.shows.season, seasonQuery);
+      const seasonResult = localStore.getQuery(
+        api.shows.queries.season,
+        seasonQuery
+      );
       if (seasonResult === undefined) return;
       const chosen = seasonResult.episodes.find(
         (episode) => episode.episodeId === args.episodeId
@@ -49,7 +52,7 @@ export function useWatchUpTo(target: {
           episode.aired && !episode.watched && episode.order <= chosen.order
       ).length;
 
-      localStore.setQuery(api.shows.season, seasonQuery, {
+      localStore.setQuery(api.shows.queries.season, seasonQuery, {
         ...seasonResult,
         episodes: seasonResult.episodes.map((episode) =>
           episode.aired && episode.order <= chosen.order
@@ -58,7 +61,7 @@ export function useWatchUpTo(target: {
         ),
       });
 
-      const show = localStore.getQuery(api.shows.get, {
+      const show = localStore.getQuery(api.shows.queries.get, {
         tvmazeId: target.tvmazeId,
       });
       if (show === undefined || show === null) return;
@@ -81,7 +84,7 @@ export function useWatchUpTo(target: {
           ? null
           : show.upNext;
       localStore.setQuery(
-        api.shows.get,
+        api.shows.queries.get,
         { tvmazeId: target.tvmazeId },
         {
           ...show,

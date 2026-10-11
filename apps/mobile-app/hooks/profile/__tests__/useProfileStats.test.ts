@@ -17,7 +17,7 @@ describe("useProfileStats", () => {
 
     const { result } = renderHook(() => useProfileStats());
 
-    expect(mockedUseQuery).toHaveBeenCalledWith(api.profile.stats, {});
+    expect(mockedUseQuery).toHaveBeenCalledWith(api.profile.queries.stats, {});
     expect(result.current).toBe(stats);
   });
 });

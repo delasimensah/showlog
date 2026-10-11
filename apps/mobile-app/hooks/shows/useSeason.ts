@@ -4,7 +4,7 @@ import { useQuery } from "convex/react";
 
 export function useSeason(showId: Id<"shows"> | undefined, season: number) {
   return useQuery(
-    api.shows.season,
+    api.shows.queries.season,
     showId === undefined ? "skip" : { showId, season }
   );
 }

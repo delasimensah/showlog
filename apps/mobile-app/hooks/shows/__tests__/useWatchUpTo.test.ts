@@ -48,7 +48,7 @@ describe("useWatchUpTo", () => {
 
     const store = memoryStore();
     store.setQuery(
-      api.shows.season,
+      api.shows.queries.season,
       { showId: "shows-1", season: 1 },
       {
         episodes: [
@@ -86,7 +86,7 @@ describe("useWatchUpTo", () => {
       }
     );
     store.setQuery(
-      api.shows.get,
+      api.shows.queries.get,
       { tvmazeId: 1 },
       {
         watchedCount: 0,
@@ -99,9 +99,11 @@ describe("useWatchUpTo", () => {
 
     update(store, { episodeId: "episodes-2" });
 
-    expect(mockedUseMutation).toHaveBeenCalledWith(api.watching.watchUpTo);
+    expect(mockedUseMutation).toHaveBeenCalledWith(
+      api.watching.mutations.watchUpTo
+    );
     expect(
-      store.getQuery(api.shows.season, { showId: "shows-1", season: 1 })
+      store.getQuery(api.shows.queries.season, { showId: "shows-1", season: 1 })
     ).toMatchObject({
       episodes: [
         { episodeId: "episodes-1", watched: true },
@@ -109,7 +111,9 @@ describe("useWatchUpTo", () => {
         { episodeId: "episodes-3", watched: false },
       ],
     });
-    expect(store.getQuery(api.shows.get, { tvmazeId: 1 })).toMatchObject({
+    expect(
+      store.getQuery(api.shows.queries.get, { tvmazeId: 1 })
+    ).toMatchObject({
       watchedCount: 2,
       upNext: null,
       leftOff: { episodeId: "episodes-2", name: "Two" },

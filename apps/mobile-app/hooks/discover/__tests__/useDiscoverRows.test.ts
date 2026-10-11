@@ -18,8 +18,11 @@ describe("useDiscoverRows", () => {
 
     const { result } = renderHook(() => useDiscoverRows());
 
-    expect(mockedUseQuery).toHaveBeenCalledWith(api.discover.taste, {});
-    expect(mockedUseQuery).toHaveBeenCalledWith(api.discover.rows, taste);
+    expect(mockedUseQuery).toHaveBeenCalledWith(api.discover.queries.taste, {});
+    expect(mockedUseQuery).toHaveBeenCalledWith(
+      api.discover.queries.rows,
+      taste
+    );
     expect(result.current).toBe(rows);
   });
 
@@ -30,7 +33,10 @@ describe("useDiscoverRows", () => {
       .mockReturnValueOnce(undefined);
     const { result, rerender } = renderHook(() => useDiscoverRows());
 
-    expect(mockedUseQuery).toHaveBeenCalledWith(api.discover.rows, "skip");
+    expect(mockedUseQuery).toHaveBeenCalledWith(
+      api.discover.queries.rows,
+      "skip"
+    );
     expect(result.current).toBeUndefined();
 
     mockedUseQuery.mockReturnValueOnce(taste).mockReturnValueOnce(rows);

@@ -17,7 +17,7 @@ describe("useShow", () => {
 
     const { result } = renderHook(() => useShow(1505));
 
-    expect(mockedUseQuery).toHaveBeenCalledWith(api.shows.get, {
+    expect(mockedUseQuery).toHaveBeenCalledWith(api.shows.queries.get, {
       tvmazeId: 1505,
     });
     expect(result.current).toBe(show);

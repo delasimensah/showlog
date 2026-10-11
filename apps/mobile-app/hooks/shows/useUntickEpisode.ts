@@ -7,18 +7,21 @@ export function useUntickEpisode(target: {
   season: number;
   tvmazeId: number;
 }) {
-  return useMutation(api.watching.untick).withOptimisticUpdate(
+  return useMutation(api.watching.mutations.untick).withOptimisticUpdate(
     (localStore, args) => {
       if (target.showId === undefined) return;
       const seasonQuery = { showId: target.showId, season: target.season };
-      const seasonResult = localStore.getQuery(api.shows.season, seasonQuery);
+      const seasonResult = localStore.getQuery(
+        api.shows.queries.season,
+        seasonQuery
+      );
       if (seasonResult === undefined) return;
       const current = seasonResult.episodes.find(
         (episode) => episode.episodeId === args.episodeId
       );
       if (current === undefined || !current.watched) return;
 
-      localStore.setQuery(api.shows.season, seasonQuery, {
+      localStore.setQuery(api.shows.queries.season, seasonQuery, {
         ...seasonResult,
         episodes: seasonResult.episodes.map((episode) =>
           episode.episodeId === args.episodeId
@@ -27,12 +30,12 @@ export function useUntickEpisode(target: {
         ),
       });
 
-      const show = localStore.getQuery(api.shows.get, {
+      const show = localStore.getQuery(api.shows.queries.get, {
         tvmazeId: target.tvmazeId,
       });
       if (show === undefined || show === null) return;
       localStore.setQuery(
-        api.shows.get,
+        api.shows.queries.get,
         { tvmazeId: target.tvmazeId },
         {
           ...show,

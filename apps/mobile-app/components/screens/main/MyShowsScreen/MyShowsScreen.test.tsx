@@ -62,7 +62,7 @@ describe("MyShowsScreen", () => {
       <MyShowsScreen />
     );
 
-    expect(getAllByText("My shows").length).toBeGreaterThan(0);
+    expect(getAllByText("My shows · 0").length).toBeGreaterThan(0);
     expect(getByText("Your list is empty")).toBeTruthy();
     expect(queryByLabelText("Sort and filter")).toBeNull();
 
@@ -86,6 +86,16 @@ describe("MyShowsScreen", () => {
     expect(getByText("My shows")).toBeTruthy();
     expect(getByLabelText("Sort and filter")).toBeTruthy();
     expect(getAllByTestId("skeleton-card").length).toBeGreaterThan(0);
+  });
+
+  it("shows how many shows are on the list", () => {
+    mockedShows.mockReturnValue([
+      bear,
+      { ...bear, showId: "shows-2", tvmazeId: 2 },
+    ]);
+    const { getByText } = render(<MyShowsScreen />);
+
+    expect(getByText("My shows · 2")).toBeTruthy();
   });
 
   it("filters to one status and opens that show", () => {

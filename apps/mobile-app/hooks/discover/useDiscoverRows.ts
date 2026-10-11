@@ -7,8 +7,8 @@ import { useState } from "react";
  * previous rows stay on screen while new ones load after I add a show.
  */
 export function useDiscoverRows() {
-  const taste = useQuery(api.discover.taste, {});
-  const rows = useQuery(api.discover.rows, taste ?? "skip");
+  const taste = useQuery(api.discover.queries.taste, {});
+  const rows = useQuery(api.discover.queries.rows, taste ?? "skip");
   const [kept, setKept] = useState(rows);
   if (rows !== undefined && rows !== kept) setKept(rows);
   return rows ?? kept;

@@ -140,7 +140,7 @@ Seasons are not their own table. They come from `shows.seasons`.
 
 Up next, My shows progress bars, and status filters all read the progress fields on `myShows`. They are never worked out on the phone.
 
-Two kinds of helper in `convex/progress.ts` keep these fields right.
+Two kinds of helper in `convex/lib/progress.ts` keep these fields right.
 
 `recomputeProgress(ctx, myShowId, now)` sets every progress field from the episodes and ticks. It reads the whole show, so it runs only when the aired episodes can have changed or many ticks changed at once:
 
@@ -171,22 +171,22 @@ Two kinds of helper in `convex/progress.ts` keep these fields right.
 
 ## 7. The functions
 
-Files under `convex/`, one per area. Public functions are signed-in only.
+Files under `convex/`, one folder per area. Queries, mutations, and actions are separate files, so the path says which kind you are opening. Public functions are signed-in only.
 
 **`auth.ts`**
 
 - Password provider. `createOrUpdateUser` refuses a second account.
 
-**`tvmaze.ts`** (internal helpers, used only by actions)
+**`lib/tvmaze.ts`** (internal helpers, used only by actions)
 
 - `fetchJson(path)`: sends the `User-Agent: Showlog/1.0 (personal app; github.com/delasimensah/showlog)` header. On a 429 reply it waits the seconds in `Retry-After` (or 5), up to three tries.
 - `toShowCopy`, `toEpisodeCopies`: turn TVmaze replies into rows, strip HTML from summaries, pick the header picture, drop specials.
 
-**`search.ts`**
+**`search/actions.ts`** and **`search/queries.ts`**
 
 - `searchShows({ query })` action: calls `/search/shows?q=`, returns up to 10 results with poster, name, type, language, premiered year, network, and `onList`.
 
-**`shows.ts`**
+**`shows/actions.ts`**, **`shows/queries.ts`**, and **`shows/mutations.ts`**
 
 - `add({ tvmazeId })` action: fetches `/shows/{id}?embed[]=episodes&embed[]=images`, then saves the show and its episodes in batches of 500, creates the `myShows` row, and runs `recomputeProgress`. If the show is already on my list, it returns that row.
 - `preview({ tvmazeId })` action: for a show not on my list. Returns genres, rating, status, network, season count, summary, header and poster. Saves nothing.
@@ -195,22 +195,22 @@ Files under `convex/`, one per area. Public functions are signed-in only.
 - `remove({ myShowId })` mutation: deletes my ticks for the show, takes them off `userStats`, deletes the `myShows` row, then schedules deletion of the show copy and its episodes.
 - `setWatchLater({ myShowId, on })`, `stop({ myShowId })`, `resume({ myShowId })` mutations.
 
-**`watching.ts`**
+**`watching/mutations.ts`**
 
 - `tick({ episodeId })`, `untick({ episodeId })`, `watchSeason({ showId, season })`, `watchUpTo({ episodeId })` mutations. Each refuses an episode that has not aired, saves one shared `watchedAt` for the batch, clears `watchLater` on that show, and updates `userStats`. `tick` and `untick` then run `tickProgress` or `untickProgress`. Watch season and watched up to here run `recomputeProgress`.
 
-**`lists.ts`**
+**`lists/queries.ts`**
 
 - `upNext()` query: my shows with a next episode and not Watch later or Stopped, split into Up next (watched in the last 30 days), Paused for a while, and Not started.
 - `myShows({ sort })` query: every show on my list with poster, progress, and status. The filter runs on the phone because the list is small.
 - `upcoming({ now })` query: future episodes of my shows, not Stopped, plus shows with nothing scheduled. It reads each show's episodes from today onward through `by_show_airsAt`, not the whole show. The phone passes the current time rounded down to the hour, so the answer refreshes each hour without the server guessing the time.
 
-**`discover.ts`**
+**`discover/queries.ts`**
 
 - `taste()` query: the ids of the shows on my list, my two most common genres, and whether I watch anime. It is separate from `rows` so that `rows`, which reads the pool, does not run again every time a tick changes my list.
 - `rows({ listed, genres, watchesAnime })` query: the three rows for my state (section 5 of the locked decisions). The phone passes in what `taste` returned. Each row returns the 100 best-rated matches that are not on my list. The phone picks 20 once a day and keeps them until tomorrow. Picking on the phone is required, because Convex queries must give the same answer every time they run.
 
-**`profile.ts`**
+**`profile/queries.ts`** and **`profile/actions.ts`**
 
 - `account()` query: the signed-in person's name and email.
 - `stats()` query: from `userStats`.
@@ -225,7 +225,7 @@ Files under `convex/`, one per area. Public functions are signed-in only.
 
 ## 8. Clock jobs (`convex/crons.ts`)
 
-**Hourly, on the hour:** `clock.hourly`
+**Hourly, on the hour:** `clock.mutations.hourly`
 
 1. Find episodes with `airsAt` in the last hour (index `by_airsAt`).
 2. Run `recomputeProgress` for each of their shows that is on my list.
@@ -233,14 +233,14 @@ Files under `convex/`, one per area. Public functions are signed-in only.
 4. Put alerts in `pendingAlerts` with `sendAfter` = now, or 08:00 my time when now is between 22:00 and 08:00 my time.
 5. Send every pending alert whose `sendAfter` has passed, when alerts are on, through Expo push. Delete each one once Expo accepts it. A failed send stays for the next hour.
 
-**Daily, 04:00 UTC:** `refresh.daily`
+**Daily, 04:00 UTC:** `refresh.actions.daily`
 
 1. Call `/updates/shows?since=day`. Keep only the TVmaze ids that are in `shows`.
 2. For each, fetch the show again and update the copy: changed episodes are updated, new ones added, and ones TVmaze removed are deleted along with any ticks on them.
 3. Run `recomputeProgress` for the show.
 4. If the show had no future episode before and has one now, and the show is not Stopped, queue a premiere-date alert: "Severance season 3 premieres 12 January."
 
-**Weekly, Monday 03:00 UTC:** `discover.refreshPool`
+**Weekly, Monday 03:00 UTC:** `discover.actions.refreshPool`
 
 1. Walk TVmaze's show index (`/shows?page=0`, `1`, …) about 15 pages per run, then schedule the next run 10 seconds later. That stays under 20 calls every 10 seconds, and under Convex's 10-minute action limit.
 2. Keep shows with `weight` 85 or more and a poster. Upsert into `suggestedShows` with this run's `refreshId`.

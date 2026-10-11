@@ -17,7 +17,7 @@ describe("useAddShow", () => {
 
     const { result } = renderHook(() => useAddShow());
 
-    expect(mockedUseAction).toHaveBeenCalledWith(api.shows.add);
+    expect(mockedUseAction).toHaveBeenCalledWith(api.shows.actions.add);
     expect(result.current).toBe(add);
   });
 });

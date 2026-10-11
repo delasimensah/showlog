@@ -13,12 +13,12 @@ function advance<Row extends { episodeId: string; waitingAfterNext: number }>(
 }
 
 export function useTickUpNext() {
-  return useMutation(api.watching.tick).withOptimisticUpdate(
+  return useMutation(api.watching.mutations.tick).withOptimisticUpdate(
     (localStore, args) => {
-      const list = localStore.getQuery(api.lists.upNext, {});
+      const list = localStore.getQuery(api.lists.queries.upNext, {});
       if (list === undefined) return;
       localStore.setQuery(
-        api.lists.upNext,
+        api.lists.queries.upNext,
         {},
         {
           upNext: advance(list.upNext, args.episodeId),

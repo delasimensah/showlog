@@ -4,5 +4,5 @@ import { useQuery } from "convex/react";
 import type { MyShowsSort } from "./useMyShowsChoice";
 
 export function useMyShows(sort: MyShowsSort) {
-  return useQuery(api.lists.myShows, { sort });
+  return useQuery(api.lists.queries.myShows, { sort });
 }

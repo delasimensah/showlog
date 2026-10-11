@@ -178,7 +178,7 @@ Year-season shows read "Episode 1180" on the mint line and "2026 · E25" under t
 
 **Grid:** three columns, gap 12. Grid `Poster`, then a `ProgressBar` 8 below it (episodes ticked out of episodes aired), then the poster label (one line) 6 below the bar. A normal bar is mint. Watch later is blue. Stopped is red.
 
-**Sort and filter sheet** (native sheet from `@expo/ui`): Sort by Last watched, Last added, A to Z. Filter by All, Watching, Up to date, Not started, Watch later, Finished, Stopped. The choice is saved on the phone. The header shows the filter name when it is not All ("Watching · 12").
+**Sort and filter sheet** (native sheet from `@expo/ui`): Sort by Last watched, Last added, A to Z. Filter by All, Watching, Up to date, Not started, Watch later, Finished, Stopped. The choice is saved on the phone. The header shows how many shows are on the list ("My shows · 12"). When a filter is on, it shows that filter and how many match ("Watching · 12").
 
 **Empty:** `EmptyState`: "Your list is empty", "Find a show in Discover.", Discover (primary). With a filter and no matches: `EmptyState` "No Finished shows", "Shows you finish show up here.", Discover (primary). The filter name changes with the filter.
 
