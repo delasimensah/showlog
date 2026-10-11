@@ -72,7 +72,15 @@ const DiscoverScreen: React.FC = () => {
 
   let body: React.ReactNode;
   if (rows === undefined) {
-    body = <DiscoverScreenSkeleton />;
+    body = (
+      <ScrollView
+        className="flex-1 bg-page"
+        contentInsetAdjustmentBehavior="automatic"
+        contentContainerStyle={{ paddingBottom: 40 }}
+      >
+        <DiscoverScreenSkeleton />
+      </ScrollView>
+    );
   } else if (visible.length === 0) {
     body = (
       <EmptyState
