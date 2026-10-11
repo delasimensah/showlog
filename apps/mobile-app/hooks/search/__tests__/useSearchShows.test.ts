@@ -17,7 +17,9 @@ describe("useSearchShows", () => {
 
     const { result } = renderHook(() => useSearchShows());
 
-    expect(mockedUseAction).toHaveBeenCalledWith(api.search.searchShows);
+    expect(mockedUseAction).toHaveBeenCalledWith(
+      api.search.actions.searchShows
+    );
     expect(result.current).toBe(search);
   });
 });

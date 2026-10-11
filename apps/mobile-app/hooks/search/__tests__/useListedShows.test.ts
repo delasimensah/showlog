@@ -16,7 +16,10 @@ describe("useListedShows", () => {
 
     const { result } = renderHook(() => useListedShows());
 
-    expect(mockedUseQuery).toHaveBeenCalledWith(api.lists.myTvmazeIds, {});
+    expect(mockedUseQuery).toHaveBeenCalledWith(
+      api.lists.queries.myTvmazeIds,
+      {}
+    );
     expect(result.current).toEqual([7, 9]);
   });
 });

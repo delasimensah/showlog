@@ -51,25 +51,28 @@ export function useWatchSeason(target: {
   season: number;
   tvmazeId: number;
 }) {
-  return useMutation(api.watching.watchSeason).withOptimisticUpdate(
+  return useMutation(api.watching.mutations.watchSeason).withOptimisticUpdate(
     (localStore) => {
       if (target.showId === undefined) return;
       const seasonQuery = { showId: target.showId, season: target.season };
-      const seasonResult = localStore.getQuery(api.shows.season, seasonQuery);
+      const seasonResult = localStore.getQuery(
+        api.shows.queries.season,
+        seasonQuery
+      );
       if (seasonResult === undefined) return;
       const added = seasonResult.episodes.filter(
         (episode) => episode.aired && !episode.watched
       ).length;
       if (added === 0) return;
 
-      localStore.setQuery(api.shows.season, seasonQuery, {
+      localStore.setQuery(api.shows.queries.season, seasonQuery, {
         ...seasonResult,
         episodes: seasonResult.episodes.map((episode) =>
           episode.aired ? { ...episode, watched: true } : episode
         ),
       });
 
-      const show = localStore.getQuery(api.shows.get, {
+      const show = localStore.getQuery(api.shows.queries.get, {
         tvmazeId: target.tvmazeId,
       });
       if (show === undefined || show === null) return;
@@ -83,7 +86,7 @@ export function useWatchSeason(target: {
           ? show.leftOff
           : leftOffNow(reached, target.season);
       localStore.setQuery(
-        api.shows.get,
+        api.shows.queries.get,
         { tvmazeId: target.tvmazeId },
         {
           ...show,

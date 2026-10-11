@@ -41,7 +41,7 @@ describe("useTickUpNext", () => {
     renderHook(() => useTickUpNext());
     const store = memoryStore();
     store.setQuery(
-      api.lists.upNext,
+      api.lists.queries.upNext,
       {},
       {
         upNext: [
@@ -55,7 +55,7 @@ describe("useTickUpNext", () => {
 
     update(store, { episodeId: "episodes-1" });
 
-    expect(store.getQuery(api.lists.upNext, {})).toMatchObject({
+    expect(store.getQuery(api.lists.queries.upNext, {})).toMatchObject({
       upNext: [{ episodeId: "episodes-2", waitingAfterNext: 2 }],
     });
   });

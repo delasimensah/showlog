@@ -21,17 +21,20 @@ export function useTickEpisode(target: {
   season: number;
   tvmazeId: number;
 }) {
-  return useMutation(api.watching.tick).withOptimisticUpdate(
+  return useMutation(api.watching.mutations.tick).withOptimisticUpdate(
     (localStore, args) => {
       if (target.showId !== undefined) {
         const seasonQuery = { showId: target.showId, season: target.season };
-        const seasonResult = localStore.getQuery(api.shows.season, seasonQuery);
+        const seasonResult = localStore.getQuery(
+          api.shows.queries.season,
+          seasonQuery
+        );
         if (seasonResult !== undefined) {
           const already = seasonResult.episodes.some(
             (episode) => episode.episodeId === args.episodeId && episode.watched
           );
           if (already) return;
-          localStore.setQuery(api.shows.season, seasonQuery, {
+          localStore.setQuery(api.shows.queries.season, seasonQuery, {
             ...seasonResult,
             episodes: seasonResult.episodes.map((episode) =>
               episode.episodeId === args.episodeId
@@ -42,12 +45,12 @@ export function useTickEpisode(target: {
         }
       }
 
-      const show = localStore.getQuery(api.shows.get, {
+      const show = localStore.getQuery(api.shows.queries.get, {
         tvmazeId: target.tvmazeId,
       });
       if (show === undefined || show === null) return;
       localStore.setQuery(
-        api.shows.get,
+        api.shows.queries.get,
         { tvmazeId: target.tvmazeId },
         {
           ...show,

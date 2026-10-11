@@ -17,7 +17,7 @@ describe("useSeason", () => {
 
     const { result } = renderHook(() => useSeason("shows-1" as never, 1));
 
-    expect(mockedUseQuery).toHaveBeenCalledWith(api.shows.season, {
+    expect(mockedUseQuery).toHaveBeenCalledWith(api.shows.queries.season, {
       showId: "shows-1",
       season: 1,
     });

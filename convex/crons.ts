@@ -4,19 +4,24 @@ import { internal } from "./_generated/api";
 
 const crons = cronJobs();
 
-crons.hourly("hourly clock", { minuteUTC: 0 }, internal.clock.hourly, {});
+crons.hourly(
+  "hourly clock",
+  { minuteUTC: 0 },
+  internal.clock.mutations.hourly,
+  {}
+);
 
 crons.daily(
   "daily refresh",
   { hourUTC: 4, minuteUTC: 0 },
-  internal.refresh.daily,
+  internal.refresh.actions.daily,
   {}
 );
 
 crons.weekly(
   "discover pool",
   { dayOfWeek: "monday", hourUTC: 3, minuteUTC: 0 },
-  internal.discover.refreshPool,
+  internal.discover.actions.refreshPool,
   {}
 );
 

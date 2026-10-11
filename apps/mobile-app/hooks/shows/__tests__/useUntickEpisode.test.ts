@@ -48,14 +48,14 @@ describe("useUntickEpisode", () => {
 
     const store = memoryStore();
     store.setQuery(
-      api.shows.season,
+      api.shows.queries.season,
       { showId: "shows-1", season: 1 },
       {
         episodes: [{ episodeId: "episodes-1", watched: true }],
       }
     );
     store.setQuery(
-      api.shows.get,
+      api.shows.queries.get,
       { tvmazeId: 1 },
       {
         watchedCount: 1,
@@ -65,13 +65,17 @@ describe("useUntickEpisode", () => {
 
     update(store, { episodeId: "episodes-1" });
 
-    expect(mockedUseMutation).toHaveBeenCalledWith(api.watching.untick);
+    expect(mockedUseMutation).toHaveBeenCalledWith(
+      api.watching.mutations.untick
+    );
     expect(
-      store.getQuery(api.shows.season, { showId: "shows-1", season: 1 })
+      store.getQuery(api.shows.queries.season, { showId: "shows-1", season: 1 })
     ).toMatchObject({
       episodes: [{ episodeId: "episodes-1", watched: false }],
     });
-    expect(store.getQuery(api.shows.get, { tvmazeId: 1 })).toMatchObject({
+    expect(
+      store.getQuery(api.shows.queries.get, { tvmazeId: 1 })
+    ).toMatchObject({
       watchedCount: 0,
       seasons: [{ number: 1, watchedCount: 0 }],
     });

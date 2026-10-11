@@ -17,7 +17,7 @@ describe("usePreviewShow", () => {
 
     const { result } = renderHook(() => usePreviewShow());
 
-    expect(mockedUseAction).toHaveBeenCalledWith(api.shows.preview);
+    expect(mockedUseAction).toHaveBeenCalledWith(api.shows.actions.preview);
     expect(result.current).toBe(preview);
   });
 });

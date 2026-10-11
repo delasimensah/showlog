@@ -17,7 +17,7 @@ describe("useUpNext", () => {
 
     const { result } = renderHook(() => useUpNext());
 
-    expect(mockedUseQuery).toHaveBeenCalledWith(api.lists.upNext, {});
+    expect(mockedUseQuery).toHaveBeenCalledWith(api.lists.queries.upNext, {});
     expect(result.current).toBe(list);
   });
 });

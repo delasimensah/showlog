@@ -72,9 +72,9 @@ The app opens on Sign in. I create my one account, land on the four tabs, and st
 **How it is built**
 
 - Tables `shows`, `episodes`, `myShows`, `watchedEpisodes`, and `userStats` from `system-design.md` section 5. `watchedEpisodes` and `userStats` stay empty until SHOW-4. They go in now so the schema is whole.
-- `convex/tvmaze.ts`: `fetchJson` with the User-Agent and 429 retry, and the copy helpers (strip HTML, header picture, drop specials, `order`, `airsAt`, `airTimeKnown`, `seasons`, `yearSeasons`).
+- `convex/lib/tvmaze.ts`: `fetchJson` with the User-Agent and 429 retry, and the copy helpers (strip HTML, header picture, drop specials, `order`, `airsAt`, `airTimeKnown`, `seasons`, `yearSeasons`).
 - `search.searchShows` action and `shows.add` action, plus the internal mutations that save in batches of 500.
-- `convex/progress.ts` with `recomputeProgress`. On add, it sets `airedCount` and the next episode.
+- `convex/lib/progress.ts` with `recomputeProgress`. On add, it sets `airedCount` and the next episode.
 - Search screen opened from the Search button on Discover.
 
 **Acceptance (yes or no)**
@@ -375,7 +375,7 @@ My Convex Free database reads and writes passed the 1 GB monthly cap after I add
 
 **How it is built**
 
-- `tickProgress` and `untickProgress` in `convex/progress.ts` update `watchedCount`, `waitingAfterNext`, the next episode, and last watched for one tick without reading the whole show. `tick` and `untick` use them. They fall back to `recomputeProgress` when the row is out of step with the ticks.
+- `tickProgress` and `untickProgress` in `convex/lib/progress.ts` update `watchedCount`, `waitingAfterNext`, the next episode, and last watched for one tick without reading the whole show. `tick` and `untick` use them. They fall back to `recomputeProgress` when the row is out of step with the ticks.
 - Watch season, watched up to here, adding a show, the hourly clock, and the daily refresh keep `recomputeProgress`.
 - `insertShow` reports whether it created the show. `insertEpisodeBatch` skips the per-episode duplicate lookup for a show that was just created.
 - New index `by_show_airsAt` on `episodes`. `lists.upcoming` reads each show's episodes from today onward through it, not the whole show.

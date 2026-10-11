@@ -46,9 +46,11 @@ const MyShowsScreen: React.FC = () => {
         : shows.filter((show) => show.status === filter);
   const showSort = shows === undefined || shows.length > 0;
   const title =
-    filter === "All" || shows === undefined
+    shows === undefined
       ? "My shows"
-      : `${filter} · ${visible.length}`;
+      : filter === "All"
+        ? `My shows · ${shows.length}`
+        : `${filter} · ${visible.length}`;
 
   let body: React.ReactNode;
   if (shows === undefined) {
