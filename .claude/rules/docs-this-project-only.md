@@ -1,0 +1,1 @@
+../../.cursor/rules/docs-this-project-only.mdc

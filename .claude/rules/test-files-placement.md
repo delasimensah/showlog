@@ -1,0 +1,1 @@
+../../.cursor/rules/test-files-placement.mdc

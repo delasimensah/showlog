@@ -1,0 +1,1 @@
+../../.cursor/rules/convex-auth-env-before-sign-in.mdc

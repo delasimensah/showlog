@@ -1,0 +1,1 @@
+../../../.cursor/rules/flag-gaps-and-own-the-board.mdc

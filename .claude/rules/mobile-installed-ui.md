@@ -1,0 +1,1 @@
+../../.cursor/rules/mobile-installed-ui.mdc

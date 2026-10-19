@@ -1,0 +1,1 @@
+../../.cursor/rules/native-packages-before-phone-builds.mdc

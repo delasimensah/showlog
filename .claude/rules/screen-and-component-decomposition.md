@@ -1,0 +1,1 @@
+../../.cursor/rules/screen-and-component-decomposition.mdc

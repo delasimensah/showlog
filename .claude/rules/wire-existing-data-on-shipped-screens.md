@@ -1,0 +1,1 @@
+../../.cursor/rules/wire-existing-data-on-shipped-screens.mdc

@@ -1,0 +1,1 @@
+../../../.cursor/rules/no-template-churn-on-workshop-ticks.mdc

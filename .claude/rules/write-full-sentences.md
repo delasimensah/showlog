@@ -1,0 +1,1 @@
+../../.cursor/rules/write-full-sentences.mdc

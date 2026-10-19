@@ -1,0 +1,1 @@
+../../../.cursor/rules/do-not-announce-cursor-modes.mdc

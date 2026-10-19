@@ -1,0 +1,1 @@
+../../../.cursor/rules/name-the-model-before-the-work.mdc

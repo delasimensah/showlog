@@ -11,3 +11,7 @@ Convex agent skills for common tasks can be installed by running
 `npx convex ai-files install`.
 
 <!-- convex-ai-end -->
+
+@AGENTS.md
+
+The files in `.claude/rules` are links to `.cursor/rules`. Edit the Cursor file. Cursor and Claude Code both follow that file. The files in `.claude/skills` are links to `.agents/skills`.

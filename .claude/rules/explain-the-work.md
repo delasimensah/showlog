@@ -1,0 +1,1 @@
+../../.cursor/rules/explain-the-work.mdc

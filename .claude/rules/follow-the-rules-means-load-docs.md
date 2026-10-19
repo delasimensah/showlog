@@ -1,0 +1,1 @@
+../../../.cursor/rules/follow-the-rules-means-load-docs.mdc

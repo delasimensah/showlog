@@ -1,0 +1,1 @@
+../../../.cursor/rules/aria-monorepo-location.mdc

@@ -1,0 +1,1 @@
+../../.cursor/rules/convex-free-plan-file-egress.mdc

@@ -1,0 +1,1 @@
+../../.cursor/rules/wait-for-approval-before-git.mdc

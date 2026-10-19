@@ -1,0 +1,1 @@
+../../../.cursor/rules/linear-tickets-follow-product-flow.mdc

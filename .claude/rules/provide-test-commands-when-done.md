@@ -1,0 +1,1 @@
+../../../.cursor/rules/provide-test-commands-when-done.mdc

@@ -1,0 +1,1 @@
+../../.cursor/rules/code-organization-and-style.mdc

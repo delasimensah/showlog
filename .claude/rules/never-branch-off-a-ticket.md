@@ -1,0 +1,1 @@
+../../.cursor/rules/never-branch-off-a-ticket.mdc

@@ -1,0 +1,1 @@
+../../.cursor/rules/tests-match-the-module.mdc

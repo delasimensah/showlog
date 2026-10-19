@@ -1,0 +1,1 @@
+../../.cursor/rules/import-paths-mandatory.mdc

@@ -1,0 +1,1 @@
+../../.cursor/rules/tests-necessary-and-fast.mdc

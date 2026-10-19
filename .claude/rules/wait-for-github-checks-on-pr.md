@@ -1,0 +1,1 @@
+../../.cursor/rules/wait-for-github-checks-on-pr.mdc

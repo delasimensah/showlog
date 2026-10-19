@@ -1,0 +1,1 @@
+../../.cursor/rules/hooks-and-services-organization.mdc

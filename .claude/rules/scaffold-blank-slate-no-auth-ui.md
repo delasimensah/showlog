@@ -1,0 +1,1 @@
+../../.cursor/rules/scaffold-blank-slate-no-auth-ui.mdc

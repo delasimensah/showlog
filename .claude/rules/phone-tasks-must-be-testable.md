@@ -1,0 +1,1 @@
+../../.cursor/rules/phone-tasks-must-be-testable.mdc

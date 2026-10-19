@@ -1,0 +1,1 @@
+../../.cursor/rules/convex-folder-layout.mdc

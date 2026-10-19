@@ -1,0 +1,1 @@
+../../../.cursor/rules/close-the-epic-with-its-last-ticket.mdc

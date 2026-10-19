@@ -1,0 +1,1 @@
+../../../.cursor/rules/docs-readable-at-first-glance.mdc

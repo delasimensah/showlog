@@ -1,0 +1,1 @@
+../../.cursor/rules/build-the-screen-the-usual-way.mdc

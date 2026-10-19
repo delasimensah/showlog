@@ -1,0 +1,1 @@
+../../.cursor/rules/import-barrel-and-single-line.mdc

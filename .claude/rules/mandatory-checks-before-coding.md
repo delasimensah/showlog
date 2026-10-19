@@ -1,0 +1,1 @@
+../../.cursor/rules/mandatory-checks-before-coding.mdc

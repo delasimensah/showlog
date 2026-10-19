@@ -1,0 +1,1 @@
+../../.cursor/rules/pr-description-from-guidelines.mdc

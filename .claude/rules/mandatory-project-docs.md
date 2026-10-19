@@ -1,0 +1,1 @@
+../../.cursor/rules/mandatory-project-docs.mdc

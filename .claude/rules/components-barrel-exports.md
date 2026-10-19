@@ -1,0 +1,1 @@
+../../.cursor/rules/components-barrel-exports.mdc

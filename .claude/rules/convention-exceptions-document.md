@@ -1,0 +1,1 @@
+../../.cursor/rules/convention-exceptions-document.mdc

@@ -1,0 +1,1 @@
+../../.cursor/rules/fix-linting-errors.mdc

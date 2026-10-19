@@ -1,0 +1,1 @@
+../../.cursor/rules/skeletons-match-the-screen.mdc

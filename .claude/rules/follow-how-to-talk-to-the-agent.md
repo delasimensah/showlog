@@ -1,0 +1,1 @@
+../../../.cursor/rules/follow-how-to-talk-to-the-agent.mdc

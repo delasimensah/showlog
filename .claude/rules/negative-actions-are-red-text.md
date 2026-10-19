@@ -1,0 +1,1 @@
+../../.cursor/rules/negative-actions-are-red-text.mdc

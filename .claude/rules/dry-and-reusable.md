@@ -1,0 +1,1 @@
+../../.cursor/rules/dry-and-reusable.mdc
