@@ -1,4 +1,4 @@
-import { fireEvent, render } from "@testing-library/react-native";
+import { act, fireEvent, render } from "@testing-library/react-native";
 import { useRouter } from "expo-router";
 import { hourStart, upcomingSections } from "shared";
 
@@ -6,10 +6,19 @@ import { useOpenedAt, useUpcoming } from "@/hooks";
 
 import UpcomingScreen from "./UpcomingScreen";
 
-jest.mock("@/hooks", () => ({
-  useUpcoming: jest.fn(),
-  useOpenedAt: jest.fn(),
-}));
+const mockReload = jest.fn(() => Promise.resolve(null));
+
+jest.mock("@/hooks", () => {
+  const { usePullToRefresh } = jest.requireActual(
+    "@/hooks/shared/usePullToRefresh"
+  );
+  return {
+    useUpcoming: jest.fn(),
+    useOpenedAt: jest.fn(),
+    useReloadUpcoming: () => mockReload,
+    usePullToRefresh,
+  };
+});
 
 const mockedList = useUpcoming as jest.Mock;
 const mockedNow = useOpenedAt as jest.Mock;
@@ -21,6 +30,8 @@ describe("UpcomingScreen", () => {
 
   beforeEach(() => {
     push.mockReset();
+    mockReload.mockReset();
+    mockReload.mockResolvedValue(null);
     (useRouter as jest.Mock).mockReturnValue({ push });
     mockedNow.mockReturnValue(Date.UTC(2026, 9, 9, 12));
     mockedList.mockReturnValue(empty);
@@ -94,5 +105,60 @@ describe("UpcomingScreen", () => {
     expect(getByText("Waiting for an air date")).toBeTruthy();
     fireEvent.press(getByLabelText("The Rookie"));
     expect(push).toHaveBeenCalledWith("/show/11");
+  });
+
+  it("shows skeletons while a pull reads the list again", async () => {
+    const pulledAt = Date.UTC(2026, 9, 9, 18, 30);
+    let resolveQuery: () => void = () => undefined;
+    mockReload.mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          resolveQuery = () => resolve(null);
+        })
+    );
+    mockedList.mockReturnValue({
+      episodes: [
+        {
+          showId: "shows-1",
+          tvmazeId: 11,
+          showName: "The Rookie",
+          headerUrl: null,
+          posterUrl: null,
+          imageUrl: null,
+          yearSeasons: false,
+          network: "ABC",
+          episodeId: "episodes-1",
+          season: 5,
+          number: 1,
+          order: 1,
+          name: "Double Down",
+          airsAt: Date.UTC(2026, 9, 19, 20),
+          airTimeKnown: true,
+        },
+      ],
+      noDate: [],
+    });
+    const { getByText, getAllByTestId, queryByText, getByTestId } = render(
+      <UpcomingScreen />
+    );
+    const nowSpy = jest.spyOn(Date, "now").mockReturnValue(pulledAt);
+
+    expect(getByText("The Rookie")).toBeTruthy();
+
+    act(() => {
+      getByTestId("upcoming-scroll").props.refreshControl.props.onRefresh();
+    });
+
+    expect(getByText("Upcoming")).toBeTruthy();
+    expect(queryByText("The Rookie")).toBeNull();
+    expect(getAllByTestId("skeleton-card").length).toBeGreaterThan(0);
+    expect(mockedList).toHaveBeenCalledWith(pulledAt);
+
+    await act(async () => {
+      resolveQuery();
+    });
+
+    expect(getByText("The Rookie")).toBeTruthy();
+    nowSpy.mockRestore();
   });
 });

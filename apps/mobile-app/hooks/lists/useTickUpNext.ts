@@ -15,17 +15,14 @@ function advance<Row extends { episodeId: string; waitingAfterNext: number }>(
 export function useTickUpNext() {
   return useMutation(api.watching.mutations.tick).withOptimisticUpdate(
     (localStore, args) => {
-      const list = localStore.getQuery(api.lists.queries.upNext, {});
-      if (list === undefined) return;
-      localStore.setQuery(
-        api.lists.queries.upNext,
-        {},
-        {
-          upNext: advance(list.upNext, args.episodeId),
-          paused: advance(list.paused, args.episodeId),
-          notStarted: advance(list.notStarted, args.episodeId),
-        }
-      );
+      for (const query of localStore.getAllQueries(api.lists.queries.upNext)) {
+        if (query.value === undefined) continue;
+        localStore.setQuery(api.lists.queries.upNext, query.args, {
+          upNext: advance(query.value.upNext, args.episodeId),
+          paused: advance(query.value.paused, args.episodeId),
+          notStarted: advance(query.value.notStarted, args.episodeId),
+        });
+      }
     }
   );
 }

@@ -120,7 +120,10 @@ async function toListEpisode(
 }
 
 export const upNext = authedQuery({
-  args: {},
+  args: {
+    // A new time on each pull, so this read runs again. The list does not use it.
+    refreshedAt: v.optional(v.number()),
+  },
   returns: v.object({
     upNext: v.array(listEpisode),
     paused: v.array(listEpisode),

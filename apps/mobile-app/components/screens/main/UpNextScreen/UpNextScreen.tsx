@@ -1,20 +1,35 @@
 import type { Id } from "@convex/_generated/dataModel";
 import { Stack, useRouter } from "expo-router";
-import React from "react";
-import { ScrollView } from "react-native";
+import React, { useCallback, useState } from "react";
 
-import { useTickUpNext, useUpNext } from "@/hooks";
+import {
+  usePullToRefresh,
+  useReloadUpNext,
+  useTickUpNext,
+  useUpNext,
+} from "@/hooks";
 import { showErrorToast } from "@/utils";
 
 import EmptyState, { EmptyIcon } from "../../../ui/EmptyState/EmptyState";
+import RefreshableScroll from "../../../ui/RefreshableScroll/RefreshableScroll";
 import { VStack } from "../../../ui/Stack/Stack";
 import UpNextSection from "../../../up-next/UpNextSection/UpNextSection";
 import UpNextScreenSkeleton from "./UpNextScreenSkeleton";
 
 const UpNextScreen: React.FC = () => {
   const router = useRouter();
-  const list = useUpNext();
+  const [refreshedAt, setRefreshedAt] = useState<number | undefined>(undefined);
+  const list = useUpNext(refreshedAt);
+  const reloadUpNext = useReloadUpNext();
   const tick = useTickUpNext();
+  const reload = useCallback(
+    (stamp: number) => {
+      setRefreshedAt(stamp);
+      return reloadUpNext(stamp);
+    },
+    [reloadUpNext]
+  );
+  const { refreshing, onRefresh } = usePullToRefresh(reload);
 
   const onTick = (episodeId: string) => {
     void tick({ episodeId: episodeId as Id<"episodes"> }).catch(() => {
@@ -22,23 +37,17 @@ const UpNextScreen: React.FC = () => {
     });
   };
 
+  const showSkeleton = list === undefined || refreshing;
   const empty =
     list !== undefined &&
+    !refreshing &&
     list.upNext.length === 0 &&
     list.paused.length === 0 &&
     list.notStarted.length === 0;
 
   let body: React.ReactNode;
-  if (list === undefined) {
-    body = (
-      <ScrollView
-        className="flex-1 bg-page"
-        contentInsetAdjustmentBehavior="automatic"
-        contentContainerStyle={{ paddingBottom: 40 }}
-      >
-        <UpNextScreenSkeleton />
-      </ScrollView>
-    );
+  if (showSkeleton) {
+    body = <UpNextScreenSkeleton />;
   } else if (empty) {
     body = (
       <EmptyState
@@ -50,40 +59,41 @@ const UpNextScreen: React.FC = () => {
         onButtonPress={() => router.push("/discover")}
       />
     );
-  } else {
+  } else if (list !== undefined) {
     body = (
-      <ScrollView
-        className="flex-1 bg-page"
-        contentInsetAdjustmentBehavior="automatic"
-        contentContainerStyle={{ paddingBottom: 40 }}
-      >
-        <VStack spacing="xl" className="px-5 py-4">
-          {list.upNext.length > 0 ? (
-            <UpNextSection title="Up next" rows={list.upNext} onTick={onTick} />
-          ) : null}
-          {list.paused.length > 0 ? (
-            <UpNextSection
-              title="Paused for a while"
-              rows={list.paused}
-              onTick={onTick}
-            />
-          ) : null}
-          {list.notStarted.length > 0 ? (
-            <UpNextSection
-              title="Not started"
-              rows={list.notStarted}
-              onTick={onTick}
-            />
-          ) : null}
-        </VStack>
-      </ScrollView>
+      <VStack spacing="xl" className="px-5 py-4">
+        {list.upNext.length > 0 ? (
+          <UpNextSection title="Up next" rows={list.upNext} onTick={onTick} />
+        ) : null}
+        {list.paused.length > 0 ? (
+          <UpNextSection
+            title="Paused for a while"
+            rows={list.paused}
+            onTick={onTick}
+          />
+        ) : null}
+        {list.notStarted.length > 0 ? (
+          <UpNextSection
+            title="Not started"
+            rows={list.notStarted}
+            onTick={onTick}
+          />
+        ) : null}
+      </VStack>
     );
   }
 
   return (
     <>
       <Stack.Title large>Watching</Stack.Title>
-      {body}
+      <RefreshableScroll
+        testID="watching-scroll"
+        refreshing={refreshing}
+        onRefresh={onRefresh}
+        centered={empty}
+      >
+        {body}
+      </RefreshableScroll>
     </>
   );
 };

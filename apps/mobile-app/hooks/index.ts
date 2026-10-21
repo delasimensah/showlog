@@ -1,6 +1,8 @@
 export { useSession } from "./auth/useSession";
 export { useBottomsheetStore } from "./bottom-sheets/useBottomsheetStore";
 export { useDiscoverRows } from "./discover/useDiscoverRows";
+export { useReloadUpcoming } from "./lists/useReloadUpcoming";
+export { useReloadUpNext } from "./lists/useReloadUpNext";
 export { useTickUpNext } from "./lists/useTickUpNext";
 export { useUpcoming } from "./lists/useUpcoming";
 export { useUpNext } from "./lists/useUpNext";
@@ -16,6 +18,7 @@ export { useExportHistory } from "./profile/useExportHistory";
 export { useProfileStats } from "./profile/useProfileStats";
 export { useListedShows } from "./search/useListedShows";
 export { useSearchShows } from "./search/useSearchShows";
+export { usePullToRefresh } from "./shared/usePullToRefresh";
 export { useAddShow } from "./shows/useAddShow";
 export {
   useRemoveShow,

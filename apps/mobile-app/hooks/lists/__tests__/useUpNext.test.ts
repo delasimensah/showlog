@@ -15,9 +15,17 @@ describe("useUpNext", () => {
     const list = { upNext: [], paused: [], notStarted: [] };
     mockedUseQuery.mockReturnValue(list);
 
-    const { result } = renderHook(() => useUpNext());
+    const { result, rerender } = renderHook(
+      ({ refreshedAt }: { refreshedAt?: number }) => useUpNext(refreshedAt),
+      { initialProps: {} }
+    );
 
     expect(mockedUseQuery).toHaveBeenCalledWith(api.lists.queries.upNext, {});
     expect(result.current).toBe(list);
+
+    rerender({ refreshedAt: 5 });
+    expect(mockedUseQuery).toHaveBeenCalledWith(api.lists.queries.upNext, {
+      refreshedAt: 5,
+    });
   });
 });

@@ -1,14 +1,23 @@
-import { fireEvent, render } from "@testing-library/react-native";
+import { act, fireEvent, render } from "@testing-library/react-native";
 import { useRouter } from "expo-router";
 
 import { useTickUpNext, useUpNext } from "@/hooks";
 
 import UpNextScreen from "./UpNextScreen";
 
-jest.mock("@/hooks", () => ({
-  useUpNext: jest.fn(),
-  useTickUpNext: jest.fn(),
-}));
+const mockReload = jest.fn(() => Promise.resolve(null));
+
+jest.mock("@/hooks", () => {
+  const { usePullToRefresh } = jest.requireActual(
+    "@/hooks/shared/usePullToRefresh"
+  );
+  return {
+    useUpNext: jest.fn(),
+    useTickUpNext: jest.fn(),
+    useReloadUpNext: () => mockReload,
+    usePullToRefresh,
+  };
+});
 
 const mockedList = useUpNext as jest.Mock;
 const mockedTick = useTickUpNext as jest.Mock;
@@ -23,6 +32,8 @@ describe("UpNextScreen", () => {
     push.mockReset();
     tick.mockReset();
     tick.mockResolvedValue(null);
+    mockReload.mockReset();
+    mockReload.mockResolvedValue(null);
     (useRouter as jest.Mock).mockReturnValue({ push });
     mockedTick.mockReturnValue(tick);
     mockedList.mockReturnValue(empty);
@@ -83,5 +94,56 @@ describe("UpNextScreen", () => {
     jest.advanceTimersByTime(320);
     expect(tick).toHaveBeenCalledWith({ episodeId: "episodes-1" });
     jest.useRealTimers();
+  });
+
+  it("shows skeletons while a pull reads the list again", async () => {
+    let resolveQuery: () => void = () => undefined;
+    mockReload.mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          resolveQuery = () => resolve(null);
+        })
+    );
+    mockedList.mockReturnValue({
+      ...empty,
+      upNext: [
+        {
+          showId: "shows-1",
+          tvmazeId: 1,
+          showName: "The Bear",
+          yearSeasons: false,
+          headerUrl: null,
+          posterUrl: null,
+          episodeId: "episodes-1",
+          season: 4,
+          number: 11,
+          order: 11,
+          name: "Milim's Friend",
+          imageUrl: null,
+          waitingAfterNext: 0,
+          lastWatchedAt: Date.UTC(2026, 9, 1),
+        },
+      ],
+    });
+    const { getByText, getAllByTestId, queryByText, getByTestId } = render(
+      <UpNextScreen />
+    );
+
+    expect(getByText("The Bear")).toBeTruthy();
+
+    act(() => {
+      getByTestId("watching-scroll").props.refreshControl.props.onRefresh();
+    });
+
+    expect(getByText("Watching")).toBeTruthy();
+    expect(queryByText("The Bear")).toBeNull();
+    expect(getAllByTestId("skeleton-card").length).toBeGreaterThan(0);
+    expect(mockedList).toHaveBeenCalledWith(expect.any(Number));
+
+    await act(async () => {
+      resolveQuery();
+    });
+
+    expect(getByText("The Bear")).toBeTruthy();
   });
 });

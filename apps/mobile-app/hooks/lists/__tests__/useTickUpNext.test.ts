@@ -11,16 +11,20 @@ jest.mock("convex/react", () => ({
 const mockedUseMutation = useMutation as jest.Mock;
 
 function memoryStore() {
-  const rows: { args: string; value: unknown }[] = [];
+  const rows: { args: Record<string, unknown>; value: unknown }[] = [];
+  const same = (left: unknown, right: unknown) =>
+    JSON.stringify(left) === JSON.stringify(right);
   return {
     getQuery(_query: unknown, args: unknown) {
-      return rows.find((row) => row.args === JSON.stringify(args))?.value;
+      return rows.find((row) => same(row.args, args))?.value;
     },
-    setQuery(_query: unknown, args: unknown, value: unknown) {
-      const key = JSON.stringify(args);
-      const row = rows.find((item) => item.args === key);
+    getAllQueries() {
+      return rows.map((row) => ({ args: row.args, value: row.value }));
+    },
+    setQuery(_query: unknown, args: Record<string, unknown>, value: unknown) {
+      const row = rows.find((item) => same(item.args, args));
       if (row) row.value = value;
-      else rows.push({ args: key, value });
+      else rows.push({ args, value });
     },
   };
 }
@@ -42,7 +46,7 @@ describe("useTickUpNext", () => {
     const store = memoryStore();
     store.setQuery(
       api.lists.queries.upNext,
-      {},
+      { refreshedAt: 1 },
       {
         upNext: [
           { episodeId: "episodes-1", waitingAfterNext: 0 },
@@ -55,7 +59,9 @@ describe("useTickUpNext", () => {
 
     update(store, { episodeId: "episodes-1" });
 
-    expect(store.getQuery(api.lists.queries.upNext, {})).toMatchObject({
+    expect(
+      store.getQuery(api.lists.queries.upNext, { refreshedAt: 1 })
+    ).toMatchObject({
       upNext: [{ episodeId: "episodes-2", waitingAfterNext: 2 }],
     });
   });
