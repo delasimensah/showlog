@@ -9,10 +9,10 @@
 ## Snapshot
 
 - **Client / job:** Showlog. Personal iPhone app for tracking TV shows. No client, no invoice, not published.
-- **Backend:** Convex (dev deployment only, team `dm-studios`)
+- **Backend:** Convex on team `dm-studios`. Dev deployment for the simulator and Showlog(Staging). Production deployment `canny-camel-565` for the Showlog app. Auth env is set on both. The production iPhone build is running.
 - **Outcome:** B (studio accounts)
 - **Current phase:** SHOW-13 is Done. Ticking and adding shows stay inside the Convex Free database limit. SHOW-11 is Done. Profile shows my stats and I can export my history. Setup is already done: scaffold, GitHub, Expo, Convex, design system, icon, system design, screens, tickets SHOW-1 to SHOW-12, and both phone builds. iPhone app (Expo SDK 57), shared package, and Convex Auth. Native packages for this version are installed. Private GitHub repo on `main`. Branches are deleted automatically after merge. Convex agent guidelines and skills are installed.
-- **Last updated:** 2026-10-10
+- **Last updated:** 2026-10-21
 - **Blocked / open:** The Apple push key waits for SHOW-12.
 
 ---
@@ -34,7 +34,7 @@
 - [x] Vercel: not used. No website.
 - [x] Expo / EAS: https://expo.dev/accounts/dm-studios/projects/showlog (`extra.eas.projectId` and `updates.url` in `app.config.ts`).
 - [x] Slack: not used.
-- [x] Backend cloud (Convex): project `showlog`, dev deployment synced, URL in local env and EAS development and preview. Auth env set (`JWT_PRIVATE_KEY`, `JWKS`, `SITE_URL=showlog://`).
+- [x] Backend cloud (Convex): project `showlog`, dev deployment synced, URL in local env and EAS development and preview. Auth env set (`JWT_PRIVATE_KEY`, `JWKS`, `SITE_URL=showlog://`). Production deployment `canny-camel-565` has its own auth env and EAS production `EXPO_PUBLIC_CONVEX_URL`. Discover pool started there on 21 Oct 2026.
 - [x] Access list (`ACCESS-LIST.md`): OpenAI key location noted
 - [x] App icon and splash (SnapAI option 3, mint TV on `#0e0e10`) — `docs/design/icon-candidates/README.md`
 - [x] Apple push key: moved into SHOW-12 (phone alerts) as its first step. Not needed before then.

@@ -16,6 +16,7 @@
     "build:dev:ios": "eas build --platform ios --profile development",
     "build:dev:ios-simulator": "eas build --platform ios --profile ios-simulator",
     "build:preview:ios": "eas build --platform ios --profile preview",
+    "build:production:ios": "eas build --platform ios --profile production",
     "workflow:preview": "eas workflow:run .eas/workflows/preview.yml",
     "update:preview": "eas update --channel preview",
     "ios": "APP_VARIANT=development expo run:ios",

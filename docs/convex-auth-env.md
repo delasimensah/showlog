@@ -39,3 +39,5 @@ A sign-in ticket is not done until these three names exist on that Convex. Tests
 ## Simulator and iPhone
 
 The development build on the simulator and the preview build on the iPhone both use this one dev deployment. Once the keys exist there, sign-in works on both. You do not set the keys on Expo.
+
+The production app uses the production deployment. Generate a new key pair for it. Do not copy the dev private key. Set the three names with `npx convex env set --prod "NAME=value"`. `SITE_URL` is `showlog://` there too.

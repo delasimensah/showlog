@@ -116,7 +116,7 @@ Each flow lists what must be true for it to count as done.
 - Export makes one JSON file (a plain text data file) with my shows, the time I added each, each show's status, and every watched episode with show name, season, number, title, and watched time.
 - It opens the iPhone share sheet so I can save it to Files.
 
-**Out of scope:** movies, specials, Android, a website, iPad layouts, widgets, App Store or TestFlight, import from TV Time or Trakt, ratings, reviews, social features, favourites, custom lists, sharing, "where to watch" links, rewatch tracking, offline use, more than one account, password reset by email, a mute button for each show, a production Convex deployment.
+**Out of scope:** movies, specials, Android, a website, iPad layouts, widgets, App Store or TestFlight, import from TV Time or Trakt, ratings, reviews, social features, favourites, custom lists, sharing, "where to watch" links, rewatch tracking, offline use, more than one account, password reset by email, a mute button for each show.
 
 ---
 

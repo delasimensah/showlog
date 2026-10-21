@@ -28,6 +28,8 @@
       "channel": "preview"
     },
     "production": {
+      "distribution": "internal",
+      "environment": "production",
       "autoIncrement": true,
       "channel": "production",
       "ios": {

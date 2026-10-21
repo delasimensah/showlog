@@ -16,6 +16,7 @@
     "dev:mobile": "turbo run dev --filter=@showlog/mobile-app",
     "dev:backend": "convex dev",
     "dev:backend:once": "convex dev --once",
+    "deploy:backend": "convex deploy",
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint:fix",
     "type-check": "turbo run type-check && tsc --noEmit -p convex",

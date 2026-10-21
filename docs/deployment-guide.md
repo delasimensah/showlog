@@ -1,6 +1,6 @@
 # Deployment guide
 
-Showlog runs on one iPhone and the iOS simulator. It is not published to the App Store. Both builds talk to the Convex **dev** deployment.
+Showlog runs on one iPhone and the iOS simulator. It is not published to the App Store. The development app and the preview app talk to the Convex **dev** deployment. The production app talks to the Convex **production** deployment.
 
 ## The three app ids
 
@@ -8,7 +8,7 @@ Showlog runs on one iPhone and the iOS simulator. It is not published to the App
 
 - **Development build** — `com.dmstudios.showlog.dev`, named Showlog(Dev). Runs on the iOS simulator and loads JavaScript from Metro on the laptop.
 - **Preview build** — `com.dmstudios.showlog.staging`, named Showlog(Staging). Installed on the iPhone. Gets JavaScript changes as update pushes.
-- **Production** — `com.dmstudios.showlog`. Reserved. No build is planned.
+- **Production build** — `com.dmstudios.showlog`, named Showlog. Installed on the iPhone from a link. Talks to the production database. Gets JavaScript changes as update pushes on the `production` channel.
 
 ## Build quota
 
@@ -23,6 +23,8 @@ yarn dev:backend
 ```
 
 That watches `convex/` and pushes every change to the dev deployment. `yarn dev:backend:once` pushes once and stops.
+
+`yarn deploy:backend` pushes to the production deployment. It does not copy rows. Do not point root `.env.local` at production. Do not run a demo seed with `--prod`.
 
 Expo builds do not push `convex/`. Push Convex before you test a change that needs a new function.
 
@@ -69,11 +71,31 @@ yarn update:preview
 
 Close and reopen Showlog(Staging) twice. The first open downloads the update, the second runs it. An update push cannot add a native package. That needs a new preview build.
 
+## Production build (iPhone)
+
+The iPhone is already registered from the preview build. The production profile in `eas.json` installs from a link (`distribution: internal`). The first build has to be started in a terminal, because Apple asks you to sign in once for the new app id `com.dmstudios.showlog`.
+
+```bash
+cd apps/mobile-app
+yarn build:production:ios
+```
+
+Open the build link on the iPhone and install Showlog. It sits next to Showlog(Staging). Sign up once. That sign-up is the only account. Shows in Showlog(Staging) stay in that app.
+
+JavaScript changes after that build:
+
+```bash
+cd apps/mobile-app
+eas update --channel production --environment production
+```
+
+Close and reopen Showlog twice. An update push cannot change the database address. That address is set when the app is built, from `EXPO_PUBLIC_CONVEX_URL` on the EAS production environment.
+
 ## Environment
 
-- `apps/mobile-app/.env.local` — `EXPO_PUBLIC_CONVEX_URL` for Metro.
-- EAS environment variables (Expo dashboard → Project → Environment variables) — `EXPO_PUBLIC_CONVEX_URL` on **development** and **preview**, both the dev Convex URL. Builds and update pushes read these.
-- Convex deployment — Convex Auth keys. See `docs/convex-auth-env.md`.
+- `apps/mobile-app/.env.local` — `EXPO_PUBLIC_CONVEX_URL` for Metro. This stays on the dev deployment.
+- EAS environment variables (Expo dashboard → Project → Environment variables) — `EXPO_PUBLIC_CONVEX_URL` on **development** and **preview** is the dev Convex URL. On **production** it is the production Convex URL.
+- Convex dev deployment and Convex production deployment each have their own Convex Auth keys. See `docs/convex-auth-env.md`. Production uses a new key pair. `SITE_URL` is `showlog://` on both.
 
 ## Phone alerts
 

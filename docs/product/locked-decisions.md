@@ -16,7 +16,7 @@ This file freezes the product calls so the questionnaire, the product requiremen
 
 **Name.** A log of the shows I watch. Short, and says what it is.
 
-**Not published.** No App Store listing. It lives on my iPhone as a preview build, which is an app installed straight onto a registered phone, without the store.
+**Not published.** No App Store listing. Showlog(Staging) and Showlog are both installed from a link onto my registered iPhone, without the store.
 
 ---
 
@@ -24,9 +24,9 @@ This file freezes the product calls so the questionnaire, the product requiremen
 
 - **iPhone only.** Expo and React Native. No Android build, no website.
 - **Development app** on the iOS simulator for day-to-day building, using Metro (the local server that sends code changes to the app). App id `com.dmstudios.showlog.dev`.
-- **Preview app** on my real iPhone. App id `com.dmstudios.showlog.staging`. This is the app I use every day, and where phone alerts are proven.
-- **Production app id** `com.dmstudios.showlog` is reserved and never built.
-- **Backend:** one Convex **dev** deployment on the `dm-studios` team. The development app and the preview app both use it. There is no production deployment.
+- **Preview app** on my real iPhone. App id `com.dmstudios.showlog.staging`. Talks to the dev database. This is where phone alerts are proven.
+- **Production app** on the same iPhone. App id `com.dmstudios.showlog`, named Showlog. Installed from a link. Talks to the production database. My shows in the preview app stay there.
+- **Backend:** a Convex **dev** deployment and a Convex **production** deployment on the `dm-studios` team. The development app and the preview app use dev. Showlog uses production. Pushing code does not copy rows from one to the other.
 - **Expo project:** `@dm-studios/showlog`.
 - **GitHub:** private repo `delasimensah/showlog`.
 - **Tickets:** in `docs/product/linear-tickets.md` only. No Linear team (Linear Free allows two active teams, and Kindred and PAAROS use both). Ticket ids are `SHOW-1`, `SHOW-2`, and so on. Branches are `feature/SHOW-n` for a ticket that exists in that file.
@@ -195,7 +195,6 @@ Tabs, in order: Watching, Upcoming, Discover, My shows. 12. A short screen befor
 - Using the app with no internet. It needs a connection to load and save.
 - More than one account
 - Password reset by email
-- A production Convex deployment
 
 ---
 
