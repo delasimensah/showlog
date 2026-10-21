@@ -68,6 +68,14 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       },
     ],
     [
+      "expo-build-properties",
+      {
+        ios: {
+          enableSceneSupport: true,
+        },
+      },
+    ],
+    [
       "expo-splash-screen",
       {
         backgroundColor: BRAND_COLOR,

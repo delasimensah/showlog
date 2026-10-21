@@ -73,7 +73,9 @@ Close and reopen Showlog(Staging) twice. The first open downloads the update, th
 
 ## Production build (iPhone)
 
-The iPhone is already registered from the preview build. The production profile in `eas.json` installs from a link (`distribution: internal`). The first build has to be started in a terminal, because Apple asks you to sign in once for the new app id `com.dmstudios.showlog`.
+The iPhone is already registered from the preview build. The production profile in `eas.json` installs from a link (`distribution: internal`) and builds with the latest Xcode image. That image uses the iOS 27 SDK, which refuses to open an app that still uses the old startup. `enableSceneSupport` in `app.config.ts` is what makes the new startup. An update push cannot add it. A new production build is required after that setting changes.
+
+The first build has to be started in a terminal, because Apple asks you to sign in once for the new app id `com.dmstudios.showlog`. Later builds can reuse those Apple credentials.
 
 ```bash
 cd apps/mobile-app

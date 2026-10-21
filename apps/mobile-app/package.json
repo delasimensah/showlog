@@ -37,6 +37,7 @@
     "convex": "^1.46.0",
     "date-fns": "^4.1.0",
     "expo": "~57.0.27",
+    "expo-build-properties": "~57.0.22",
     "expo-constants": "~57.0.19",
     "expo-dev-client": "~57.0.18",
     "expo-device": "~57.0.2",
