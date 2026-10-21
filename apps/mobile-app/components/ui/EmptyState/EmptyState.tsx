@@ -86,6 +86,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
   if (usesSystemHeader) {
     return (
       <View
+        pointerEvents="box-none"
         style={{
           flex: 1,
           justifyContent: "center",

@@ -20,4 +20,22 @@ describe("RefreshableScroll", () => {
     getByTestId("watching-scroll").props.refreshControl.props.onRefresh();
     expect(onRefresh).toHaveBeenCalled();
   });
+
+  it("keeps a centred empty state out of the scrolling list", () => {
+    const onRefresh = jest.fn();
+    const { getByText, getByTestId } = render(
+      <RefreshableScroll
+        testID="watching-scroll"
+        refreshing={false}
+        onRefresh={onRefresh}
+        centered
+      >
+        <Text>Add the shows you watch</Text>
+      </RefreshableScroll>
+    );
+
+    expect(getByText("Add the shows you watch")).toBeTruthy();
+    getByTestId("watching-scroll").props.refreshControl.props.onRefresh();
+    expect(onRefresh).toHaveBeenCalled();
+  });
 });
