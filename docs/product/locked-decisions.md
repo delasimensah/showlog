@@ -1,6 +1,6 @@
 # Showlog — locked product decisions
 
-**Status:** Approved by Delasi on 8 Oct 2026. Discover added the same day at his request.
+**Status:** Approved by Delasi on 8 Oct 2026. Discover added the same day at his request. Pick for me (AI picks, paid OpenAI with hard caps) added on 17 Nov 2026 at his request.
 **Date:** 8 Oct 2026
 **Owner:** Delasi Mensah. Personal app. One user.
 
@@ -75,7 +75,24 @@ Every outside thing this app depends on, with source, rights, and how it gets in
 - **Rights:** the same TVmaze CC BY-SA credit.
 - **How it gets in:** a weekly Convex job reads the index in small batches (about 350 pages, under TVmaze's 20 calls every 10 seconds) and keeps only shows with a popularity score of 85 or more and a poster. That is a few thousand shows, a few MB of database rows, and no file storage. The job also runs once during setup so Discover is not empty on day one.
 - **Limit:** these are suggestions by genre, popularity, and rating. TVmaze has no "people who watched this also liked" data, so they are not true recommendations.
-- **Out:** TMDB recommendations, AI suggestions, a "Not interested" button.
+- **Out:** TMDB recommendations and a "Not interested" button. AI picks are in version one as **Pick for me**, described next.
+
+**Pick for me (AI picks)**
+
+- **What:** I answer three quick questions (mood, episode length, anime or not) and can add a few words of my own. Showlog finds up to five shows from the Discover pool whose descriptions best match my answers, and says in one sentence why each one fits. This is how the Discover limit above is answered: the picks come from meaning, not only genre.
+- **How it works, in plain words:** every pool show's description is turned into an **embedding**, a list of numbers that stands for its meaning. My answers are turned into an embedding the same way. Convex **vector search** (a search that finds the stored lists of numbers closest to mine) returns the closest shows. A language model then writes the one-sentence reasons. This pattern is called **RAG** (retrieval-augmented generation): find the right facts first, then let the model write only from them.
+- **Where from:** the [OpenAI API](https://developers.openai.com/api/docs). `text-embedding-3-small` shortened to 512 numbers makes the embeddings. `gpt-6-luna` with reasoning off writes the reasons. Both checked on 17 Nov 2026.
+- **What is sent to OpenAI:** pool show names, genres, type, network, year, and TVmaze summaries, plus my three answers and my own words. Never my email, my list, or my ticks.
+- **Rights:** the show text is TVmaze data under CC BY-SA. Showlog already credits TVmaze, and the embeddings and reasons stay inside my private app. Nothing is published.
+- **How it gets in:** the weekly Discover refresh already downloads each show's summary and TVmaze update time. It now keeps them and makes an embedding only for a show that is new to the pool or that TVmaze changed since its last embedding. The first run after this change embeds the whole pool once.
+- **Key:** `OPENAI_API_KEY` is an environment variable on the Convex dev deployment and on the Convex production deployment. The phone never holds it and never calls OpenAI.
+- **Caps, so spending cannot run away:**
+  - A separate OpenAI project named Showlog with a **hard monthly spend limit of $5**. OpenAI refuses calls once it is reached.
+  - Prepaid OpenAI credit with **auto recharge off**, so OpenAI can never charge my card on its own.
+  - **10 picks a day** in Showlog itself. The server refuses the eleventh with "That's today's 10 picks. Try again tomorrow."
+  - Each reason call may write at most 600 tokens (a token is about three quarters of a word).
+- **Convex stays free:** this uses no Convex AI gateway and no paid Convex feature. The Free plan has hard caps and never bills. The added storage and reads are sized in section 12 to stay far under those caps.
+- **Out:** chat with the model, picks for several people at once, movies, picks from shows outside the Discover pool, and saving past picks.
 
 **My watch history**
 
@@ -106,6 +123,7 @@ Every outside thing this app depends on, with source, rights, and how it gets in
 12. I get a phone alert when a new episode of one of my shows airs.
 13. I get a phone alert when a show on my list gets a new premiere date (for example "Severance season 3 premieres 12 January").
 14. I can export my whole list and watch history as a file from Profile, so a shutdown never takes my history again.
+15. **Pick for me**, opened from the Discover header, asks my mood, the episode length I want, and anime or not, with an optional line of my own words. It shows up to five shows that are not on my list, one at a time, each with its poster and one sentence on why it fits. I can add the show, open it, or go to the next pick.
 
 ---
 
@@ -178,7 +196,10 @@ Every outside thing this app depends on, with source, rights, and how it gets in
 10. Profile: stats, account email, alerts on or off, export my history, TVmaze credit, app version, Sign out in red
 11. Empty states for Up next, Upcoming, and My shows. An empty Up next or an empty My shows sends you to Discover.
 
-Tabs, in order: Watching, Upcoming, Discover, My shows. 12. A short screen before the iPhone's own alert permission prompt, saying what alerts the app sends
+12. A short screen before the iPhone's own alert permission prompt, saying what alerts the app sends
+13. Pick for me (opened from the Discover header): the three questions and my own words, then the picks one at a time with Add, open, and Next pick
+
+Tabs, in order: Watching, Upcoming, Discover, My shows.
 
 ---
 
@@ -218,11 +239,14 @@ Then one iOS simulator development build and one iOS preview build. No Android b
 
 ## 12. What it costs
 
-Nothing new. Every line below is a free plan or an account I already have.
+One paid service, OpenAI, for Pick for me, with hard caps. Every other line below is a free plan or an account I already have.
+
+- **OpenAI:** prepaid credit, auto recharge off, and a hard $5 monthly limit on the Showlog project. Expected spend is a few cents a month. Embedding the whole pool of about 6,700 shows is about 1.1 million tokens, about 2 cents, once on each Convex deployment. Each pick costs about 0.02 cents, so even 10 picks every day is about 6 cents a month. The weekly refresh re-embeds only changed shows, a fraction of a cent. Prices from the OpenAI pricing page on 17 Nov 2026: `text-embedding-3-small` $0.02 per million tokens, `gpt-6-luna` $0.10 per million tokens in and $0.50 out.
 
 - **Apple Developer membership:** already paid. Needed for the preview app on my iPhone and for the push key. If the membership lapses, the preview app stops opening. The install's permission file (provisioning profile) also expires after about a year, and then the app needs a new preview build.
 - **Expo Free:** 15 iOS cloud builds a month across the whole `dm-studios` account. This app needs 2 to start (1 simulator, 1 preview). Kindred has used none this month. Code changes after that go out as updates, which do not use builds.
 - **Convex Free:** limits are shared by every project on the `dm-studios` team. This app stores no files. Its function calls are small: about 720 hourly alert checks and 30 daily refreshes a month, plus my own taps. The Free plan allows 1,000,000 function calls a month.
+- **Convex Free, Pick for me:** about 32 MB of database rows and about 28 MB of vector search storage on each deployment, out of 0.5 GB each. The first embedding run writes about 32 MB of Database I/O once. After that, the weekly re-embeds and 10 picks a day stay under about 90 MB of the 1 GB monthly Database I/O, and each pick uses about 0.03 of the 3,000 monthly search query-GB. No new TVmaze calls.
 - **TVmaze:** free, no account. Discover adds about 350 TVmaze calls a week and a few MB of database rows.
 - **GitHub:** free private repo.
 - **Mobbin:** my existing plan.
@@ -235,6 +259,7 @@ Nothing new. Every line below is a free plan or an account I already have.
 - **TVmaze could shut down**, like TV Time. My shows, episodes, and ticks are copies in Convex, so the history survives. The export file is the second copy.
 - **Alerts depend on the Apple push key.** If that setup is not done, alerts cannot be tested. It comes before the alerts ticket.
 - **Shared free meters.** Kindred and PAAROS share the same Convex team and Expo account. A heavy month on Kindred could use up builds this app needs.
+- **OpenAI can be down, change a model, or hit the $5 limit.** Pick for me then says "Pick for me isn't available right now." Everything else in Showlog keeps working, because nothing else calls OpenAI. If OpenAI fails only while writing the reasons, the picks still show without a reason. OpenAI's hard limit can let a little extra through before it stops calls, which is why the in-app 10-a-day limit also exists.
 
 ---
 

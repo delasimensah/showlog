@@ -140,4 +140,13 @@ The meters that matter here are:
 
 The weekly Discover refresh rewrites the pool, about 6,700 rows, so it is a steady few megabytes of I/O each week.
 
+**Pick for me** adds two meters and grows two others. The numbers are in section 12 of `docs/product/system-design.md`.
+
+- **Search storage** (0.5 GB, shared by text and vector search indexes) — the `showEmbeddings` vector index, about 28 MB for the pool.
+- **Search queries** (3,000 query-GB a month) — every vector search is billed at the size of the whole index, about 0.03 query-GB, whatever it returns. Ten picks a day is about 9 query-GB a month.
+- **Database storage** — about 32 MB more for `showEmbeddings`. Embeddings are never put on `suggestedShows`, because the weekly refresh patches every pool row and Discover's `rows` reads the pool. On that table they would cost Database I/O every week and every Discover load.
+- **Database I/O** — a show is re-embedded only when its TVmaze update time changed, so the weekly refresh writes a few hundred embedding rows, not 6,700. Each pick reads up to 24 embedding rows, about 115 KB.
+
+Do not turn on the Convex AI gateway (the `aiGatewayCostDollars` line in `npx convex deployment usage`). Showlog calls OpenAI directly with its own capped key, so Convex never bills for AI.
+
 The team meters are shared with every other project on the same Convex team. Check `npx convex deployment usage` if a usage email arrives.

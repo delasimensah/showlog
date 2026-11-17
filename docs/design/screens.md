@@ -44,7 +44,7 @@ Every screen is built from these. One component each, used the same way everywhe
 
 **Pictures:** `expo-image`, radius 10 for every poster and episode picture, `surface` behind while loading, a fade-in of 150 ms. When a picture is missing, the fallback is the TV mark in muted on `surface`, never an empty box.
 
-- `Poster`: 2:3. Sizes: small 48 × 72 (Upcoming, Search), medium 120 × 180 (Discover), grid (a third of the row width, My shows).
+- `Poster`: 2:3. Sizes: small 48 × 72 (Upcoming, Search), medium 120 × 180 (Discover), large 200 × 300 (Pick for me), grid (a third of the row width, My shows).
 - `EpisodeImage`: 16:9, 128 × 72 in Up next, Upcoming, and Season rows, full width in the episode sheet. Falls back to the show's header picture, then the poster, then the TV mark.
 
 **Controls:**
@@ -54,6 +54,7 @@ Every screen is built from these. One component each, used the same way everywhe
 - `HeaderButton`: 36 circle, `surface`, an 18 Ionicons icon in text colour. Sort and filter uses this until that control is a system bar button. Profile, search on Discover, and a back or close control are the system bar buttons. That bar is the iPhone's liquid glass bar. Do not draw those.
 - `Button`: primary (mint, ink text), secondary (`surface`, text colour), `quietDanger` (red text, no fill). Height 50, fully rounded, Bold 16.
 - `Chip`: 22 tall, fully rounded, `surface`, 12 SemiBold. "+3" and genres in text colour, Premiere in mint.
+- `ChoiceChip`: a chip I can tap to choose. 36 tall, fully rounded, padding 14 across, 15 SemiBold. Not chosen: `surface` with text colour. Chosen: mint fill with ink text. Chips wrap onto new lines 8 apart. Pick for me uses it for every question, one choice per question.
 - `ProgressBar`: 6 tall, fully rounded, mint on `surface`. My shows grid, the show header, and Season rows on the show screen.
 - Pressed state on everything tappable: opacity 0.7 on rows and text buttons, scale 0.96 on circles.
 
@@ -153,7 +154,7 @@ Year-season shows read "Episode 1180" on the mint line and "2026 · E25" under t
 
 **Route:** `app/(main-app)/(tabs)/discover/index.tsx`
 
-**Header:** the system navigation bar, title "Discover". The search control is the system bar button on the right (magnifying glass). It opens Search.
+**Header:** the system navigation bar, title "Discover". Two system bar buttons on the right: Pick for me (sparkles icon), then search (magnifying glass). Pick for me opens Pick for me. Search opens Search.
 
 **Rows:** each row has a section heading and a horizontal list of 20 cards, 12 apart, starting at the screen edge inset. Before I add any shows: Popular anime, Popular right now, Top rated. After: Because you watch anime (only when anime is on my list), More Drama and More Comedy (my two most common genres), Top rated.
 
@@ -315,6 +316,47 @@ Unaired: no buttons. "Airs Friday 21:00" instead.
 **References:**
 
 - [Peloton allow notifications](https://mobbin.com/screens/d030c568-4577-46b8-a3e1-1ff84fc8e317): kept for the left-aligned headline, one plain line, a sample alert, and Turn on with Maybe later at the bottom.
+
+---
+
+## 13. Pick for me
+
+**Route:** `app/(main-app)/pick.tsx`, pushed from the Pick for me button on Discover.
+
+**Questions (first view):**
+
+- The system navigation bar with the back button and the large title "Pick for me".
+- Three groups, 24 apart. Each has a section heading and a wrap of `ChoiceChip`s:
+  - "What are you in the mood for?" with Light and funny, Gripping and tense, Feel-good, Emotional, Dark and gritty, Mind-bending, Action and adventure, and Romantic. Nothing is chosen at first.
+  - "How long are the episodes?" with Under 30 minutes, About an hour, and Any length. Any length is chosen at first.
+  - "Anime?" with Anime, Not anime, and Either. Either is chosen at first.
+- "Anything else?" heading, then a text field on `surface` (radius 12, height 50, 17 Regular) with the placeholder "For example: set in space, or like Severance". A muted count "0/200" sits under it on the right.
+- A full-width primary `Button` "Find shows" pinned above the bottom safe area. It is disabled (opacity 0.4) until a mood is chosen.
+
+**Pick (after Find shows):**
+
+- The bar keeps the back button. A text button "Change answers" (15, Bold, mint) is the bar's right button. It returns to the questions with my answers kept.
+- The large `Poster`, centred. Tapping it opens the show.
+- The show name as a hero title (28, ExtraBold, up to two lines), centred.
+- A meta line: up to two genres, the year, and the network, for example "Drama · Sci-Fi · 2022 · Apple TV+".
+- The reason as body text in a card (`surface`, radius 16, padding 16), for example "You wanted mind-bending: office workers split their memories in two, and the mystery deepens every episode." When there is no reason, the card is left out.
+- "Pick 2 of 5" as a meta line, centred.
+- At the bottom: a full-width primary `Button` "Add to my list", reading "On your list" with a tick and disabled after adding. Under it a secondary `Button` "Next pick". On the last pick, Next pick becomes "Change answers".
+- Next pick slides the next pick in from the right. No new server call is made, because all five came back at once.
+
+**Loading (after Find shows):** the bar and Change answers stay. A 200 × 300 poster block (radius 10), a name bar (22 tall, 60% wide), a meta bar (9 tall, 45% wide), a card of the reason's size with three body bars (11 tall: 100%, 92%, 60%), and the two buttons as 50-tall rounded blocks.
+
+**States:**
+
+- No matches: `EmptyState` with the compass icon, "No shows match", and "No shows match those answers. Try another mood or length.", with a secondary `Button` "Change answers".
+- Daily limit: `EmptyState` with the compass icon, "That's today's picks", and "That's today's 10 picks. Try again tomorrow.", with no button.
+- OpenAI unavailable or any other failure: `EmptyState` with "Could not pick", "Pick for me isn't available right now.", and a secondary `Button` "Try again".
+- Adding a show that fails shows the usual `Toast`.
+
+**References:**
+
+- [Mindtrip travel style questions](https://mobbin.com/screens/de028535-e901-415e-a399-39e27d14e3d9): kept for short question headings, each with a wrap of chips under it, one answer already chosen in some groups, and one primary button pinned at the bottom.
+- [Apple Books book page](https://mobbin.com/screens/5116582e-a95f-4cff-ac81-d5affed183e9): kept for the single large cover centred near the top, the name and one short meta line centred under it, and a rounded card below for the details.
 
 ---
 

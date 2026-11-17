@@ -25,7 +25,7 @@ Read **`STATUS.md`** at the repo root before planning or implementing. Update it
 
 - **`docs/product/locked-decisions.md`** and **`docs/product/product-requirements.md`** — What we are building. Do not invent features that are not in these files.
 - **`docs/product/system-design.md`** — Tables, server functions, clock jobs, and build order. Do not invent tables or permission rules beyond it.
-- **`docs/product/linear-tickets.md`** — Tickets `SHOW-1` to `SHOW-13`, build order, and status.
+- **`docs/product/linear-tickets.md`** — Tickets `SHOW-1` to `SHOW-14`, build order, and status.
 - **`docs/design/screens.md`** — One spec per screen with its references. **`docs/design/design-system.md`** — colours, type, spacing. `docs/design/references/tvtime/` holds layout references only.
 
 ## Stack and official docs
@@ -47,6 +47,7 @@ Prefer these official sources. Add them as **@Docs** in Cursor (Settings → Ind
 - Show data comes from TVmaze through Convex actions. The phone never calls TVmaze directly. Every call sends a User-Agent that names Showlog. On a 429 reply, wait and retry. Stay under 20 calls every 10 seconds.
 - Show "Show data from TVmaze" with a link on the show screen and on Profile. The data is CC BY-SA.
 - Posters load from TVmaze image URLs. Nothing is stored in Convex file storage.
+- OpenAI is called only for Pick for me, only from Convex actions, with `OPENAI_API_KEY`. The phone never holds the key. Keep the 10-picks-a-day limit, the 600-token cap on reasons, and embeddings in `showEmbeddings`, never on `suggestedShows`.
 - Specials (episodes outside the numbered seasons) are left out of counts, Up next, and stats. TVmaze leaves them out by default.
 - Seasons numbered by year (One Piece) show "Episode 1180" first, then "2026 · E25". Other shows use "S4 | E11".
 - Product data uses Convex `useQuery` / `useMutation` / `useAction`. Check the signed-in user at the top of every public Convex function. The client is not trusted.

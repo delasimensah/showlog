@@ -1,6 +1,6 @@
 # Project requirements — Showlog
 
-**Status:** Approved on 8 Oct 2026. Discover added the same day. Decisions come from `locked-decisions.md`.
+**Status:** Approved on 8 Oct 2026. Discover added the same day. Pick for me added on 17 Nov 2026. Decisions come from `locked-decisions.md`.
 **Date:** 8 Oct 2026
 **Owner:** Delasi Mensah
 
@@ -47,6 +47,7 @@ Each flow lists what must be true for it to count as done.
 - Each card shows the poster, name, and year, with an Add button. Adding works from the card, and the card shows "Added".
 - Tapping a card opens the show with its genres, rating, status, network, number of seasons, summary, and an Add button.
 - The suggestion pool is filled once during setup, so Discover is never empty on the first open.
+- A **Pick for me** button sits in the Discover header, left of Search. It opens Pick for me (flow 14).
 
 **4. Tick episodes**
 
@@ -116,6 +117,22 @@ Each flow lists what must be true for it to count as done.
 - Export makes one JSON file (a plain text data file) with my shows, the time I added each, each show's status, and every watched episode with show name, season, number, title, and watched time.
 - It opens the iPhone share sheet so I can save it to Files.
 
+**14. Pick for me**
+
+- Pick for me opens from the Discover header and asks three questions on one screen.
+- **Mood**, pick one: Light and funny, Gripping and tense, Feel-good, Emotional, Dark and gritty, Mind-bending, Action and adventure, or Romantic.
+- **Episode length**, pick one: Under 30 minutes, About an hour, or Any length. Under 30 minutes keeps shows whose average runtime is 30 minutes or less. About an hour keeps 31 to 70 minutes. A show with no runtime on TVmaze is kept only under Any length.
+- **Anime**, pick one: Anime, Not anime, or Either.
+- **Anything else?** is an optional line of my own words, up to 200 characters, for example "set in space" or "like Severance".
+- Find shows stays disabled until a mood is picked. Episode length starts on Any length and Anime starts on Either.
+- Find shows returns up to five shows from the Discover pool whose descriptions best match my answers. Shows already on my list are left out.
+- The picks show one at a time: the poster, the name, a meta line with genres, year, and network, and one sentence on why the show fits my answers. The sentence uses only the show's TVmaze summary and my answers, and gives no spoilers.
+- Under the pick: **Add to my list** (reads "On your list" after adding) and **Next pick**. Tapping the poster opens the show. A line reads "Pick 2 of 5". After the last pick, Next pick becomes **Change answers**.
+- **Change answers** at the top returns to the questions with my answers kept.
+- I can ask 10 times a day. The eleventh shows "That's today's 10 picks. Try again tomorrow." A day starts at midnight UTC.
+- When nothing matches, it shows "No shows match those answers. Try another mood or length."
+- When OpenAI is unavailable, it shows "Pick for me isn't available right now." If only the reasons fail, the picks show without a reason.
+
 **Out of scope:** movies, specials, Android, a website, iPad layouts, widgets, App Store or TestFlight, import from TV Time or Trakt, ratings, reviews, social features, favourites, custom lists, sharing, "where to watch" links, rewatch tracking, offline use, more than one account, password reset by email, a mute button for each show.
 
 ---
@@ -128,13 +145,14 @@ References for each screen are in `docs/design/references/tvtime/`. Mobbin refer
 2. **Watching** (tab) — sections Up next, Paused for a while, Not started. Empty state: "Add the shows you watch" with a Discover button. Reference: `01-watch-list.jpg`.
 3. **Upcoming** (tab) — date-grouped list. Empty state: "Nothing scheduled for your shows yet." References: `03`, `04`.
 4. **My shows** (tab) — poster grid, sort and filter sheet. Profile icon in the header. Empty state sends you to Discover. References: `06`, `07`.
-5. **Discover** (tab) — rows of suggested shows, each card with poster, name, year, and Add. Search button in the header. The same 20 stay until the next day.
+5. **Discover** (tab) — rows of suggested shows, each card with poster, name, year, and Add. Pick for me and Search buttons in the header. The same 20 stay until the next day.
 6. **Search** — search field, results with Add.
 7. **Show** — header picture, name, seasons and network, progress bar, Where you left off card, seasons, menu (Watch later, Stop watching, Remove from my list), TVmaze credit. A show not on my list yet shows genres, rating, status, network, number of seasons, summary, and Add instead of episodes. References: `10`, `11`, `14`, `16`.
 8. **Season** (opens inside the show) — episode rows with picture, number, title, tick or countdown. Watch season. References: `12`, `13`.
 9. **Episode sheet** — picture, title, number, air date, runtime, summary, watched toggle, Watched up to here.
 10. **Profile** — stats, settings, export, sign out. Reference: `08`.
 11. **Before alerts** — one screen before the iPhone permission prompt: "Showlog tells you when a new episode of your shows is out, and when a new season gets a date." Allow and Not now.
+12. **Pick for me** — the three questions and Anything else, then one pick at a time with poster, name, reason, Add to my list, and Next pick.
 
 Tabs, in order: Watching, Upcoming, Discover, My shows.
 
@@ -148,7 +166,9 @@ Tabs, in order: Watching, Upcoming, Discover, My shows.
 - **Watched episode** — user, episode, show, watched time. One per user and episode.
 - **Push token** — user, Expo push token, alerts on or off, time zone (for quiet hours).
 - **Pending alert** — an alert waiting for quiet hours to end: user, show, message, send-after time.
-- **Suggested show** — a show in the Discover pool: TVmaze id, name, poster address, genres, type, language, premiere year, status, rating, network, popularity score. Replaced by the weekly refresh. Separate from Show, which holds only shows on my list.
+- **Suggested show** — a show in the Discover pool: TVmaze id, name, poster address, genres, type, language, premiere year, status, rating, network, popularity score, average runtime, TVmaze update time, and the TVmaze update time its embedding was made from. Replaced by the weekly refresh. Separate from Show, which holds only shows on my list.
+- **Show embedding** — one per pool show: TVmaze id, anime flag, the plain-text summary, and the embedding (512 numbers). Used only by Pick for me. Deleted when its show leaves the pool.
+- **Pick count** — user, day (UTC), and how many picks I asked for that day. Enforces the 10-a-day limit.
 - **User** — from Convex Auth. Email only.
 
 Seasons are not stored as their own records. They come from the episode season numbers.
@@ -161,6 +181,7 @@ Seasons are not stored as their own records. They come from the episode season n
 - **TVmaze image servers** — posters, header pictures, and episode pictures, linked directly and kept on the phone by `expo-image`. Not stored in Convex.
 - **Expo push** — alerts from Convex to my iPhone, through the Apple push key on the Expo project.
 - **Convex Auth** — email and password, one account.
+- **OpenAI API** — embeddings (`text-embedding-3-small`, 512 numbers) for pool shows and for my answers, and one-sentence reasons (`gpt-6-luna`, reasoning off). Paid, from prepaid credit with auto recharge off and a hard $5 monthly limit on the Showlog project. Called only from Convex actions with `OPENAI_API_KEY`, never from the phone.
 
 ---
 
@@ -176,14 +197,14 @@ Seasons are not stored as their own records. They come from the episode season n
 ## 8. Non-functional
 
 - **Scale:** one user, 30 to 100 shows, a few thousand episodes. Long anime runs (One Piece has over 1,100 episodes) must open a season without loading every episode at once.
-- **Speed:** ticks show instantly. Search answers within about a second on normal internet.
+- **Speed:** ticks show instantly. Search answers within about a second on normal internet. Pick for me answers within about five seconds.
 - **Freshness:** TVmaze changes reach the app within a day (daily refresh). The Discover pool refreshes weekly. New-episode alerts within an hour of air time.
 - **Offline:** not supported. The app needs a connection.
-- **Cost:** stays on free plans. No Convex file storage.
+- **Cost:** Convex, Expo, and TVmaze stay on free plans. No Convex file storage. OpenAI is the one paid service, capped at $5 a month by OpenAI and at 10 picks a day by Showlog. Expected spend is a few cents a month.
 
 ---
 
 ## 9. Success and priorities
 
 - **Success:** I use Showlog for every show I watch for a month, and I no longer open Trakt.
-- **Priority if time runs short:** search and add, ticking, Up next, and Where you left off first. Then My shows, Upcoming, and Discover. Then stats and export. Then alerts.
+- **Priority if time runs short:** search and add, ticking, Up next, and Where you left off first. Then My shows, Upcoming, and Discover. Then stats and export. Then alerts. Pick for me does not depend on alerts, so it can be built before or after them.

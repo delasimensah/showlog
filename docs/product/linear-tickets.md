@@ -24,7 +24,7 @@ Every ticket follows `.cursor/rules/` and the docs `mandatory-project-docs.mdc` 
 
 ## Status now
 
-- SHOW-1: **Done**. SHOW-2: **Done**. SHOW-3: **Done**. SHOW-4: **Done**. SHOW-5: **Done**. SHOW-6: **Done**. SHOW-7: **Done**. SHOW-8: **Done**. SHOW-9: **Done**. SHOW-10: **Done**. SHOW-11: **Done**. SHOW-12: **Todo**. SHOW-13: **Done**.
+- SHOW-1: **Done**. SHOW-2: **Done**. SHOW-3: **Done**. SHOW-4: **Done**. SHOW-5: **Done**. SHOW-6: **Done**. SHOW-7: **Done**. SHOW-8: **Done**. SHOW-9: **Done**. SHOW-10: **Done**. SHOW-11: **Done**. SHOW-12: **Todo**. SHOW-13: **Done**. SHOW-14: **Todo**.
 
 ---
 
@@ -392,6 +392,84 @@ My Convex Free database reads and writes passed the 1 GB monthly cap after I add
 - Ticking ten episodes of a long show in a row adds a few hundredths of a gigabyte or less to Database I/O in `npx convex deployment usage`.
 
 **Out of scope:** Watch season and watched up to here on a long show still read the whole show once each. The weekly Discover refresh still rewrites the pool.
+
+**Tested on:** simulator.
+
+---
+
+## SHOW-14. Pick for me finds shows that match my mood
+
+**Status:** Todo
+**Apps:** phone, Convex
+**Branch:** `feature/SHOW-14`
+**Screens:** `screens.md` section 13, the Discover header in section 5, and the `ChoiceChip` and large `Poster` in Shared parts
+
+I open Pick for me from Discover, choose a mood, an episode length, and anime or not, and can add a few words of my own. Showlog shows up to five shows that are not on my list, one at a time, each with one sentence on why it fits. This is RAG (retrieval-augmented generation): Convex vector search finds the shows whose descriptions are closest in meaning to my answers, then OpenAI writes the reasons from those descriptions only. It does not depend on SHOW-12, so it can be built first.
+
+**Where things stand:** every decision for this ticket is written down, and nothing is built. The OpenAI project and key do not exist yet. The ticket starts only when Delasi says so.
+
+**Start here, in this order**
+
+1. Do "Before you start" below. Without the key on dev, nothing in this ticket can be tested.
+2. Branch `feature/SHOW-14` from `main` and move this ticket and `STATUS.md` to In Progress.
+3. Read these, in this order. Each one holds part of the decisions:
+   - `docs/product/locked-decisions.md` section 4, "Pick for me (AI picks)": what is sent to OpenAI, the models, the caps, and what is out.
+   - `docs/product/product-requirements.md` flow 14: every question, choice, default, and message on the screen.
+   - `docs/product/system-design.md` sections 5 (`suggestedShows`, `showEmbeddings`, `pickCounts`), 7 (`lib/openai.ts`, `lib/pickText.ts`, and the `picks` folder), 8 (the weekly job steps), and 12 (the Convex and OpenAI numbers).
+   - `docs/convex-usage.md`, the Pick for me part: which Convex meters move and why embeddings never go on `suggestedShows`.
+   - `docs/design/screens.md` section 13, its Mobbin references, and the `ChoiceChip` and large `Poster` in Shared parts.
+   - `convex/_generated/ai/guidelines.md`, the vector search and environment variable parts.
+4. Build the Convex side first (schema, `lib`, the pool refresh change, then `picks`), with its tests. Run `npx convex run discover:refreshPool` on dev and check that `showEmbeddings` fills.
+5. Build the phone side: the Discover bar button, then the Pick for me screen and its skeleton.
+6. Check every acceptance line below, then run `yarn lint`, `yarn format:check`, `yarn type-check`, and `yarn test:ci`.
+7. After the pull request merges, run `npx convex run --prod discover:refreshPool` once so production gets its embeddings.
+
+**From the product requirements (flow 14)**
+
+- "Find shows returns up to five shows from the Discover pool whose descriptions best match my answers. Shows already on my list are left out."
+- "The picks show one at a time: the poster, the name, a meta line with genres, year, and network, and one sentence on why the show fits my answers."
+- "I can ask 10 times a day. The eleventh shows "That's today's 10 picks. Try again tomorrow." A day starts at midnight UTC."
+- Every question, choice, default, and message on the screen is listed in flow 14. Build those and nothing else.
+
+**Before you start (Delasi, about 10 minutes, once)**
+
+1. Open https://platform.openai.com and sign in. Create a new project named **Showlog**. A project is OpenAI's box for one app's keys and spending.
+2. In Billing, add **$5** of prepaid credit and turn **Auto recharge** off. With it off, OpenAI can never charge your card again on its own.
+3. In the Showlog project's settings, open **Limits**. Under **Spend**, choose **Edit spend limit**, set the monthly limit to **$5**, turn on **Enforce a hard limit**, and save. This path is from OpenAI's spend-limits guide on 17 Nov 2026. I have not seen the live page.
+4. In the Showlog project, create a secret API key. Save it in `ACCESS-LIST.md`, never in `STATUS.md` or the repo.
+5. Put the key on both Convex deployments, from the repo root:
+   - `npx convex env set OPENAI_API_KEY <the key>` for dev.
+   - `npx convex env set --prod OPENAI_API_KEY <the key>` for production.
+6. Do not turn on the Convex AI gateway. Showlog calls OpenAI with its own capped key.
+
+**How it is built** (full detail in `system-design.md` sections 3, 5, 7, 8, and 12)
+
+- Install the `openai` package for Convex. The default Convex runtime is enough, because the SDK uses `fetch`.
+- Schema: add `averageRuntime`, `tvmazeUpdatedAt`, and `embeddedUpdatedAt` to `suggestedShows`. Add table `showEmbeddings` with index `by_tvmazeId` and the vector index `by_embedding` (512 dimensions, filter field `isAnime`). Add table `pickCounts` with index `by_user_day`.
+- `convex/lib/openai.ts` with `embedTexts` and `writeReasons`. `convex/lib/pickText.ts` with `showText`, `answersText`, and `fitsLength`.
+- `toPoolShows` keeps `averageRuntime`, `updated`, and the HTML-stripped summary. `upsertSuggestions` returns the shows whose embedding is missing or out of date. `refreshPool` embeds those from the page it already downloaded, saves them with `saveEmbeddings`, and carries on when OpenAI fails. `dropStale` also deletes the stale shows' `showEmbeddings` rows.
+- `picks.actions.pick`, `picks.queries.hydrate`, `picks.mutations.recordPick`, and `picks.mutations.saveEmbeddings`, with the steps in `system-design.md` section 7.
+- Phone: the Pick for me bar button on Discover, the `(main-app)/pick.tsx` route, `usePickForMe` in `hooks/`, `ChoiceChip` and the large `Poster` in the shared parts, and a `PickForMeScreenSkeleton`. The screen passes `listed` from `discover.taste`. Add to my list uses `shows.add`.
+- Run `npx convex run discover:refreshPool` once on dev while building, and `npx convex run --prod discover:refreshPool` once after merge, so every pool show gets its first embedding. The run schedules itself page by page, paced for TVmaze, so it finishes on its own after a while. Watch it in the Convex dashboard logs.
+
+**Acceptance (yes or no)**
+
+- The OpenAI Showlog project shows a $5 hard monthly limit, and auto recharge is off.
+- `OPENAI_API_KEY` exists on the dev and the production Convex deployments, and no key is in the repo.
+- After the first `refreshPool` run, `showEmbeddings` has one row for every `suggestedShows` row.
+- A second `refreshPool` run with no TVmaze changes embeds no shows. A Convex test proves the upsert returns no shows the second time.
+- Find shows stays disabled until a mood is chosen. Any length and Either are chosen at first.
+- Picks never include a show on my list. Under 30 minutes and About an hour leave out shows of other lengths and shows with no runtime. A Convex test with a mocked OpenAI proves both.
+- Each pick shows the poster, the name, the meta line, a one-sentence reason, and "Pick n of 5". Next pick moves through all five without a new server call. On the last pick, Next pick reads Change answers.
+- Change answers returns to the questions with my answers kept.
+- Add to my list adds the show, and the button reads "On your list". Tapping the poster opens the show.
+- The eleventh pick on one day shows "That's today's 10 picks. Try again tomorrow." A Convex test proves it.
+- With a wrong `OPENAI_API_KEY` on dev, Pick for me shows "Pick for me isn't available right now.", and the rest of the app works. When only the reason call fails, the picks show without a reason. A Convex test covers the second case.
+- A word of my own longer than 200 characters cannot be typed, and the server refuses it too.
+- `npx convex deployment usage` after ten picks shows Database I/O up by about 1 MB, and search queries up by under 1 query-GB.
+- The screen matches `screens.md` section 13 at 375 and 430 wide, including loading, no matches, the daily limit, and the failure state.
+
+**Out of scope:** chat with the model, picks for several people at once, movies, picks from shows outside the Discover pool, saving past picks, and personal picks from my watch history. That last one would average the embeddings of shows I finished. It is a possible later ticket, not part of this version.
 
 **Tested on:** simulator.
 

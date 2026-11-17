@@ -1,6 +1,6 @@
 # System design — Showlog
 
-**Status:** written 8 Oct 2026, from `locked-decisions.md` and `product-requirements.md`.
+**Status:** written 8 Oct 2026, from `locked-decisions.md` and `product-requirements.md`. Pick for me added on 17 Nov 2026.
 **Owner:** Delasi Mensah
 
 The product requirements say **what** Showlog does. This file says **how**: what is stored, which server functions exist, which jobs run on a clock, and the order to build it in. Screen layouts live in `docs/design/screens.md`. Tickets live in `docs/product/linear-tickets.md`.
@@ -13,7 +13,7 @@ The product requirements say **what** Showlog does. This file says **how**: what
 2. **Up next is right.** The next episode, the "+N", and the sections must match my ticks and what has aired. This is the screen I open every day.
 3. **Ticking feels instant.** The tick shows before the server replies, with a small haptic tap.
 4. **TVmaze changes reach the app within a day**, and a new episode reaches Up next within an hour of airing.
-5. **Everything stays on free plans.** No Convex file storage. TVmaze calls stay under its limit.
+5. **Everything stays on free plans, except OpenAI, which is capped.** No Convex file storage. TVmaze calls stay under its limit. OpenAI is called only for Pick for me, behind a hard $5 monthly limit and 10 picks a day.
 
 ---
 
@@ -30,6 +30,7 @@ Outside services:
 - **TVmaze API** (`https://api.tvmaze.com`) for show and episode data. Free, no key.
 - **TVmaze image servers** (`https://static.tvmaze.com`) for posters and pictures. The phone links to them directly.
 - **Expo push** (`https://exp.host/--/api/v2/push/send`) to send phone alerts. Expo passes them to Apple.
+- **OpenAI API** (`https://api.openai.com/v1`) for Pick for me: embeddings with `text-embedding-3-small` at 512 dimensions, and reasons with `gpt-6-luna` through the Responses API. Paid, with key `OPENAI_API_KEY`.
 
 ---
 
@@ -43,15 +44,18 @@ Outside services:
 
 **Clock jobs**: Convex **crons** (functions Convex runs on a schedule) do the hourly, daily, and weekly work in section 8.
 
+**Pick for me**: the app calls the `picks.pick` action. Vector search only runs in actions, and the action is also the only place the OpenAI key can be read. The action counts the pick, embeds my answers, runs vector search on `showEmbeddings`, loads the matches through one internal query, asks OpenAI for the reasons, and returns the picks. Nothing about the picks is saved, so a pick is not a live query. The app keeps the five picks on screen until I change my answers.
+
 ---
 
 ## 4. Who can read and write
 
 - One account. The first sign-up creates it. After that, `convex/auth.ts` refuses any new sign-up with "This app already has an account." This lives in the Convex Auth `createOrUpdateUser` callback, so it holds even if someone calls the sign-up endpoint directly.
 - Every public query and mutation is built with `authedQuery` or `authedMutation` from `convex/lib/functions.ts`. They refuse a caller who is not signed in.
-- Every row a user owns (`myShows`, `watchedEpisodes`, `userStats`, `pushTokens`, `pendingAlerts`) carries `userId`. Functions read and write only rows where `userId` is the caller.
+- Every row a user owns (`myShows`, `watchedEpisodes`, `userStats`, `pushTokens`, `pendingAlerts`, `pickCounts`) carries `userId`. Functions read and write only rows where `userId` is the caller.
 - `shows`, `episodes`, and `suggestedShows` are copies of TVmaze data. Any signed-in caller may read them. Only internal functions write them.
-- Public actions (search, add, preview) check the caller with `getAuthUserId` first.
+- `showEmbeddings` is read and written only by internal functions. No public query returns an embedding.
+- Public actions (search, add, preview, pick) check the caller with `getAuthUserId` first.
 
 ---
 
@@ -128,9 +132,29 @@ An alert waiting for quiet hours to end, or waiting to be sent.
 The Discover pool. Separate from `shows`, because it holds shows that are not on my list.
 
 - `tvmazeId`, `name`, `posterUrl`, `genres`, `type`, `language`, `premieredYear`, `status`, `rating`, `network`, `weight` (TVmaze popularity, 0 to 100), `isAnime`, `refreshId`
+- `averageRuntime` (optional, minutes), `tvmazeUpdatedAt` (TVmaze's `updated` time for the show), `embeddedUpdatedAt` (optional, the `tvmazeUpdatedAt` its embedding was made from)
 - Indexes: `by_tvmazeId`, `by_rating`, `by_anime_rating` (`isAnime`, `rating`), `by_status_rating` (`status`, `rating`)
 
 `isAnime` is true when the genres include Anime, or when the type is Animation and the language is Japanese.
+
+A show needs a new embedding when `embeddedUpdatedAt` is missing or differs from `tvmazeUpdatedAt`. The check reads only this small row, never the embedding.
+
+### showEmbeddings
+
+One row per pool show, for Pick for me. Kept apart from `suggestedShows` on purpose. The weekly refresh patches every pool row, and Discover's `rows` reads the pool, so an embedding on that row would be read and rewritten thousands of times a month for nothing.
+
+- `tvmazeId`, `isAnime`, `summary` (plain text, HTML stripped), `embedding` (512 numbers, `v.array(v.float64())`)
+- Index: `by_tvmazeId`
+- Vector index: `by_embedding`, vector field `embedding`, 512 dimensions, filter field `isAnime`
+
+The embedding is made from one text per show: "{name}. {type} show. Genres: {genres}. {network}, {premiered year}. {summary}". Missing parts are left out.
+
+### pickCounts
+
+How many picks I asked for on one day. Enforces 10 a day.
+
+- `userId`, `day` (the UTC date as "2026-11-17"), `count`
+- Index: `by_user_day` (`userId`, `day`)
 
 Seasons are not their own table. They come from `shows.seasons`.
 
@@ -210,6 +234,33 @@ Files under `convex/`, one folder per area. Queries, mutations, and actions are 
 - `taste()` query: the ids of the shows on my list, my two most common genres, and whether I watch anime. It is separate from `rows` so that `rows`, which reads the pool, does not run again every time a tick changes my list.
 - `rows({ listed, genres, watchesAnime })` query: the three rows for my state (section 5 of the locked decisions). The phone passes in what `taste` returned. Each row returns the 100 best-rated matches that are not on my list. The phone picks 20 once a day and keeps them until tomorrow. Picking on the phone is required, because Convex queries must give the same answer every time they run.
 
+**`lib/openai.ts`** (internal helpers, used only by actions)
+
+- Creates the OpenAI client from `OPENAI_API_KEY` inside each call, with a 20-second timeout and one retry. The key is declared as a typed app environment variable, the way `convex/_generated/ai/guidelines.md` says.
+- `embedTexts(texts)`: one `text-embedding-3-small` call with `dimensions: 512` for up to 100 texts. Returns the embeddings in the same order.
+- `writeReasons(answers, shows)`: one Responses API call to `gpt-6-luna` with reasoning effort `none`, `max_output_tokens: 600`, and a JSON schema output of `{ reasons: [{ tvmazeId, reason }] }`. The instructions say: one sentence per show, under 25 words, speak to me as "you", use only the summary given and my answers, and give no spoilers.
+
+**`lib/pickText.ts`** (pure functions, unit tested)
+
+- `showText(show)`: the embedding text in section 5.
+- `answersText(answers)`: turns my answers into one sentence, for example "A dark and gritty TV show with episodes of about an hour, not anime. Set in space." Each mood has a fixed descriptive phrase, so "Feel-good" becomes "a warm, comforting, feel-good show".
+- `fitsLength(averageRuntime, length)`: the episode length rule in product requirements flow 14.
+
+**`picks/actions.ts`**, **`picks/queries.ts`**, and **`picks/mutations.ts`**
+
+- `pick({ mood, length, anime, extra, listed })` action, public. `listed` is the TVmaze ids from `discover.taste`, the same list Discover's `rows` already takes. Steps:
+  1. Check the caller. Refuse an `extra` longer than 200 characters.
+  2. Run `recordPick`. It refuses with the ConvexError "That's today's 10 picks. Try again tomorrow." when the count for today is already 10. The pick is counted before OpenAI is called, so failed picks count too, and a failing screen cannot keep spending.
+  3. Embed `answersText(answers)` with `embedTexts`.
+  4. `ctx.vectorSearch("showEmbeddings", "by_embedding", { vector, limit: 24, filter })`. The filter is `isAnime` true or false, or none for Either.
+  5. Load the hits with `hydrate`, in search order. Drop shows in `listed` and shows that fail `fitsLength`. Keep the first five. There is no score cutoff, because every pool show is a real, popular show and the order is what matters.
+  6. Call `writeReasons` for those five. If it fails, return the picks with `reason: null`.
+  7. Return `{ picks: [{ tvmazeId, name, posterUrl, genres, year, network, reason }] }`, or an empty list when nothing matched.
+  - When the embedding or the vector search fails, it throws the ConvexError "Pick for me isn't available right now." and logs the real error.
+- `hydrate({ ids })` internal query: for each `showEmbeddings` id, the row's `tvmazeId` and `summary`, plus the matching `suggestedShows` card fields and `averageRuntime`.
+- `recordPick()` internal mutation: reads and increments today's `pickCounts` row.
+- `saveEmbeddings({ rows })` internal mutation: upserts `showEmbeddings` rows by `tvmazeId`, then sets `embeddedUpdatedAt` on each matching `suggestedShows` row.
+
 **`profile/queries.ts`** and **`profile/actions.ts`**
 
 - `account()` query: the signed-in person's name and email.
@@ -243,9 +294,10 @@ Files under `convex/`, one folder per area. Queries, mutations, and actions are 
 **Weekly, Monday 03:00 UTC:** `discover.actions.refreshPool`
 
 1. Walk TVmaze's show index (`/shows?page=0`, `1`, …) about 15 pages per run, then schedule the next run 10 seconds later. That stays under 20 calls every 10 seconds, and under Convex's 10-minute action limit.
-2. Keep shows with `weight` 85 or more and a poster. Upsert into `suggestedShows` with this run's `refreshId`.
-3. When TVmaze returns a 404 (past the last page), delete pool rows with an older `refreshId`.
-4. The same job is run by hand once during setup so Discover is never empty: `npx convex run discover:refreshPool`.
+2. Keep shows with `weight` 85 or more and a poster. Upsert into `suggestedShows` with this run's `refreshId`, the show's `averageRuntime`, and TVmaze's `updated` time as `tvmazeUpdatedAt`. `upsertSuggestions` returns the TVmaze ids whose `embeddedUpdatedAt` is missing or differs.
+3. For those shows, still in the same run, the action builds `showText` from the page it already downloaded, calls `embedTexts` once for the run's shows (in groups of 100), and saves them with `saveEmbeddings`. No extra TVmaze calls. If OpenAI fails, the action logs it and carries on with the pool. `embeddedUpdatedAt` stays old, so next week's run tries those shows again.
+4. When TVmaze returns a 404 (past the last page), delete pool rows with an older `refreshId`, and delete their `showEmbeddings` rows.
+5. The same job is run by hand once during setup so Discover is never empty: `npx convex run discover:refreshPool`. Run it by hand once more after `OPENAI_API_KEY` is set, on dev and on production, so every pool show gets its first embedding.
 
 ---
 
@@ -266,6 +318,7 @@ Files under `convex/`, one folder per area. Queries, mutations, and actions are 
   - `(main-app)/search.tsx`
   - `(main-app)/show/[tvmazeId]/index.tsx` and `(main-app)/show/[tvmazeId]/season/[season].tsx`. The show screen is a screen of the main stack, so the system back button returns to the screen that opened it.
   - `(main-app)/profile.tsx`, `(main-app)/alerts-intro.tsx`
+  - `(main-app)/pick.tsx`, pushed from the Pick for me button on Discover. Its hook `usePickForMe` in `hooks/` wraps `useAction(api.picks.actions.pick)`.
 - The episode sheet is a bottom sheet in `components/bottom-sheets/`, opened through `BottomSheetsManager`.
 - Feature components in `components/[feature]/` (for example `components/shows/`, `components/up-next/`). Screens in `components/screens/`.
 - Data hooks in `hooks/` wrap the Convex calls, so screens do not import `api` directly.
@@ -283,6 +336,9 @@ Files under `convex/`, one folder per area. Queries, mutations, and actions are 
 - **TVmaze removes or renumbers an episode.** The refresh deletes the episode and its tick and recomputes. My stats drop by that episode, which matches what TVmaze now says.
 - **Alerts at 2 am.** Quiet-hours tests in `packages/shared` cover 21:59, 22:00, 07:59, and 08:00 in Accra time.
 - **A second account.** A Convex test signs up twice and expects the refusal.
+- **OpenAI spending too much.** OpenAI's hard $5 limit on the Showlog project, prepaid credit with auto recharge off, `recordPick`'s 10 a day counted before any OpenAI call, and `max_output_tokens: 600`. A test asks an eleventh time and expects the refusal.
+- **Embeddings eating the Convex Free meters.** Embeddings live in their own table, are re-made only when TVmaze changed a show, and are never read by Discover's rows or the pool upsert. A test runs the pool upsert twice with the same TVmaze update times and expects no shows to need embedding the second time.
+- **Picks showing shows already on my list.** A test runs `pick` with a mocked OpenAI and checks that listed shows and shows of the wrong length are left out, and that a failed reason call still returns the picks.
 
 ---
 
@@ -293,6 +349,8 @@ Files under `convex/`, one folder per area. Queries, mutations, and actions are 
 - **Convex file storage:** none. Pictures stay on TVmaze's servers.
 - **TVmaze:** about 350 calls a week for the pool, a handful a day for refreshes and searches.
 - **Expo:** alerts are free. Builds: one simulator and one preview to start.
+- **Pick for me on Convex Free:** each `showEmbeddings` row is about 4.8 KB (512 numbers at 8 bytes, plus the summary), so the pool of about 6,700 shows is about 32 MB of database storage and about 28 MB of vector search storage on each deployment, out of 0.5 GB each. The first embedding run writes about 32 MB of Database I/O once. Each pick reads up to 24 rows, about 115 KB, so 10 picks every day is about 35 MB a month. Weekly re-embeds of changed shows add tens of MB a month. Each vector search is billed at the whole index, about 0.03 query-GB, out of 3,000 a month. Function calls rise by a few hundred a month.
+- **OpenAI:** about 2 cents to embed the whole pool once on each deployment, about 0.02 cents a pick, and a fraction of a cent a week for changed shows. Hard $5 monthly limit.
 
 ---
 
@@ -304,7 +362,8 @@ Files under `convex/`, one folder per area. Queries, mutations, and actions are 
 - Queue and scheduled work: Amazon SQS and EventBridge → Convex crons and `scheduler.runAfter`.
 - Outside API calls: AWS Lambda → Convex actions.
 - Push: Amazon SNS → Expo push.
-- Secrets: AWS Secrets Manager → Convex environment variables (`JWT_PRIVATE_KEY`, `JWKS`, `SITE_URL`). TVmaze and Expo push need no secret.
+- Secrets: AWS Secrets Manager → Convex environment variables (`JWT_PRIVATE_KEY`, `JWKS`, `SITE_URL`, `OPENAI_API_KEY`). TVmaze and Expo push need no secret.
+- Vector database: Amazon OpenSearch or Postgres with pgvector → a Convex vector index on `showEmbeddings`.
 
 ---
 
@@ -333,5 +392,7 @@ The tickets follow this order (full text in `linear-tickets.md`):
 10. Discover and the weekly pool
 11. Profile stats and export
 12. Phone alerts
+13. Ticking and adding inside the Convex Free database limit (SHOW-13)
+14. Pick for me (SHOW-14). It does not depend on phone alerts, so it may be built before them.
 
 That is the priority in the product requirements: search, ticking, Up next, and Where you left off first. Then My shows, Upcoming, and Discover. Then stats and export. Then alerts.

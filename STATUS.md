@@ -11,9 +11,9 @@
 - **Client / job:** Showlog. Personal iPhone app for tracking TV shows. No client, no invoice, not published.
 - **Backend:** Convex on team `dm-studios`. Dev deployment for the simulator and Showlog(Staging). Production deployment `canny-camel-565` for the Showlog app. Auth env is set on both. The production iPhone build is running.
 - **Outcome:** B (studio accounts)
-- **Current phase:** SHOW-13 is Done. Ticking and adding shows stay inside the Convex Free database limit. SHOW-11 is Done. Profile shows my stats and I can export my history. Setup is already done: scaffold, GitHub, Expo, Convex, design system, icon, system design, screens, tickets SHOW-1 to SHOW-12, and both phone builds. iPhone app (Expo SDK 57), shared package, and Convex Auth. Native packages for this version are installed. Private GitHub repo on `main`. Branches are deleted automatically after merge. Convex agent guidelines and skills are installed.
-- **Last updated:** 2026-10-21
-- **Blocked / open:** The Apple push key waits for SHOW-12.
+- **Current phase:** SHOW-14 (Pick for me, AI picks with OpenAI) was fully documented on 17 Nov 2026 and is Todo. Nothing of it is built, and it waits until Delasi chooses to start it. Its "Start here, in this order" list in `docs/product/linear-tickets.md` says what to do first and which docs hold each decision. SHOW-13 is Done. Ticking and adding shows stay inside the Convex Free database limit. SHOW-11 is Done. Profile shows my stats and I can export my history. Setup is already done: scaffold, GitHub, Expo, Convex, design system, icon, system design, screens, tickets SHOW-1 to SHOW-12, and both phone builds. iPhone app (Expo SDK 57), shared package, and Convex Auth. Native packages for this version are installed. Private GitHub repo on `main`. Branches are deleted automatically after merge. Convex agent guidelines and skills are installed.
+- **Last updated:** 2026-11-17
+- **Blocked / open:** The Apple push key waits for SHOW-12. SHOW-14 waits for the OpenAI Showlog project, its $5 hard limit, and `OPENAI_API_KEY` on both Convex deployments (steps in the ticket).
 
 ---
 
@@ -46,7 +46,7 @@
 - [x] System design (8 Oct 2026) — `docs/product/system-design.md`
 - [x] Design system locked (8 Oct 2026): mint on ink, Plus Jakarta Sans — `docs/design/design-system.md`. Tokens wired into `packages/shared` colours, the Tailwind theme, and the font loader.
 - [x] Screen design (8 Oct 2026): TV Time screenshots plus Mobbin references for each screen — `docs/design/screens.md`. No UX Pilot.
-- [x] Tickets SHOW-1 to SHOW-13 in `docs/product/linear-tickets.md`. SHOW-1 through SHOW-11 are Done. SHOW-12 is Todo. SHOW-13 is Done.
+- [x] Tickets SHOW-1 to SHOW-14 in `docs/product/linear-tickets.md`. SHOW-1 through SHOW-11 are Done. SHOW-12 is Todo. SHOW-13 is Done. SHOW-14 is Todo.
 - [x] One development build, one preview build (8 Oct 2026, Plus Jakarta Sans package already installed). Simulator: https://expo.dev/accounts/dm-studios/projects/showlog/builds/bf5a7b93-ccf6-41d4-8999-41b67c64bdec. Preview: https://expo.dev/accounts/dm-studios/projects/showlog/builds/21398ded-56e6-4244-ac90-336c5b0a4d0a.
 - [ ] Build
 
@@ -54,7 +54,7 @@
 
 ## Next action (one line)
 
-SHOW-12 is next. I get a phone alert when a new episode is out. Add the Apple push key first.
+SHOW-12 or SHOW-14 is next, in either order, when Delasi chooses to start one. SHOW-12 needs the Apple push key first. SHOW-14 needs the OpenAI project, its $5 hard limit, and the key on both Convex deployments first, then its "Start here" list.
 
 ---
 
